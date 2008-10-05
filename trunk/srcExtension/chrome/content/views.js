@@ -90,7 +90,7 @@ YAHOO.ip.ImageGrid.prototype = {
                 //create grid cell box
                 var vbox = document.createElementNS(XUL_NS, "vbox");
                 vbox.setAttribute("width", columnWidth);
-                vbox.setAttribute("height", columnWidth + 20);
+                vbox.setAttribute("height", columnWidth + 15);
                 vbox.setAttribute("pack", "center");
                 vbox.setAttribute("align", "center");
                 
@@ -104,7 +104,7 @@ YAHOO.ip.ImageGrid.prototype = {
                     img.setAttribute("id", imageList[index].id);
                     img.setAttribute("src", imageList[index].url);
                     
-                    var widthPerImage = columnWidth - 25;
+                    var widthPerImage = columnWidth - 15;
                     var imageRate = widthPerImage / Math.max(imageList[index].width, imageList[index].height, 1);
                     var width = Math.min(imageRate * imageList[index].width, imageList[index].width);
                     var height = Math.min(imageRate * imageList[index].height, imageList[index].height);
@@ -127,9 +127,8 @@ YAHOO.ip.ImageGrid.prototype = {
                     
                     additionalInfo = imageList[index].fileName;
                     
-                    alert(imageList[index].fileName);
                     if (imageList[index].fileName.length > widthPerImage / 6) {
-                       // additionalInfo = imageList[index].fileName.substr(0, widthPerImage / 6 - 6) + "...";
+                        additionalInfo = imageList[index].fileName.substr(0, widthPerImage / 6 - 6) + "...";
                         if (imageList[index].fileExt != null) {
                             additionalInfo = additionalInfo + imageList[index].fileExt;
                         }

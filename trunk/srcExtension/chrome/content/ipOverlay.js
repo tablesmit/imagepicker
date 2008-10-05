@@ -28,7 +28,7 @@ function pickImages(){
     }
 
     var params = {
-        "imageList": imageList
+        "imageList": imageInfoList
     };
     var mainWindow = window.openDialog("chrome://imagepicker/content/pick.xul", "PickImage.mainWindow", "chrome,centerscreen,resizable, dialog=no, modal=no, dependent=no,status=yes", params);
     mainWindow.focus();

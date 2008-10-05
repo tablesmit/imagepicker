@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 	<RDF:Description about="urn:mozilla:install-manifest">
-		<em:aboutURL>chrome://ImagePicker/content/about.xul</em:aboutURL>
-		<em:creator>topolog@gmail.com</em:creator>
-		<em:description>The Image Picker for Firefox.</em:description>
-		<em:homepageURL/>
-		<em:iconURL/>
+
 		<em:id>ImagePicker@topolog.org</em:id>
-		<em:name>ImagePicker</em:name>
+		<em:name>Image Picker</em:name>
 		<em:version>0.4.0</em:version>
-		<em:updateURL/>
+        <em:creator>Wesley Chen (topolog@gmail.com)</em:creator>
+        <em:description>Choose (filter) images and save images from web page to local disk. </em:description>
+
+        <em:homepageURL>http://code.google.com/p/imagepicker/</em:homepageURL>
+        <em:aboutURL />
+        <em:iconURL>chrome://imagepicker/skin/icon.ico</em:iconURL>
+        <em:updateURL />
+        <!--
+        <em:updateURL>http://imagepicker.googlecode.com/svn/dist/update.rdf</em:updateURL>
+        -->
 		
 		<!-- Firefox -->
 		<em:targetApplication>
@@ -22,7 +27,7 @@
 		
 	    <em:targetPlatform/>
 	
-	    <em:developer>Wesley Chen</em:developer>
+	    <em:developer>Wesley Chen (topolog@gmail.com)</em:developer>
 	
 	</RDF:Description>
 </RDF>
