@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+  <Description about="urn:mozilla:extension:ImagePicker@topolog.org">
+    <em:updates>
+      <Seq>
+        <li resource="urn:mozilla:extension:ImagePicker@topolog.org:0.3"/>
+        <li resource="urn:mozilla:extension:ImagePicker@topolog.org:0.4"/>
+      </Seq>
+    </em:updates>
+
+  </Description>
+  
+  <!-- version 0.3 -->
+  <Description about="urn:mozilla:extension:ImagePicker@topolog.org:0.3">
+    <em:version>0.3</em:version>
+    <em:targetApplication>
+      <Description>
+	 <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+	 <em:maxVersion>3.0.*</em:maxVersion>
+	 <em:minVersion>2.0</em:minVersion>
+         <em:updateLink>http://imagepicker.googlecode.com/svn/dist/imagepicker-0.3.xpi</em:updateLink>
+      </Description>
+    </em:targetApplication>
+  </Description>
+  
+  <!-- version 0.4 -->
+  <Description about="urn:mozilla:extension:ImagePicker@topolog.org:0.4">
+    <em:version>0.4</em:version>
+    <em:targetApplication>
+      <Description>
+	 <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+	 <em:maxVersion>3.0.*</em:maxVersion>
+	 <em:minVersion>2.0</em:minVersion>
+         <em:updateLink>http://imagepicker.googlecode.com/svn/dist/imagepicker-0.4.xpi</em:updateLink>
+      </Description>
+    </em:targetApplication>
+  </Description>
+</RDF>
+
