@@ -1,5 +1,10 @@
 #summary Screenshots for FileLinks plugin.
+#labels Featured
 
 === Feature ===
 
-http://filelinks.googlecode.com/svn/wiki/img/feature1_1.png
+http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker.PNG
+
+http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker1.PNG
+
+http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker2.PNG
