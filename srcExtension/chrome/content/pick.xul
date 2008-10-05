@@ -90,6 +90,7 @@
 	</hbox>
 	<statusbar>
 		<statusbarpanel id="filterStat" flex="1" />
+        <progressmeter  id="downloadMeter"  mode="determined"  value="0" onclick="gController.showDownloadManagerUI();"/>
 		<space flex="1" />
 	</statusbar>
 </window>
