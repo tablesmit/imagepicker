@@ -1,0 +1,5 @@
+#summary Screenshots for FileLinks plugin.
+
+=== Feature ===
+
+http://filelinks.googlecode.com/svn/wiki/img/feature1_1.png
