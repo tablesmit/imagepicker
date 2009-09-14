@@ -1,17 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 	<RDF:Description about="urn:mozilla:install-manifest">
 
 		<em:id>ImagePicker@topolog.org</em:id>
 		<em:name>Image Picker</em:name>
-		<em:version>0.4.0</em:version>
+		<em:version>0.5.0</em:version>
         <em:creator>Wesley Chen (topolog@gmail.com)</em:creator>
         <em:description>Choose (filter) images and save images from web page to local disk. </em:description>
 
         <em:homepageURL>http://code.google.com/p/imagepicker/</em:homepageURL>
-        <em:aboutURL />
+        <em:aboutURL/>
         <em:iconURL>chrome://imagepicker/skin/icon.ico</em:iconURL>
-        <em:updateURL />
+        <em:updateURL/>
         <!--
         <em:updateURL>http://imagepicker.googlecode.com/svn/dist/update.rdf</em:updateURL>
         -->
@@ -20,7 +19,7 @@
 		<em:targetApplication>
 			<RDF:Description>
 				<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-				<em:maxVersion>3.0.*</em:maxVersion>
+				<em:maxVersion>3.5.*</em:maxVersion>
 				<em:minVersion>2.0</em:minVersion>
 			</RDF:Description>
 		</em:targetApplication>
@@ -29,5 +28,5 @@
 	
 	    <em:developer>Wesley Chen (topolog@gmail.com)</em:developer>
 	
-	</RDF:Description>
+	<em:optionsURL/><em:updateKey/><em:hidden/><em:localized><RDF:Description><em:locale/><em:name/><em:description/></RDF:Description></em:localized><em:localized><RDF:Description><em:locale/><em:name/><em:description/></RDF:Description></em:localized><em:localized><RDF:Description><em:locale/><em:name/><em:description/></RDF:Description></em:localized><em:localized><RDF:Description><em:locale/><em:name/><em:description/></RDF:Description></em:localized></RDF:Description>
 </RDF>

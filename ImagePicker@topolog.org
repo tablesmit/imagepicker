@@ -1,1 +1,1 @@
-E:\Dev\FireFoxAddons\ImagePicker\trunk\srcExtension
+D:\Dev\FireFoxAddons\ImagePicker\trunk\srcExtension
