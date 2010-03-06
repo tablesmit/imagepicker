@@ -3,7 +3,7 @@
 
 		<em:id>ImagePicker@topolog.org</em:id>
 		<em:name>Image Picker</em:name>
-		<em:version>0.5.0</em:version>
+		<em:version>0.5.1</em:version>
         <em:creator>Wesley Chen (topolog@gmail.com)</em:creator>
         <em:description>Choose (filter) images and save images from web page to local disk. </em:description>
 
@@ -19,7 +19,7 @@
 		<em:targetApplication>
 			<RDF:Description>
 				<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-				<em:maxVersion>3.5.*</em:maxVersion>
+				<em:maxVersion>3.6.*</em:maxVersion>
 				<em:minVersion>2.0</em:minVersion>
 			</RDF:Description>
 		</em:targetApplication>
