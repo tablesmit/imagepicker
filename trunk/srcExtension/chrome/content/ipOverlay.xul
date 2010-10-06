@@ -12,6 +12,7 @@
 	</toolbarpalette>
 	<popup id="contentAreaContextMenu">
 		<menuitem id="pick-images" label="Pick Images" accesskey="p"
-			insertbefore="context-sep-properties" oncommand="pickImages();" />
+			insertbefore="context-sep-properties" oncommand="pickImages();" 
+            class="menuitem-iconic" image="chrome://imagepicker/skin/img-picker_16.png" />
 	</popup>
 </overlay>
