@@ -19,11 +19,11 @@
 	</RDF:Seq>
 
 	<RDF:Description RDF:about="urn:mozilla:package:imagepicker"
-		chrome:displayName="Image Picker 0.1"
-		chrome:author="WesleyChen"
+		chrome:displayName="Image Picker 0.6.2"
+		chrome:author="Wesley Chen"
 		chrome:name="imagepicker"
 		chrome:extension="true"
-		chrome:description="List url, size and dimension properties for all images in a page.">
+		chrome:description="Choose (filter) images and save images from web page to local disk.">
 	</RDF:Description>
 
 </RDF:RDF>
