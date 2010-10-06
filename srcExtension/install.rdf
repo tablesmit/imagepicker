@@ -1,32 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
-	<RDF:Description about="urn:mozilla:install-manifest">
-
-		<em:id>ImagePicker@topolog.org</em:id>
-		<em:name>Image Picker</em:name>
-		<em:version>0.5.1</em:version>
-        <em:creator>Wesley Chen (topolog@gmail.com)</em:creator>
-        <em:description>Choose (filter) images and save images from web page to local disk. </em:description>
-
-        <em:homepageURL>http://code.google.com/p/imagepicker/</em:homepageURL>
-        <em:aboutURL/>
-        <em:iconURL>chrome://imagepicker/skin/icon.ico</em:iconURL>
-        <em:updateURL/>
-        <!--
-        <em:updateURL>http://imagepicker.googlecode.com/svn/dist/update.rdf</em:updateURL>
-        -->
-		
-		<!-- Firefox -->
-		<em:targetApplication>
-			<RDF:Description>
-				<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-				<em:maxVersion>3.6.*</em:maxVersion>
-				<em:minVersion>2.0</em:minVersion>
-			</RDF:Description>
-		</em:targetApplication>
-		
-	    <em:targetPlatform/>
-	
-	    <em:developer>Wesley Chen (topolog@gmail.com)</em:developer>
-	
-	<em:optionsURL/><em:updateKey/><em:hidden/><em:localized><RDF:Description><em:locale/><em:name/><em:description/></RDF:Description></em:localized><em:localized><RDF:Description><em:locale/><em:name/><em:description/></RDF:Description></em:localized><em:localized><RDF:Description><em:locale/><em:name/><em:description/></RDF:Description></em:localized><em:localized><RDF:Description><em:locale/><em:name/><em:description/></RDF:Description></em:localized></RDF:Description>
-</RDF>
+<?xml version="1.0"?>
+<RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="urn:mozilla:install-manifest"
+                   em:id="ImagePicker@topolog.org"
+                   em:name="Image Picker"
+                   em:version="0.6.2"
+                   em:creator="Wesley Chen (topolog@gmail.com)"
+                   em:description="Choose (filter) images and save images from web page to local disk."
+                   em:homepageURL="http://code.google.com/p/imagepicker/"
+                   em:iconURL="chrome://imagepicker/skin/img-picker_24.png">
+    <em:targetApplication RDF:resource="rdf:#$A4.QS1"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="rdf:#$A4.QS1"
+                   em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   em:minVersion="2.0"
+                   em:maxVersion="3.6.*" />
+</RDF:RDF>
