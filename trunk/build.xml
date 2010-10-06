@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<project name="ImagePicker" default="package">
+
+    <property name="version" value="0.6.2" />
+    
+    <!-- Project directories -->
+    <property name="src_dir" location="./srcExtension" />
+    <property name="build_dir" location="./build" />
+    <property name="dist_dir" location="../dist" />
+    
+
+    <!-- Custom tasks -->
+
+    <!-- Targets -->
+    <target name="package" >
+        <mkdir dir="${dist_dir}/${version}"/>
+        <delete file="${dist_dir}/${version}/${ant.project.name}.xpi" failonerror="true" />
+        <zip destfile="${dist_dir}/${version}/${ant.project.name}.xpi" >
+            <zipfileset dir="${src_dir}/chrome" includes="**" prefix="chrome" />
+            <zipfileset dir="${src_dir}/defaults" includes="**" prefix="defaults" />
+            <zipfileset dir="${src_dir}" includes="install.rdf" />
+            <zipfileset dir="${src_dir}" includes="chrome.manifest" />
+        </zip>
+    </target>
+</project> 
