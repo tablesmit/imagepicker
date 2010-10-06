@@ -78,11 +78,11 @@
 		persist="height" height="300" align="center" flex="1">
 	</vbox>
 	<hbox>
-		<hbox flex="1">
-			<label value="Dir" />
+		<hbox flex="1"  align="center" >
+			<label value="Saved Directory" />
 			<textbox id="browsedirTB" height="18" flex="1" />
-			<toolbarbutton id="browsedir" oncommand="gController.browseDir();"
-				image="chrome://imagepicker/skin/browse.png" style="padding:3px 2px 0px 3px;" />
+			<toolbarbutton id="browsedir" oncommand="gController.browseDir();" tooltiptext="Browse..."
+				image="chrome://imagepicker/skin/browse.png"  />
 		</hbox>
 		<spacer flex="1" />
 		<button label="Save" oncommand="gController.doSaveImages();" />
