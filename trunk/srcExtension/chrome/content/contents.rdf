@@ -19,7 +19,7 @@
 	</RDF:Seq>
 
 	<RDF:Description RDF:about="urn:mozilla:package:imagepicker"
-		chrome:displayName="Image Picker 0.6.2"
+		chrome:displayName="Image Picker"
 		chrome:author="Wesley Chen"
 		chrome:name="imagepicker"
 		chrome:extension="true"
