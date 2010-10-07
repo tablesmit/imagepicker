@@ -33,9 +33,12 @@
         <fail unless="firefox.present"/>
         <copy file="${basedir}/${extension.id}" todir="${firefox.profile.path}/extensions" overwrite="true" verbose="true">
           <filterset>
-            <filter token="EXTENSION_SRC_LOCATION" value="${basedir}\srcExtension"/>
+            <filter token="EXTENSION_SRC_LOCATION" value="${src_dir}"/>
           </filterset>
         </copy>
+        <!-- touch src_dir for change install.rdf (windows only)-->
+        <mkdir dir="${src_dir}\temp"/>
+        <delete dir="${src_dir}\temp"/>
     </target>
     
     <target name="test" depends="install">
