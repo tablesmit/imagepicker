@@ -8,9 +8,8 @@
     <property name="firefox.profile.path" location="${firefox.dir}/../devtest"/>
 
     <!-- Project directories -->
-    <property name="src_dir" location="./srcExtension" />
-    <property name="build_dir" location="./build" />
-    <property name="dist_dir" location="../dist" />
+    <property name="src.dir" location="./srcExtension" />
+    <property name="dist.dir" location="../dist" />
 
     <condition property="firefox.present">
         <and>
@@ -31,30 +30,31 @@
 
     <target name="install" depends="init">    
         <fail unless="firefox.present"/>
+        <!-- copy to extensions directory -->
         <copy file="${basedir}/${extension.id}" todir="${firefox.profile.path}/extensions" overwrite="true" verbose="true">
           <filterset>
-            <filter token="EXTENSION_SRC_LOCATION" value="${src_dir}"/>
+            <filter token="EXTENSION_SRC_LOCATION" value="${src.dir}"/>
           </filterset>
         </copy>
-        <!-- touch src_dir for change install.rdf (windows only)-->
-        <mkdir dir="${src_dir}\temp"/>
-        <delete dir="${src_dir}\temp"/>
+        <!-- touch src.dir for change install.rdf (windows only)-->
+        <mkdir dir="${src.dir}\temp"/>
+        <delete dir="${src.dir}\temp"/>
     </target>
     
-    <target name="test" depends="install">
+    <target name="test" depends="install" description="run FireFox with this extension for testing">
         <exec executable="${firefox.exe}" spawn="true">
             <arg line="-no-remote -profile ${firefox.profile.path}"/>
         </exec>
     </target>
     
-    <target name="package">
-        <mkdir dir="${dist_dir}/${extension.version}" />
-        <delete file="${dist_dir}/${extension.version}/${ant.project.name}.xpi" failonerror="true" />
-        <zip destfile="${dist_dir}/${extension.version}/${ant.project.name}.xpi">
-            <zipfileset dir="${src_dir}/chrome" includes="**" prefix="chrome" />
-            <zipfileset dir="${src_dir}/defaults" includes="**" prefix="defaults" />
-            <zipfileset dir="${src_dir}" includes="install.rdf" />
-            <zipfileset dir="${src_dir}" includes="chrome.manifest" />
+    <target name="package" description="package xpi file for release">
+        <mkdir dir="${dist.dir}/${extension.version}" />
+        <delete file="${dist.dir}/${extension.version}/${ant.project.name}.xpi" failonerror="true" />
+        <zip destfile="${dist.dir}/${extension.version}/${ant.project.name}.xpi">
+            <zipfileset dir="${src.dir}/chrome" includes="**" prefix="chrome" />
+            <zipfileset dir="${src.dir}/defaults" includes="**" prefix="defaults" />
+            <zipfileset dir="${src.dir}" includes="install.rdf" />
+            <zipfileset dir="${src.dir}" includes="chrome.manifest" />
         </zip>
     </target>
 </project>
