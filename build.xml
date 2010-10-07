@@ -1,25 +1,57 @@
 <?xml version="1.0" ?>
 <project name="ImagePicker" default="package">
 
-    <property name="version" value="0.6.2" />
-    
+    <property name="extension.id" value="ImagePicker@topolog.org" />
+    <property name="extension.version" value="0.6.2" />
+    <property name="firefox.dir" value="D:\PortableApps\Browser\Firefox\Firefox" />
+    <property name="firefox.exe" location="${firefox.dir}/firefox.exe"/>
+    <property name="firefox.profile.path" location="${firefox.dir}/../devtest"/>
+
     <!-- Project directories -->
     <property name="src_dir" location="./srcExtension" />
     <property name="build_dir" location="./build" />
     <property name="dist_dir" location="../dist" />
+
+    <condition property="firefox.present">
+        <and>
+            <isset property="firefox.dir" />
+            <available file="${firefox.dir}" type="dir" />
+        </and>
+    </condition>
     
-
     <!-- Custom tasks -->
+    <target name="init">
+        <echoproperties>
+            <propertyset>
+                <propertyref prefix="extension." />
+                <propertyref prefix="firefox." />
+            </propertyset>
+        </echoproperties>
+    </target>
 
-    <!-- Targets -->
-    <target name="package" >
-        <mkdir dir="${dist_dir}/${version}"/>
-        <delete file="${dist_dir}/${version}/${ant.project.name}.xpi" failonerror="true" />
-        <zip destfile="${dist_dir}/${version}/${ant.project.name}.xpi" >
+    <target name="install" depends="init">    
+        <fail unless="firefox.present"/>
+        <copy file="${basedir}/${extension.id}" todir="${firefox.profile.path}/extensions" overwrite="true" verbose="true">
+          <filterset>
+            <filter token="EXTENSION_SRC_LOCATION" value="${basedir}\srcExtension"/>
+          </filterset>
+        </copy>
+    </target>
+    
+    <target name="test" depends="install">
+        <exec executable="${firefox.exe}" spawn="true">
+            <arg line="-no-remote -profile ${firefox.profile.path}"/>
+        </exec>
+    </target>
+    
+    <target name="package">
+        <mkdir dir="${dist_dir}/${extension.version}" />
+        <delete file="${dist_dir}/${extension.version}/${ant.project.name}.xpi" failonerror="true" />
+        <zip destfile="${dist_dir}/${extension.version}/${ant.project.name}.xpi">
             <zipfileset dir="${src_dir}/chrome" includes="**" prefix="chrome" />
             <zipfileset dir="${src_dir}/defaults" includes="**" prefix="defaults" />
             <zipfileset dir="${src_dir}" includes="install.rdf" />
             <zipfileset dir="${src_dir}" includes="chrome.manifest" />
         </zip>
     </target>
-</project> 
+</project>
