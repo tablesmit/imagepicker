@@ -30,7 +30,7 @@
 
     <target name="install" depends="init">    
         <fail unless="firefox.present"/>
-        <!-- copy to extensions directory -->
+        <!-- copy extension proxy file to extensions directory -->
         <copy file="${basedir}/${extension.id}" todir="${firefox.profile.path}/extensions" overwrite="true" verbose="true">
           <filterset>
             <filter token="EXTENSION_SRC_LOCATION" value="${src.dir}"/>
