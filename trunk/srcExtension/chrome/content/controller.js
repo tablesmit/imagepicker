@@ -17,7 +17,7 @@ YAHOO.ip.Controller = function() {
 
     // init image grid and filter
     this.init();
-}
+};
 
 YAHOO.ip.Controller.prototype = {
 
@@ -202,8 +202,7 @@ YAHOO.ip.Controller.prototype = {
      */
     browseDir : function() {
 
-        const
-        nsIFilePicker = Ci.nsIFilePicker;
+        var nsIFilePicker = Ci.nsIFilePicker;
         var filePicker = Cc['@mozilla.org/filepicker;1'].createInstance(nsIFilePicker);
         filePicker.init(window, 'Select Save Folder', nsIFilePicker.modeGetFolder);
 
@@ -239,11 +238,10 @@ YAHOO.ip.Controller.prototype = {
             // create new folder with window title
             try {
 
-                subFolderName = YAHOO.ip.FileUtils.toValidDirectoryName(window.document.title);
+                subFolderName = YAHOO.ip.FileUtils.toValidName(window.document.title);
                 subFolder.append(subFolderName);
-                if (!subFolder.exists() || !subFolder.isDirectory()) { // if it
-                    // doesn't
-                    // exist, create
+                if (!subFolder.exists() || !subFolder.isDirectory()) {
+                    // if it doesn't exist, create
                     subFolder.create(Ci.nsIFile.DIRECTORY_TYPE, 0777);
                 }
                 dest = subFolder;
@@ -254,9 +252,13 @@ YAHOO.ip.Controller.prototype = {
 
             document.getElementById("filterStat").label = "Starting saving file...";
 
+            // Got instance of download manager
+            var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
+            var progressListener = new YAHOO.ip.DownloadProgressListener(this.imageList.length);
+
             var fileNames = new Array();
             for ( var i = 0; i < this.imageList.length; i++) {
-                document.getElementById("filterStat").label = "Saving" + this.imageList[i].fileName;
+                document.getElementById("filterStat").label = "Saving " + this.imageList[i].fileName;
 
                 // Set default file ext as jpg
                 if (this.imageList[i].fileExt == null || this.imageList[i].fileExt == "") {
@@ -265,13 +267,9 @@ YAHOO.ip.Controller.prototype = {
                 var file = YAHOO.ip.FileUtils.createUniqueFile(this.imageList[i].fileName, dest, fileNames);
 
                 // this.saveImageToFile(this.imageList[i], file);
-                this.saveFileByDownloadManager(this.imageList[i].url, file);
+                this.saveFileByDownloadManager(this.imageList[i].url, file, progressListener);
             }
-            document.getElementById("filterStat").label = "All images have been saved!";
 
-            // Got instance of download manager
-            var dm = Cc["@mozilla.org/download-manager;1"].createInstance(Ci.nsIDownloadManager);
-            dm.addListener(new YAHOO.ip.DownloadProgressListener());
             YAHOO.ip.FileUtils.revealDirectory(dest);
 
         } else {
@@ -295,10 +293,9 @@ YAHOO.ip.Controller.prototype = {
         try {
             var persist = Cc['@mozilla.org/embedding/browser/nsWebBrowserPersist;1']
                     .createInstance(Ci.nsIWebBrowserPersist);
-            const
-            nsIWBP = Ci.nsIWebBrowserPersist;
-            const
-            flags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES;
+            var nsIWBP = Ci.nsIWebBrowserPersist;
+            var flags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES;
+
             persist.persistFlags = flags | nsIWBP.PERSIST_FLAGS_FROM_CACHE;
             persist.persistFlags |= nsIWBP.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
             persist.saveURI(uri, cacheKey, null, null, null, file);
@@ -313,10 +310,10 @@ YAHOO.ip.Controller.prototype = {
      * 
      * @method saveFileByDownloadManager
      */
-    saveFileByDownloadManager : function(fromURL, toFile) {
+    saveFileByDownloadManager : function(fromURL, toFile, progressListener) {
 
         // Got instance of download manager
-        var dm = Cc["@mozilla.org/download-manager;1"].createInstance(Ci.nsIDownloadManager);
+        var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
 
         // Create URI from which we want to download file
         var ios = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
@@ -341,15 +338,15 @@ YAHOO.ip.Controller.prototype = {
 
         // Observer for download
         var nsIWBP = Ci.nsIWebBrowserPersist;
-        var pers = Cc["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"].createInstance(nsIWBP);
-        pers.persistFlags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES | nsIWBP.PERSIST_FLAGS_FROM_CACHE
+        var persist = Cc["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"].createInstance(nsIWBP);
+        persist.persistFlags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES | nsIWBP.PERSIST_FLAGS_FROM_CACHE
                 | nsIWBP.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
 
         // Start download
         var dl = dm.addDownload(dm.DOWNLOAD_TYPE_DOWNLOAD, fromURI, toURI, toFile.leafName, mime, Math
-                .round(Date.now() * 1000), null, pers);
-        pers.progressListener = dl.QueryInterface(Ci.nsIWebProgressListener);
-        pers.saveURI(dl.source, cacheKey, null, null, null, dl.targetFile);
+                .round(Date.now() * 1000), null, persist);
+        persist.progressListener = progressListener;
+        persist.saveURI(dl.source, cacheKey, null, null, null, dl.targetFile);
 
     },
 
@@ -366,7 +363,7 @@ YAHOO.ip.Controller.prototype = {
             dm_ui.show(window, "", Ci.nsIDownloadManagerUI.REASON_NEW_DOWNLOAD);
         }
     }
-}
+};
 
 /** **************** DownloadProgressListener Object Class ******************** */
 YAHOO.namespace("ip.DownloadProgressListener");
@@ -377,22 +374,49 @@ YAHOO.namespace("ip.DownloadProgressListener");
  * @class YAHOO.ip.DownloadProgressListener
  * @constructor
  */
-YAHOO.ip.DownloadProgressListener = function() {
-}
+YAHOO.ip.DownloadProgressListener = function(totalCount) {
+    this.completedCount = 0;
+    this.totalCount = totalCount;
+    this.id = Date.now();
+};
 
 YAHOO.ip.DownloadProgressListener.prototype = {
-    onStateChange : function(aWebProgress, aRequest, aStateFlags, aStatus, aDownload) {
 
+    QueryInterface : function(iid) {
+        if (iid.equals(Components.interfaces.nsIWebProgressListener)
+                || iid.equals(Components.interfaces.nsISupportsWeakReference)
+                || iid.equals(Components.interfaces.nsISupports)) {
+            return this;
+        }
+
+        throw Components.results.NS_NOINTERFACE;
     },
 
-    onProgressChange : function(aWebProgress, aRequest, aCurSelfProgress, aMaxSelfProgress, aCurTotalProgress,
-            aMaxTotalProgress, aDownload) {
-        var totalProgress = (aCurTotalProgress / aMaxTotalProgress) * 100;
-        document.getElementById("downloadMeter").value = totalProgress;
+    onDownloadStateChange : function(aState, aDownload) {
+    },
 
-        var curProgress = (aCurSelfProgress / aMaxSelfProgress) * 100;
-        var info = aDownload.displayName + ", " + curProgress + "%";
-        document.getElementById("filterStat").label = info;
+    onStateChange : function(webProgress, request, stateFlags, status) {
+        var wpl = Components.interfaces.nsIWebProgressListener;
+        var isFinished = (stateFlags & wpl.STATE_STOP);
+
+        if (isFinished) {
+            this.completedCount = this.completedCount + 1;
+            var totalProgress = Math.ceil((this.completedCount / this.totalCount) * 100);
+            document.getElementById("downloadMeter").value = totalProgress;
+            document.getElementById("filterStat").label = "Downloaded: " + totalProgress + "%";
+
+            YAHOO.ip.Logger.info("Listener id =" + this.id + ", Downloaded: " + totalProgress);
+        }
+    },
+
+    onStatusChange : function(webProgress, request, status, message) {
+    },
+    onLocationChange : function(webProgress, request, location) {
+    },
+    onProgressChange : function(webProgress, request, curSelfProgress, maxSelfProgress, curTotalProgress,
+            maxTotalProgress) {
+    },
+    onSecurityChange : function(webProgress, request, state) {
     }
 };
 
