@@ -255,6 +255,7 @@ YAHOO.ip.Controller.prototype = {
             // Got instance of download manager
             var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
             var progressListener = new YAHOO.ip.DownloadProgressListener(this.imageList.length);
+            dm.addListener(progressListener);
 
             var fileNames = new Array();
             for ( var i = 0; i < this.imageList.length; i++) {
@@ -345,7 +346,8 @@ YAHOO.ip.Controller.prototype = {
         // Start download
         var dl = dm.addDownload(dm.DOWNLOAD_TYPE_DOWNLOAD, fromURI, toURI, toFile.leafName, mime, Math
                 .round(Date.now() * 1000), null, persist);
-        persist.progressListener = progressListener;
+        persist.progressListener = dl.QueryInterface(Ci.nsIWebProgressListener);
+        // persist.progressListener = progressListener;
         persist.saveURI(dl.source, cacheKey, null, null, null, dl.targetFile);
 
     },
@@ -396,16 +398,18 @@ YAHOO.ip.DownloadProgressListener.prototype = {
     },
 
     onStateChange : function(webProgress, request, stateFlags, status) {
-        var wpl = Components.interfaces.nsIWebProgressListener;
-        var isFinished = (stateFlags & wpl.STATE_STOP);
+        if (Components) { // hack for sometimes Components is not defined
+            var wpl = Components.interfaces.nsIWebProgressListener;
+            var isFinished = (stateFlags & wpl.STATE_STOP);
 
-        if (isFinished) {
-            this.completedCount = this.completedCount + 1;
-            var totalProgress = Math.ceil((this.completedCount / this.totalCount) * 100);
-            document.getElementById("downloadMeter").value = totalProgress;
-            document.getElementById("filterStat").label = "Downloaded: " + totalProgress + "%";
+            if (isFinished) {
+                this.completedCount = this.completedCount + 1;
+                var totalProgress = Math.ceil((this.completedCount / this.totalCount) * 100);
+                document.getElementById("downloadMeter").value = totalProgress;
+                document.getElementById("filterStat").label = "Downloaded: " + totalProgress + "%";
 
-            YAHOO.ip.Logger.info("Listener id =" + this.id + ", Downloaded: " + totalProgress);
+                YAHOO.ip.Logger.info("Listener id =" + this.id + ", Downloaded: " + totalProgress);
+            }
         }
     },
 
