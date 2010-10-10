@@ -1,9 +1,7 @@
 //      Common (global) variables
 var guid = (new Date()).getTime();
-const
-fileProtocolHandler = Cc["@mozilla.org/network/protocol;1?name=file"].createInstance(Ci.nsIFileProtocolHandler);
-const
-httpCacheSession = Cc["@mozilla.org/network/cache-service;1"].getService(Ci.nsICacheService).createSession("HTTP",
+var fileProtocolHandler = Cc["@mozilla.org/network/protocol;1?name=file"].createInstance(Ci.nsIFileProtocolHandler);
+var httpCacheSession = Cc["@mozilla.org/network/cache-service;1"].getService(Ci.nsICacheService).createSession("HTTP",
         Ci.nsICache.STORE_ANYWHERE, true);
 
 /** **************** ImageInfo Object Class ******************** */
@@ -31,7 +29,7 @@ YAHOO.ip.ImageInfo = function(image) {
     // define toString() method
     this.toString = function() {
         return this.url;
-    }
+    };
 
     // caculate file sizes
     this.fileSize = YAHOO.ip.ImageUtils.updateFileSizeFromCache(this);
@@ -58,7 +56,7 @@ YAHOO.ip.ImageInfo = function(image) {
         // set default file ext
         this.fileExt = "jpg";
     }
-}
+};
 
 /** **************** FileUtils Object Class ******************** */
 YAHOO.namespace("ip.ImageUtils");
@@ -155,7 +153,7 @@ YAHOO.ip.ImageUtils = {
                         YAHOO.ip.Logger.warn("Cannot update file size to " + fileSize + " by Ajax for " + imageInfo, e);
                     }
                 }
-            }
+            };
             xmlhttp.send(null);
         } catch (exml) {
             YAHOO.ip.Logger.warn("Cannot update file size by Ajax for " + imageInfo, exml);
@@ -170,10 +168,8 @@ YAHOO.ip.ImageUtils = {
      */
     updateFileNameFromCache : function(imageInfo) {
 
-        const
-        imgICache = Ci.imgICache;
-        const
-        nsISupportsCString = Ci.nsISupportsCString;
+        var imgICache = Ci.imgICache;
+        var nsISupportsCString = Ci.nsISupportsCString;
 
         var aURL = imageInfo.url;
         var aDocument = window.document;
@@ -198,12 +194,9 @@ YAHOO.ip.ImageUtils = {
 
         // look for a filename in the content-disposition header, if any
         if (contentDisposition) {
-            const
-            mhpContractID = "@mozilla.org/network/mime-hdrparam;1";
-            const
-            mhpIID = Ci.nsIMIMEHeaderParam;
-            const
-            mhp = Cc[mhpContractID].getService(mhpIID);
+            var mhpContractID = "@mozilla.org/network/mime-hdrparam;1";
+            var mhpIID = Ci.nsIMIMEHeaderParam;
+            var mhp = Cc[mhpContractID].getService(mhpIID);
             var dummy = {
                 value : null
             }; // Need an out param...
@@ -240,7 +233,7 @@ YAHOO.ip.ImageUtils = {
         var ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
         return ioService.newURI(aURL, aOriginCharset, aBaseURI);
     }
-}
+};
 
 /** **************** CacheListener Object Class ******************** */
 YAHOO.namespace("ip.CacheListener");
@@ -251,11 +244,11 @@ YAHOO.namespace("ip.CacheListener");
  * @class YAHOO.ip.CacheListener
  * @constructor
  * @param {ImageInfo}
- *            image info object to upade file size
+ *            image info object to update file size
  */
 YAHOO.ip.CacheListener = function(imageInfo) {
     this.imageInfo = imageInfo;
-}
+};
 
 YAHOO.ip.CacheListener.prototype = {
 

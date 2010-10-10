@@ -23,7 +23,7 @@ YAHOO.ip.ImageGrid = function(imageContainerId, gridWidth, thumbnailType, isShow
     this.isShowImageName = isShowImageName;
     this.isShowImageUrl = isShowImageUrl;
     this.isShowImageSize = isShowImageSize;
-}
+};
 
 YAHOO.ip.ImageGrid.prototype = {
 
@@ -60,8 +60,7 @@ YAHOO.ip.ImageGrid.prototype = {
      */
     render : function(imageList) {
 
-        const
-        XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+        var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
         var columnWidth = this.thumbnailSize;
 
@@ -147,7 +146,7 @@ YAHOO.ip.ImageGrid.prototype = {
                     vbox.appendChild(additionalLabel);
                 }
 
-                index++
+                index++;
             }
             rows.appendChild(row);
         }
@@ -158,4 +157,4 @@ YAHOO.ip.ImageGrid.prototype = {
         var imageContainer = document.getElementById("imageContainer");
         imageContainer.appendChild(imgGrid);
     }
-}
+};
