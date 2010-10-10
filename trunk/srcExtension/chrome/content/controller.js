@@ -14,6 +14,7 @@ YAHOO.ip.Controller = function() {
     this.imageList = this.rawImageList;
     this.imageGrid = null;
     this.filter = null;
+    this.progressListener = null;
 
     // init image grid and filter
     this.init();
@@ -247,18 +248,25 @@ YAHOO.ip.Controller.prototype = {
                 dest = subFolder;
             } catch (e) {
                 YAHOO.ip.Logger.info("Cannot create subfolder: " + e);
-                alert("Cannot create subfolder! subFolderName = " + subFolderName + ",e = " + e);
+                alert("Cannot create subfolder! subFolderName = " + subFolderName + ", e = " + e);
             }
 
             document.getElementById("filterStat").label = "Starting saving file...";
 
             // Got instance of download manager
             var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
-            var progressListener = new YAHOO.ip.DownloadProgressListener(this.imageList.length);
-            dm.addListener(progressListener);
 
+            // Register progress listener
+            if (this.progressListener != null) {
+                dm.removeListener(this.progressListener);
+            }
+            this.progressListener = new YAHOO.ip.DownloadProgressListener(this.imageList.length);
+            dm.addListener(this.progressListener);
+
+            // Handle each file
             var fileNames = new Array();
             for ( var i = 0; i < this.imageList.length; i++) {
+
                 document.getElementById("filterStat").label = "Saving " + this.imageList[i].fileName;
 
                 // Set default file ext as jpg
@@ -268,7 +276,7 @@ YAHOO.ip.Controller.prototype = {
                 var file = YAHOO.ip.FileUtils.createUniqueFile(this.imageList[i].fileName, dest, fileNames);
 
                 // this.saveImageToFile(this.imageList[i], file);
-                this.saveFileByDownloadManager(this.imageList[i].url, file, progressListener);
+                this.saveFileByDownloadManager(this.imageList[i].url, file);
             }
 
             YAHOO.ip.FileUtils.revealDirectory(dest);
@@ -311,7 +319,7 @@ YAHOO.ip.Controller.prototype = {
      * 
      * @method saveFileByDownloadManager
      */
-    saveFileByDownloadManager : function(fromURL, toFile, progressListener) {
+    saveFileByDownloadManager : function(fromURL, toFile) {
 
         // Got instance of download manager
         var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
@@ -347,9 +355,7 @@ YAHOO.ip.Controller.prototype = {
         var dl = dm.addDownload(dm.DOWNLOAD_TYPE_DOWNLOAD, fromURI, toURI, toFile.leafName, mime, Math
                 .round(Date.now() * 1000), null, persist);
         persist.progressListener = dl.QueryInterface(Ci.nsIWebProgressListener);
-        // persist.progressListener = progressListener;
         persist.saveURI(dl.source, cacheKey, null, null, null, dl.targetFile);
-
     },
 
     /**
@@ -384,32 +390,28 @@ YAHOO.ip.DownloadProgressListener = function(totalCount) {
 
 YAHOO.ip.DownloadProgressListener.prototype = {
 
-    QueryInterface : function(iid) {
-        if (iid.equals(Components.interfaces.nsIWebProgressListener)
-                || iid.equals(Components.interfaces.nsISupportsWeakReference)
-                || iid.equals(Components.interfaces.nsISupports)) {
-            return this;
-        }
-
-        throw Components.results.NS_NOINTERFACE;
-    },
-
     onDownloadStateChange : function(aState, aDownload) {
     },
 
     onStateChange : function(webProgress, request, stateFlags, status) {
-        if (Components) { // hack for sometimes Components is not defined
-            var wpl = Components.interfaces.nsIWebProgressListener;
-            var isFinished = (stateFlags & wpl.STATE_STOP);
 
-            if (isFinished) {
-                this.completedCount = this.completedCount + 1;
-                var totalProgress = Math.ceil((this.completedCount / this.totalCount) * 100);
-                document.getElementById("downloadMeter").value = totalProgress;
-                document.getElementById("filterStat").label = "Downloaded: " + totalProgress + "%";
+        // NOTE: reload all Chrome will cause "Components is not defined" error,
+        // restart firefox is OK
+        if (typeof Components === "undefined") {
+            return;
+        }
 
-                YAHOO.ip.Logger.info("Listener id =" + this.id + ", Downloaded: " + totalProgress);
-            }
+        var wpl = Components.interfaces.nsIWebProgressListener;
+
+        var isFinished = (stateFlags & wpl.STATE_STOP);
+
+        if (isFinished) {
+            this.completedCount = this.completedCount + 1;
+            var totalProgress = Math.ceil((this.completedCount / this.totalCount) * 100);
+            document.getElementById("downloadMeter").value = totalProgress;
+            document.getElementById("filterStat").label = "Downloaded: " + totalProgress + "%";
+
+            YAHOO.ip.Logger.debug("Listener id =" + this.id + ", Downloaded: " + totalProgress);
         }
     },
 

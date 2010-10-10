@@ -81,6 +81,7 @@ YAHOO.ip.FileUtils = {
 
         var validName = originalName;
 
+        // remove "- Mozilla Firefox"
         var parts = originalName.split("-");
         if (parts.length > 1) {
             validName = parts[parts.length - 2];
@@ -92,11 +93,11 @@ YAHOO.ip.FileUtils = {
 
         validName = validName.substr(0, 100);
 
-        // tirm string
+        // trim
         validName = validName.replace(/^\s*/, "").replace(/\s*$/, "");
 
-        if (validName.length != originalName.length) {
-            YAHOO.ip.Logger.info("convert " + originalName + " to directory name: " + validName);
+        if (originalName.length != validName.length) {
+            YAHOO.ip.Logger.info("convert " + originalName + " to valid directory/file name: " + validName);
         }
 
         return validName;
@@ -153,4 +154,4 @@ YAHOO.ip.FileUtils = {
 
         return tempFile;
     }
-}
+};
