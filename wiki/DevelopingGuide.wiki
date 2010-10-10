@@ -1,0 +1,18 @@
+=Setting up FireFox for developing=
+Install FireFox :
+Install the following addons:
+ *Console2 (enable log from "Chrome" on Info level)
+ *Extension Developer (enable Debugging Preferences)
+ https://developer.mozilla.org/en/Setting_up_extension_development_environment#Development_extensions
+
+=Setting up Eclipse for developing=
+Install Eclipse:
+Install the following Eclipse pulgins:
+ *xulbooster
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
