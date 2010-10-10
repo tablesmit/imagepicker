@@ -2,6 +2,13 @@
 #labels Featured
 
 === Feature ===
+http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker-start1(en).PNG
+
+http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker-start2(en).PNG
+
+http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker-open1(en).PNG
+
+http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker-open2(en).PNG
 
 http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker.PNG
 
