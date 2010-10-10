@@ -60,16 +60,16 @@
 			<button label="Filter" oncommand="gController.doFilter();" />
 			<button type="menu" label="View" id="view-as-button">
 				<menupopup>
-					<menuitem type="radio" name="radio" id="thumbnailTypeSmallMI"
-						label="Thumbnails(Small)" oncommand="gController.doViewAS('small');" />
-					<menuitem type="radio" name="radio" id="thumbnailTypeNormalMI"
-						label="Thumbnails(Normal)" oncommand="gController.doViewAS('normal');" />
-					<menuitem type="radio" name="radio" id="thumbnailTypeLargeMI"
-						label="Thumbnails(Large)" oncommand="gController.doViewAS('large');" />
+					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeSmallMI"
+						label="Thumbnails(Small)" oncommand="gController.doViewAS();" />
+					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeNormalMI"
+						label="Thumbnails(Normal)" oncommand="gController.doViewAS();" />
+					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeLargeMI"
+						label="Thumbnails(Large)" oncommand="gController.doViewAS();" />
 					<menuseparator />
-					<menuitem type="checkbox" id="showImageNameMI" label="Show Image Name" />
-					<menuitem type="checkbox" id="showImageUrlMI" label="Show Image URL" />
-					<menuitem type="checkbox" id="showImageSizeMI" label="Show Image Size" />
+                    <menuitem type="checkbox" id="showImageSizeMI" label="Show Image Size" oncommand="gController.doViewAS();"/>
+					<menuitem type="checkbox" id="showImageNameMI" label="Show Image Name" oncommand="gController.doViewAS();"/>
+					<menuitem type="checkbox" id="showImageUrlMI" label="Show Image URL" oncommand="gController.doViewAS();" disabled="true"/>
 				</menupopup>
 			</button>
 		</hbox>

@@ -36,7 +36,11 @@ YAHOO.ip.Controller.prototype = {
         var gridSize = window.innerWidth - 6;
 
         var thumbnailType = prefs.getCharPref("displayrule.thumbnailType");
-        this.imageGrid = new YAHOO.ip.ImageGrid("imageContainer", gridSize, thumbnailType, false, false, false);
+        var isShowImageSize = prefs.getBoolPref("displayrule.showImageSize");
+        var isShowImageName = prefs.getBoolPref("displayrule.showImageName");
+        var isShowImageURL = prefs.getBoolPref("displayrule.showImageURL");
+        this.imageGrid = new YAHOO.ip.ImageGrid("imageContainer", gridSize, thumbnailType, isShowImageSize,
+                isShowImageName, isShowImageURL);
     },
 
     /**
@@ -79,6 +83,13 @@ YAHOO.ip.Controller.prototype = {
             YAHOO.ip.Logger.info("gDisplayRule.thumbnailType = " + thumbnailType);
         }
 
+        var isShowImageSize = prefs.getBoolPref("displayrule.showImageSize");
+        var isShowImageName = prefs.getBoolPref("displayrule.showImageName");
+        var isShowImageURL = prefs.getBoolPref("displayrule.showImageURL");
+        document.getElementById("showImageSizeMI").setAttribute("checked", isShowImageSize);
+        document.getElementById("showImageNameMI").setAttribute("checked", isShowImageName);
+        document.getElementById("showImageUrlMI").setAttribute("checked", isShowImageURL);
+
         var saveFolderPath = YAHOO.ip.PrefUtils.getUnicodeChar(prefs, "savedFolderPath");
         document.getElementById("browsedirTB").value = saveFolderPath;
 
@@ -103,6 +114,9 @@ YAHOO.ip.Controller.prototype = {
 
         // save display rule
         prefs.setCharPref("displayrule.thumbnailType", this.imageGrid.thumbnailType);
+        prefs.setBoolPref("displayrule.showImageSize", this.imageGrid.isShowImageSize);
+        prefs.setBoolPref("displayrule.showImageName", this.imageGrid.isShowImageName);
+        prefs.setBoolPref("displayrule.showImageURL", this.imageGrid.isShowImageUrl);
 
         // save filter
         prefs.setIntPref("filter.minWidth", document.getElementById("minWidthTB").value);
@@ -184,13 +198,24 @@ YAHOO.ip.Controller.prototype = {
         this.refreshImageContainer();
     },
     /**
-     * view image for given thumbnail tsype
+     * view image for thumbnail type
      * 
      * @method doViewAS
      */
-    doViewAS : function(thumbnailType) {
+    doViewAS : function() {
 
+        var thumbnailType = null;
+        if (document.getElementById("thumbnailTypeSmallMI").getAttribute("checked") == 'true') {
+            thumbnailType = 'small';
+        } else if (document.getElementById("thumbnailTypeNormalMI").getAttribute("checked") == 'true') {
+            thumbnailType = 'normal';
+        } else if (document.getElementById("thumbnailTypeLargeMI").getAttribute("checked") == 'true') {
+            thumbnailType = 'large';
+        }
         this.imageGrid.setThumbnailType(thumbnailType);
+        this.imageGrid.isShowImageSize = (document.getElementById("showImageSizeMI").getAttribute("checked") == 'true');
+        this.imageGrid.isShowImageName = (document.getElementById("showImageNameMI").getAttribute("checked") == 'true');
+        this.imageGrid.isShowImageUrl = (document.getElementById("showImageUrlMI").getAttribute("checked") == 'true');
 
         // refresh image container
         this.refreshImageContainer();
