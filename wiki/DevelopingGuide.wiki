@@ -1,8 +1,8 @@
 =Setting up FireFox for developing=
-Install FireFox :
+Install FireFox:
 Install the following addons:
- *Console2 (enable log from "Chrome" on Info level)
- *Extension Developer (enable Debugging Preferences)
+ * Console2 (enable log from "Chrome" on INFO level)
+ * Extension Developer (enable Debugging Preferences)
  https://developer.mozilla.org/en/Setting_up_extension_development_environment#Development_extensions
 
 =Setting up Eclipse for developing=
