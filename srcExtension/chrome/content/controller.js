@@ -1,33 +1,33 @@
 /** **************** Controller Class ******************** */
-YAHOO.namespace("ip.Controller");
+const Cc = Components.classes;
+const Ci = Components.interfaces;
+Components.utils.import("resource://imagepicker/common.js");
+Components.utils.import("resource://imagepicker/fileUtils.js");
+Components.utils.import("resource://imagepicker/prefUtils.js");
+Components.utils.import("resource://imagepicker/model.js");
+Components.utils.import("resource://imagepicker/filters.js");
 
 /**
  * Provides the controller
- * 
- * @namespace YAHOO.ip
- * @class YAHOO.ip.Controller
+ *
+ * @namespace ImagePickerChrome
+ * @class ImagePickerChrome.Controller
  * @constructor
  */
-YAHOO.ip.Controller = function() {
-
-    this.rawImageList = window.arguments[0].imageList;
-    this.imageList = this.rawImageList;
-    this.imageGrid = null;
-    this.filter = null;
-    this.progressListener = null;
-
-    // init image grid and filter
-    this.init();
-};
-
-YAHOO.ip.Controller.prototype = {
+ImagePickerChrome.Controller = {
 
     /**
      * callback function for loading pick window
-     * 
+     *
      * @method init
      */
     init : function() {
+
+        this.rawImageList = window.arguments[0].imageList;
+        this.imageList = this.rawImageList;
+        this.filter = null;
+        this.progressListener = null;
+
         // Get preferences
         var prefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch(
                 "extensions.imagepicker.");
@@ -39,13 +39,13 @@ YAHOO.ip.Controller.prototype = {
         var isShowImageSize = prefs.getBoolPref("displayrule.showImageSize");
         var isShowImageName = prefs.getBoolPref("displayrule.showImageName");
         var isShowImageURL = prefs.getBoolPref("displayrule.showImageURL");
-        this.imageGrid = new YAHOO.ip.ImageGrid("imageContainer", gridSize, thumbnailType, isShowImageSize,
+        this.imageGrid = new ImagePickerChrome.ImageGrid("imageContainer", gridSize, thumbnailType, isShowImageSize,
                 isShowImageName, isShowImageURL);
     },
 
     /**
      * callback function for loading pick window
-     * 
+     *
      * @method loadPickWindow
      */
     loadPickWindow : function() {
@@ -80,7 +80,7 @@ YAHOO.ip.Controller.prototype = {
             document.getElementById("thumbnailTypeLargeMI").setAttribute("checked", true);
             break;
         default:
-            YAHOO.ip.Logger.info("gDisplayRule.thumbnailType = " + thumbnailType);
+            ImagePicker.Logger.info("gDisplayRule.thumbnailType = " + thumbnailType);
         }
 
         var isShowImageSize = prefs.getBoolPref("displayrule.showImageSize");
@@ -90,20 +90,20 @@ YAHOO.ip.Controller.prototype = {
         document.getElementById("showImageNameMI").setAttribute("checked", isShowImageName);
         document.getElementById("showImageUrlMI").setAttribute("checked", isShowImageURL);
 
-        var saveFolderPath = YAHOO.ip.PrefUtils.getUnicodeChar(prefs, "savedFolderPath");
+        var saveFolderPath = ImagePicker.PrefUtils.getUnicodeChar(prefs, "savedFolderPath");
         document.getElementById("browsedirTB").value = saveFolderPath;
 
         this.doFilter();
 
         // add event
         window.addEventListener("resize", function() {
-            gController.refreshImageContainer();
+            ImagePickerChrome.Controller.refreshImageContainer();
         }, true);
     },
 
     /**
      * callback function for unloading pick window
-     * 
+     *
      * @method unloadPickWindow
      */
     unloadPickWindow : function() {
@@ -129,12 +129,12 @@ YAHOO.ip.Controller.prototype = {
         prefs.setBoolPref("filter.skipImageTypes.gif", !document.getElementById("imageTypeGifCB").checked);
 
         // save saved folder
-        YAHOO.ip.PrefUtils.setUnicodeChar(prefs, "savedFolderPath", document.getElementById("browsedirTB").value);
+        ImagePicker.PrefUtils.setUnicodeChar(prefs, "savedFolderPath", document.getElementById("browsedirTB").value);
     },
 
     /**
      * refresh image container
-     * 
+     *
      * @method refreshImageContainer
      */
     refreshImageContainer : function() {
@@ -154,7 +154,7 @@ YAHOO.ip.Controller.prototype = {
 
     /**
      * filter images
-     * 
+     *
      * @method doFilter
      */
     doFilter : function() {
@@ -178,12 +178,12 @@ YAHOO.ip.Controller.prototype = {
             skipImageTypes.push("gif");
         }
 
-        var sizeFilter = new YAHOO.ip.SizeFilter(minSize * 1000, -1, true);
-        var widthFilter = new YAHOO.ip.WidthFilter(minWidth, -1, true);
-        var heightFilter = new YAHOO.ip.HeightFilter(minHeight, -1, true);
-        var skipImageTypeFilter = new YAHOO.ip.SkipImageTypeFilter(skipImageTypes);
+        var sizeFilter = new ImagePicker.SizeFilter(minSize * 1000, -1, true);
+        var widthFilter = new ImagePicker.WidthFilter(minWidth, -1, true);
+        var heightFilter = new ImagePicker.HeightFilter(minHeight, -1, true);
+        var skipImageTypeFilter = new ImagePicker.SkipImageTypeFilter(skipImageTypes);
 
-        this.filter = new YAHOO.ip.Filter(sizeFilter, widthFilter, heightFilter, skipImageTypeFilter);
+        this.filter = new ImagePicker.Filter(sizeFilter, widthFilter, heightFilter, skipImageTypeFilter);
 
         // do filter
         this.imageList = this.filter.filterImageList(this.rawImageList);
@@ -199,7 +199,7 @@ YAHOO.ip.Controller.prototype = {
     },
     /**
      * view image for thumbnail type
-     * 
+     *
      * @method doViewAS
      */
     doViewAS : function() {
@@ -223,7 +223,7 @@ YAHOO.ip.Controller.prototype = {
 
     /**
      * browse directory
-     * 
+     *
      * @method browseDir
      */
     browseDir : function() {
@@ -234,7 +234,7 @@ YAHOO.ip.Controller.prototype = {
 
         // locate current directory
         var destPath = document.getElementById("browsedirTB").value;
-        var dest = YAHOO.ip.FileUtils.toDirectory(destPath);
+        var dest = ImagePicker.FileUtils.toDirectory(destPath);
         if (dest) {
             filePicker.displayDirectory = dest;
         }
@@ -246,25 +246,25 @@ YAHOO.ip.Controller.prototype = {
 
     /**
      * save image to local
-     * 
+     *
      * @method doSaveImages
      */
     doSaveImages : function() {
 
         // locate current directory
         var destPath = document.getElementById("browsedirTB").value;
-        var dest = YAHOO.ip.FileUtils.toDirectory(destPath);
+        var dest = ImagePicker.FileUtils.toDirectory(destPath);
 
         if (dest) {
 
             var subFolderName;
 
             // clone the parent folder, don't use the clone() method.
-            var subFolder = YAHOO.ip.FileUtils.toDirectory(destPath);
+            var subFolder = ImagePicker.FileUtils.toDirectory(destPath);
             // create new folder with window title
             try {
 
-                subFolderName = YAHOO.ip.FileUtils.toValidName(window.document.title);
+                subFolderName = ImagePicker.FileUtils.toValidName(window.document.title);
                 subFolder.append(subFolderName);
                 if (!subFolder.exists() || !subFolder.isDirectory()) {
                     // if it doesn't exist, create
@@ -272,7 +272,7 @@ YAHOO.ip.Controller.prototype = {
                 }
                 dest = subFolder;
             } catch (e) {
-                YAHOO.ip.Logger.info("Cannot create subfolder: " + e);
+                ImagePicker.Logger.info("Cannot create subfolder: " + e);
                 alert("Cannot create subfolder! subFolderName = " + subFolderName + ", e = " + e);
             }
 
@@ -285,7 +285,7 @@ YAHOO.ip.Controller.prototype = {
             if (this.progressListener != null) {
                 dm.removeListener(this.progressListener);
             }
-            this.progressListener = new YAHOO.ip.DownloadProgressListener(this.imageList.length);
+            this.progressListener = new ImagePickerChrome.DownloadProgressListener(this.imageList.length);
             dm.addListener(this.progressListener);
 
             // Handle each file
@@ -295,16 +295,16 @@ YAHOO.ip.Controller.prototype = {
                 document.getElementById("filterStat").label = "Saving " + this.imageList[i].fileName;
 
                 // Set default file ext as jpg
-                if (this.imageList[i].fileExt == null || this.imageList[i].fileExt == "") {
+                if ((this.imageList[i].fileExt == null) || (this.imageList[i].fileExt == "")) {
                     this.imageList[i].fileName = this.imageList[i].fileName + ".jpg";
                 }
-                var file = YAHOO.ip.FileUtils.createUniqueFile(this.imageList[i].fileName, dest, fileNames);
+                var file = ImagePicker.FileUtils.createUniqueFile(this.imageList[i].fileName, dest, fileNames);
 
                 // this.saveImageToFile(this.imageList[i], file);
                 this.saveFileByDownloadManager(this.imageList[i].url, file);
             }
 
-            YAHOO.ip.FileUtils.revealDirectory(dest);
+            ImagePicker.FileUtils.revealDirectory(dest);
 
         } else {
             alert("dest directory not found! ");
@@ -313,7 +313,7 @@ YAHOO.ip.Controller.prototype = {
 
     /**
      * save image to local
-     * 
+     *
      * @method saveImageToFile
      */
     saveImageToFile : function(imageInfo, file) {
@@ -335,13 +335,13 @@ YAHOO.ip.Controller.prototype = {
             persist.saveURI(uri, cacheKey, null, null, null, file);
 
         } catch (e) {
-            YAHOO.ip.Logger.info("cannot save file size for URL: " + imageInfo.url + ", exception = " + e);
+            ImagePicker.Logger.info("cannot save file size for URL: " + imageInfo.url + ", exception = " + e);
         }
     },
 
     /**
      * save image to local
-     * 
+     *
      * @method saveFileByDownloadManager
      */
     saveFileByDownloadManager : function(fromURL, toFile) {
@@ -367,7 +367,7 @@ YAHOO.ip.Controller.prototype = {
             var type = msrv.getTypeFromURI(fromURI);
             mime = msrv.getFromTypeAndExtension(type, "");
         } catch (e) {
-            YAHOO.ip.Logger.info("can not get mine type, e = " + e);
+            ImagePicker.Logger.info("can not get mine type, e = " + e);
         }
 
         // Observer for download
@@ -385,7 +385,7 @@ YAHOO.ip.Controller.prototype = {
 
     /**
      * show DownloadManager UI
-     * 
+     *
      * @method showDownloadManagerUI
      */
     showDownloadManagerUI : function() {
@@ -399,21 +399,20 @@ YAHOO.ip.Controller.prototype = {
 };
 
 /** **************** DownloadProgressListener Object Class ******************** */
-YAHOO.namespace("ip.DownloadProgressListener");
 /**
  * Provides the DownloadProgressListener class
- * 
- * @namespace YAHOO.ip
- * @class YAHOO.ip.DownloadProgressListener
+ *
+ * @namespace ImagePicker
+ * @class ImagePickerChrome.DownloadProgressListener
  * @constructor
  */
-YAHOO.ip.DownloadProgressListener = function(totalCount) {
+ImagePickerChrome.DownloadProgressListener = function(totalCount) {
     this.completedCount = 0;
     this.totalCount = totalCount;
     this.id = Date.now();
 };
 
-YAHOO.ip.DownloadProgressListener.prototype = {
+ImagePickerChrome.DownloadProgressListener.prototype = {
 
     onDownloadStateChange : function(aState, aDownload) {
     },
@@ -436,7 +435,7 @@ YAHOO.ip.DownloadProgressListener.prototype = {
             document.getElementById("downloadMeter").value = totalProgress;
             document.getElementById("filterStat").label = "Downloaded: " + totalProgress + "%";
 
-            YAHOO.ip.Logger.debug("Listener id =" + this.id + ", Downloaded: " + totalProgress);
+            ImagePicker.Logger.debug("Listener id =" + this.id + ", Downloaded: " + totalProgress);
         }
     },
 
@@ -451,4 +450,9 @@ YAHOO.ip.DownloadProgressListener.prototype = {
     }
 };
 
-var gController = new YAHOO.ip.Controller();
+/**
+ * Constructor.
+ */
+(function() {
+    this.init();
+}).apply(ImagePickerChrome.Controller);
