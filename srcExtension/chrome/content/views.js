@@ -59,7 +59,7 @@ ImagePickerChrome.ImageGrid.prototype = {
      * @param {List
      *            <ImageInfo>} imageList The list which contains all ImageInfo objects to render
      */
-    render : function(imageList) {
+    render : function(imageList, selectedMap) {
 
         var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
@@ -108,27 +108,35 @@ ImagePickerChrome.ImageGrid.prototype = {
 
                 if (index < imageList.length) {
 
+                    var imgInfo = imageList[index];
+
                     // create image element
                     var img = document.createElementNS(XUL_NS, "image");
-                    img.setAttribute("id", imageList[index].id);
-                    img.setAttribute("src", imageList[index].url);
+                    img.setAttribute("id", imgInfo.id);
+                    img.setAttribute("src", imgInfo.url);
 
                     var widthPerImage = columnWidth - 15;
-                    var imageRate = widthPerImage / Math.max(imageList[index].width, imageList[index].height, 1);
-                    var width = Math.min(imageRate * imageList[index].width, imageList[index].width);
-                    var height = Math.min(imageRate * imageList[index].height, imageList[index].height);
+                    var imageRate = widthPerImage / Math.max(imgInfo.width, imgInfo.height, 1);
+                    var width = Math.min(imageRate * imgInfo.width, imgInfo.width);
+                    var height = Math.min(imageRate * imgInfo.height, imgInfo.height);
 
                     img.setAttribute("width", width);
                     img.setAttribute("height", height);
                     vbox.appendChild(img);
 
                     // show additional info
-                    var additionalInfos = this.getAdditionalInfo(imageList[index], widthPerImage);
+                    var additionalInfos = this.getAdditionalInfo(imgInfo, widthPerImage);
                     for ( var k = 0; k < additionalInfos.length; k++) {
                         var additionalLabel = document.createElementNS(XUL_NS, "label");
                         additionalLabel.setAttribute("value", additionalInfos[k]);
                         vbox.appendChild(additionalLabel);
                     }
+
+                    //Add checkbox
+                    var checkbox = document.createElementNS(XUL_NS, "checkbox");
+                    checkbox.setAttribute("checked", selectedMap.get(imgInfo.id));
+                    checkbox.setAttribute("oncommand", 'ImagePickerChrome.Controller.selectImage('+imgInfo.id+')');
+                    vbox.appendChild(checkbox);
                 }
 
                 index++;

@@ -2,6 +2,7 @@
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 Components.utils.import("resource://imagepicker/common.js");
+Components.utils.import("resource://imagepicker/hashMap.js");
 Components.utils.import("resource://imagepicker/fileUtils.js");
 Components.utils.import("resource://imagepicker/prefUtils.js");
 Components.utils.import("resource://imagepicker/model.js");
@@ -25,6 +26,7 @@ ImagePickerChrome.Controller = {
 
         this.rawImageList = window.arguments[0].imageList;
         this.imageList = this.rawImageList;
+        this.selectedMap = new ImagePicker.HashMap();
         this.filter = null;
         this.progressListener = null;
 
@@ -149,7 +151,7 @@ ImagePickerChrome.Controller = {
         // render image grid
         var gridWidth = window.innerWidth - 6;
         this.imageGrid.gridWidth = gridWidth;
-        this.imageGrid.render(this.imageList);
+        this.imageGrid.render(this.imageList, this.selectedMap);
     },
 
     /**
@@ -193,6 +195,9 @@ ImagePickerChrome.Controller = {
         var newImageConut = this.imageList.length;
         document.getElementById("filterStat").label = "Current: " + newImageConut + ", Total: " + oldImageConut
                 + ", Filter:" + (oldImageConut - newImageConut);
+
+
+        this.selectAllImages();
 
         // refresh image container
         this.refreshImageContainer();
@@ -278,6 +283,15 @@ ImagePickerChrome.Controller = {
 
             document.getElementById("filterStat").label = "Starting saving file...";
 
+            // Collect saved files
+            var savedImages = new Array();
+            for ( var i = 0; i < this.imageList.length; i++) {
+                var img = this.imageList[i];
+                if(this.selectedMap.get(img.id) == true){ // saved selected image only
+                    savedImages.push(img);
+                }
+            }
+
             // Got instance of download manager
             var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
 
@@ -285,23 +299,25 @@ ImagePickerChrome.Controller = {
             if (this.progressListener != null) {
                 dm.removeListener(this.progressListener);
             }
-            this.progressListener = new ImagePickerChrome.DownloadProgressListener(this.imageList.length);
+            this.progressListener = new ImagePickerChrome.DownloadProgressListener(savedImages.length);
             dm.addListener(this.progressListener);
 
             // Handle each file
             var fileNames = new Array();
-            for ( var i = 0; i < this.imageList.length; i++) {
+            for ( var i = 0; i < savedImages.length; i++) {
 
-                document.getElementById("filterStat").label = "Saving " + this.imageList[i].fileName;
+                var img = savedImages[i];
+
+                document.getElementById("filterStat").label = "Saving " + img.fileName;
 
                 // Set default file ext as jpg
-                if ((this.imageList[i].fileExt == null) || (this.imageList[i].fileExt == "")) {
-                    this.imageList[i].fileName = this.imageList[i].fileName + ".jpg";
+                if ((img.fileExt == null) || (img.fileExt == "")) {
+                    img.fileName = img.fileName + ".jpg";
                 }
-                var file = ImagePicker.FileUtils.createUniqueFile(this.imageList[i].fileName, dest, fileNames);
+                var file = ImagePicker.FileUtils.createUniqueFile(img.fileName, dest, fileNames);
 
-                // this.saveImageToFile(this.imageList[i], file);
-                this.saveFileByDownloadManager(this.imageList[i].url, file);
+                // this.saveImageToFile(img, file);
+                this.saveFileByDownloadManager(img.url, file);
             }
 
             ImagePicker.FileUtils.revealDirectory(dest);
@@ -395,6 +411,21 @@ ImagePickerChrome.Controller = {
         if (!dm_ui.visible) {
             dm_ui.show(window, "", Ci.nsIDownloadManagerUI.REASON_NEW_DOWNLOAD);
         }
+    },
+
+    selectAllImages: function(){
+
+        this.selectedMap = new ImagePicker.HashMap();
+        for ( var i = 0; i < this.imageList.length; i++) {
+            var img = this.imageList[i];
+            this.selectedMap.put(img.id, true);
+        }
+        ImagePicker.Logger.debug("select all images ");
+    },
+
+    selectImage: function(imageId){
+      var isSelected = this.selectedMap.get(imageId);
+      this.selectedMap.put(imageId, !isSelected);
     }
 };
 
