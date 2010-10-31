@@ -2,7 +2,7 @@
 <project name="ImagePicker" default="package">
 
     <property name="extension.id" value="ImagePicker@topolog.org" />
-    <property name="extension.version" value="0.7" />
+    <property name="extension.version" value="0.8" />
     <property name="firefox.dir" value="D:\PortableApps\Browser\Firefox\Firefox" />
     <property name="firefox.exe" location="${firefox.dir}/firefox.exe"/>
     <property name="firefox.profile.path" location="${firefox.dir}/../devtest"/>
@@ -43,7 +43,7 @@
     
     <target name="test" depends="install" description="run FireFox with this extension for testing">
         <exec executable="${firefox.exe}" spawn="true">
-            <arg line="-no-remote -profile ${firefox.profile.path}"/>
+            <arg line="-no-remote -jsconsole -profile ${firefox.profile.path}"/>
         </exec>
     </target>
     
