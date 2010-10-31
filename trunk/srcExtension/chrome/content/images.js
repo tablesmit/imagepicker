@@ -1,76 +1,21 @@
-//      Common (global) variables
-var guid = (new Date()).getTime();
-var fileProtocolHandler = Cc["@mozilla.org/network/protocol;1?name=file"].createInstance(Ci.nsIFileProtocolHandler);
-var httpCacheSession = Cc["@mozilla.org/network/cache-service;1"].getService(Ci.nsICacheService).createSession("HTTP",
-        Ci.nsICache.STORE_ANYWHERE, true);
-
 /** **************** ImageInfo Object Class ******************** */
-YAHOO.namespace("ip.ImageInfo");
+Components.utils.import("resource://imagepicker/common.js");
+Components.utils.import("resource://imagepicker/model.js");
+
+
+/** **************** ImageUtils Object Class ******************** */
+
 /**
- * Provides the ImageInfo class used by the ImagePicker
- * 
- * @namespace YAHOO.ip
- * @class YAHOO.ip.ImageInfo
- * @constructor
- * @param {HTMLElement}
- *            image element
+ * Provides the image utilities and extensions used by the ImagePicker
+ *
+ * @namespace ImagePicker
+ * @class ImagePickerChrome.ImageUtils
  */
-YAHOO.ip.ImageInfo = function(image) {
-
-    this.id = ++guid;
-    this.imageSrc = image;
-    this.url = image.src;
-
-    this.nameFromURL = this.url.substring(this.url.lastIndexOf('/') + 1, this.url.length);
-
-    this.height = image.height;
-    this.width = image.width;
-
-    // define toString() method
-    this.toString = function() {
-        return this.url;
-    };
-
-    // caculate file sizes
-    this.fileSize = YAHOO.ip.ImageUtils.updateFileSizeFromCache(this);
-
-    if (this.fileSize == null) {
-        YAHOO.ip.ImageUtils.updateFileSizeByAjax(this);
-    }
-
-    // retrieve file name from cache
-    this.fileName = YAHOO.ip.ImageUtils.updateFileNameFromCache(this);
-
-    if (this.fileName == null || this.fileName == "") {
-        this.fileName = this.nameFromURL;
-    }
-
-    // caculate file ext
-    this.fileExt = null;
-    var reg = /(\w+\.(\w*))/;
-    var result = reg.exec(this.fileName);
-    if (result != null) {
-        this.fileName = result[1];
-        this.fileExt = result[2];
-    } else {
-        // set default file ext
-        this.fileExt = "jpg";
-    }
-};
-
-/** **************** FileUtils Object Class ******************** */
-YAHOO.namespace("ip.ImageUtils");
-/**
- * Provides the image utilites and extensions used by the ImagePicker
- * 
- * @namespace YAHOO.ip
- * @class YAHOO.ip.ImageUtils
- */
-YAHOO.ip.ImageUtils = {
+ImagePickerChrome.ImageUtils = {
     /**
-     * Attempt to update file size from cache. If cache is unavalidable, attempt
+     * Attempt to update file size from cache. If cache is un-avalidable, attempt
      * to update file size by cache listener.
-     * 
+     *
      * @method updateFileSizeFromCache
      * @param {ImageInfo}
      *            imageInfo The ImageInfo object to updated
@@ -85,7 +30,7 @@ YAHOO.ip.ImageUtils = {
         try {
 
             // try to get from http cache
-            file = httpCacheSession.openCacheEntry(cacheKey, Ci.nsICache.ACCESS_READ, false);
+            file = ImagePicker.httpCacheSession.openCacheEntry(cacheKey, Ci.nsICache.ACCESS_READ, false);
 
             if (file) {
                 fileSize = file.dataSize;
@@ -93,27 +38,27 @@ YAHOO.ip.ImageUtils = {
 
         } catch (ecache) {
 
-            YAHOO.ip.Logger.warn("Cannot update file size by HttpCacheSession for " + imageInfo, ecache);
+            ImagePicker.Logger.warn("Cannot update file size by HttpCacheSession for " + imageInfo, ecache);
 
             // try to get from ftp cache
             try {
-                file = fileProtocolHandler.getFileFromURLSpec(cacheKey);
+                file = ImagePicker.fileProtocolHandler.getFileFromURLSpec(cacheKey);
 
                 if (file && file.exists() && file.isFile()) {
                     fileSize = file.fileSize;
                 }
             } catch (efile) {
-                YAHOO.ip.Logger.warn("Cannot update file size by fileProtocolHandler for " + imageInfo, efile);
+                ImagePicker.Logger.warn("Cannot update file size by fileProtocolHandler for " + imageInfo, efile);
             }
         }
 
         if (fileSize == null) {
             // try to update file size by cache listener
-            var listener = new YAHOO.ip.CacheListener();
+            var listener = new ImagePickerChrome.CacheListener(imageInfo);
             try {
-                httpCacheSession.asyncOpenCacheEntry(cacheKey, Ci.nsICache.ACCESS_READ, listener);
+                ImagePicker.httpCacheSession.asyncOpenCacheEntry(cacheKey, Ci.nsICache.ACCESS_READ, listener);
             } catch (ecache) {
-                YAHOO.ip.Logger.warn("Cannot update file size by HttpCacheSession.asyncOpenCacheEntry for " + url,
+                ImagePicker.Logger.warn("Cannot update file size by HttpCacheSession.asyncOpenCacheEntry for " + url,
                         ecache);
             }
         } else {
@@ -123,7 +68,7 @@ YAHOO.ip.ImageUtils = {
 
     /**
      * Attempt to update file size through Ajax technology.
-     * 
+     *
      * @method updateFileSizeByAjax
      * @param {ImageInfo}
      *            imageInfo The ImageInfo object to updated
@@ -145,23 +90,23 @@ YAHOO.ip.ImageUtils = {
 
                         var fileSize = xmlhttp.getResponseHeader("Content-Length");
 
-                        if (imageInfo.fileSize == null || imageInfo.fileSize == 0) {
+                        if ((imageInfo.fileSize == null) || (imageInfo.fileSize == 0)) {
                             imageInfo.fileSize = parseFloat(fileSize);
-                            YAHOO.ip.Logger.info("update file size to " + fileSize + " by Ajax for " + imageInfo);
+                            ImagePicker.Logger.info("update file size to " + fileSize + " by Ajax for " + imageInfo);
                         }
                     } catch (e) {
-                        YAHOO.ip.Logger.warn("Cannot update file size to " + fileSize + " by Ajax for " + imageInfo, e);
+                        ImagePicker.Logger.warn("Cannot update file size to " + fileSize + " by Ajax for " + imageInfo, e);
                     }
                 }
             };
             xmlhttp.send(null);
         } catch (exml) {
-            YAHOO.ip.Logger.warn("Cannot update file size by Ajax for " + imageInfo, exml);
+            ImagePicker.Logger.warn("Cannot update file size by Ajax for " + imageInfo, exml);
         }
     },
     /**
      * Attempt to update file name from cache.
-     * 
+     *
      * @method updateFileNameFromCache
      * @param {ImageInfo}
      *            imageInfo The ImageInfo object to updated
@@ -180,16 +125,16 @@ YAHOO.ip.ImageUtils = {
             var imageCache = Cc["@mozilla.org/image/cache;1"].getService(imgICache);
             var props = imageCache.findEntryProperties(makeURI(aURL, charset));
 
-            YAHOO.ip.Logger.debug("find content props = " + props + " for " + imageInfo);
+            ImagePicker.Logger.debug("find content props = " + props + " for " + imageInfo);
             if (props) {
                 contentType = props.get("type", nsISupportsCString);
                 contentDisposition = props.get("content-disposition", nsISupportsCString);
 
-                YAHOO.ip.Logger.debug("contentType = " + contentType + " for " + imageInfo);
-                YAHOO.ip.Logger.debug("contentDisposition = " + contentDisposition + " for " + imageInfo);
+                ImagePicker.Logger.debug("contentType = " + contentType + " for " + imageInfo);
+                ImagePicker.Logger.debug("contentDisposition = " + contentDisposition + " for " + imageInfo);
             }
         } catch (e) {
-            YAHOO.ip.Logger.warn("Failure to get type and content-disposition of the image " + imageInfo, e);
+            ImagePicker.Logger.warn("Failure to get type and content-disposition of the image " + imageInfo, e);
         }
 
         // look for a filename in the content-disposition header, if any
@@ -211,16 +156,16 @@ YAHOO.ip.ImageUtils = {
                 }
             }
 
-            if (imageInfo.name == null) {
-                imageInfo.name = fileName;
-                YAHOO.ip.Logger.info("update file name to " + fileName + " from content-disposition for " + imageInfo);
+            if (fileName != null) {
+                imageInfo.fileName = fileName;
+                ImagePicker.Logger.info("update file name to " + fileName + " from content-disposition for " + imageInfo);
             }
         }
     },
 
     /**
      * Constructs a new URI, using nsIIOService.
-     * 
+     *
      * @param aURL
      *            The URI spec.
      * @param aOriginCharset
@@ -236,21 +181,20 @@ YAHOO.ip.ImageUtils = {
 };
 
 /** **************** CacheListener Object Class ******************** */
-YAHOO.namespace("ip.CacheListener");
 /**
  * Provides the CacheListener class
- * 
- * @namespace YAHOO.ip
- * @class YAHOO.ip.CacheListener
+ *
+ * @namespace ImagePicker
+ * @class ImagePickerChrome.CacheListener
  * @constructor
  * @param {ImageInfo}
  *            image info object to update file size
  */
-YAHOO.ip.CacheListener = function(imageInfo) {
+ImagePickerChrome.CacheListener = function(imageInfo) {
     this.imageInfo = imageInfo;
 };
 
-YAHOO.ip.CacheListener.prototype = {
+ImagePickerChrome.CacheListener.prototype = {
 
     QueryInterface : function(iid) {
         if (iid.equals(Ci.nsICacheListener)) {
@@ -260,16 +204,18 @@ YAHOO.ip.CacheListener.prototype = {
     },
 
     onCacheEntryAvailable : function(/* in nsICacheEntryDescriptor */descriptor, /*
-                                                                                     * in
-                                                                                     * nsCacheAccessMode
-                                                                                     */
+     * in
+     * nsCacheAccessMode
+     */
     accessGranted, /* in nsresult */status) {
 
         var fileSize = descriptor.file.dataSize;
 
-        if (this.imageInfo.fileSize == null || this.imageInfo.fileSize == 0) {
+        if ((fileSize && (fileSize > 0)) && ((this.imageInfo.fileSize == null) || (this.imageInfo.fileSize == 0))) {
             this.imageInfo.fileSize = fileSize;
-            YAHOO.ip.Logger.info("update file size to " + fileSize + " by async cache listener for " + this.imageInfo);
+
+            ImagePicker.Logger.info("update file size to " + fileSize + " by async cache listener for "
+                    + this.imageInfo);
         }
     }
 };

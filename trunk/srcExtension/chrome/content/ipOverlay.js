@@ -1,8 +1,11 @@
-function pickImages() {
+Components.utils.import("resource://imagepicker/common.js");
+Components.utils.import("resource://imagepicker/model.js");
+
+ImagePickerChrome.pickImages = function() {
 
     var mainTabBox = getBrowser().mTabBox;
     var contentWindow = getBrowser().browsers[mainTabBox.selectedIndex].contentWindow;
-    var documentList = getDocumentList(contentWindow);
+    var documentList = ImagePickerChrome.getDocumentList(contentWindow);
 
     var imageList = new Array();
     for ( var i = 0; i < documentList.length; i++) {
@@ -12,18 +15,24 @@ function pickImages() {
         for (j = 0; j < documentImageList.length; j++) {
             imageList.push(documentImageList[j]);
         }
-        YAHOO.ip.Logger.info("document  = " + documentList[i] + ", images  = " + documentImageList.length);
+        ImagePicker.Logger.info("document  = " + documentList[i] + ", images  = " + documentImageList.length);
     }
 
     // filter image by url
-    var tidiedImageList = tidyImages(imageList);
-    YAHOO.ip.Logger.info("imageList.length  = " + imageList.length + ", tidiedImageList.length  = "
+    var tidiedImageList = ImagePickerChrome.tidyImages(imageList);
+    ImagePicker.Logger.info("imageList.length  = " + imageList.length + ", tidiedImageList.length  = "
             + tidiedImageList.length);
 
     var imageInfoList = new Array();
+    var guid = (new Date()).getTime();
     for ( var j = 0; j < tidiedImageList.length; j++) {
-        YAHOO.ip.Logger.info("image" + j + " = " + tidiedImageList[j].src);
-        var image = new YAHOO.ip.ImageInfo(tidiedImageList[j]);
+        ImagePicker.Logger.info("image" + j + " = " + tidiedImageList[j].src);
+        var image = new ImagePicker.ImageInfo(guid++, tidiedImageList[j]);
+
+        ImagePickerChrome.ImageUtils.updateFileSizeFromCache(image);
+        ImagePickerChrome.ImageUtils.updateFileSizeByAjax(image);
+        ImagePickerChrome.ImageUtils.updateFileNameFromCache(image);
+
         imageInfoList.push(image);
     }
 
@@ -33,9 +42,9 @@ function pickImages() {
     var mainWindow = window.openDialog("chrome://imagepicker/content/pick.xul", "PickImage.mainWindow",
             "chrome,centerscreen,resizable, dialog=no, modal=no, dependent=no,status=yes", params);
     mainWindow.focus();
-}
+};
 
-function getDocumentList(frame) {
+ImagePickerChrome.getDocumentList = function(frame) {
 
     var documentList = new Array();
     documentList.push(frame.document);
@@ -48,15 +57,16 @@ function getDocumentList(frame) {
     }
 
     return documentList;
-}
+};
 
-function tidyImages(imageList) {
+ImagePickerChrome.tidyImages = function(imageList) {
+
     var tidiedImageList = new Array();
 
-    imageList.sort(sortImages);
+    imageList.sort(ImagePickerChrome.sortImages);
 
     for ( var i = 0; i < imageList.length; i++) {
-        if (i + 1 < imageList.length && imageList[i].src == imageList[i + 1].src) {
+        if ((i + 1 < imageList.length) && (imageList[i].src == imageList[i + 1].src)) {
             continue;
         }
 
@@ -64,9 +74,9 @@ function tidyImages(imageList) {
     }
 
     return tidiedImageList;
-}
+};
 
-function sortImages(imageOne, imageTwo) {
+ImagePickerChrome.sortImages = function(imageOne, imageTwo) {
     var imageOneSrc = imageOne.src;
     var imageTwoSrc = imageTwo.src;
 
@@ -79,4 +89,4 @@ function sortImages(imageOne, imageTwo) {
     }
 
     return sortValue;
-}
+};

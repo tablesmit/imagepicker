@@ -2,17 +2,16 @@
 <?xml-stylesheet href="chrome://imagepicker/skin/ip.css" type="text/css"?>
 <overlay id="ipOverlay"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-	<script type="application/x-javascript" src="chrome://imagepicker/content/jslib/yahoo.js" />
-	<script type="application/x-javascript" src="chrome://imagepicker/content/common.js" />
+    <script type="application/x-javascript" src="chrome://imagepicker/content/common.js" />
     <script type="application/x-javascript" src="chrome://imagepicker/content/images.js" />
 	<script type="application/x-javascript" src="chrome://imagepicker/content/ipOverlay.js" />
 	<toolbarpalette id="BrowserToolbarPalette">
 		<toolbarbutton id="image-pick-button" class="toolbarbutton-1"
-			label="Pick Image" tooltiptext="Pick Image" oncommand="pickImages();" />
+			label="Pick Image" tooltiptext="Pick Image" oncommand="ImagePickerChrome.pickImages();" />
 	</toolbarpalette>
 	<popup id="contentAreaContextMenu">
 		<menuitem id="pick-images" label="Pick Images" accesskey="p"
-			insertbefore="context-sep-properties" oncommand="pickImages();" 
+			insertbefore="context-sep-properties" oncommand="ImagePickerChrome.pickImages();" 
             class="menuitem-iconic" image="chrome://imagepicker/skin/img-picker_16.png" />
 	</popup>
 </overlay>

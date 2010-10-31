@@ -3,15 +3,11 @@
 <?xml-stylesheet href="chrome://imagepicker/skin/ip.css" type="text/css"?>
 <window id="root-windows" title="Pick Image"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	persist="width height screenX screenY" onload="gController.loadPickWindow();"
-	onunload="gController.unloadPickWindow();">
-	<script type="application/x-javascript" src="jslib/yahoo.js" />
-	<script type="application/x-javascript" src="common.js" />
-	<script type="application/x-javascript" src="prefUtils.js" />
-	<script type="application/x-javascript" src="fileUtils.js" />
-	<script type="application/x-javascript" src="images.js" />
+	persist="width height screenX screenY" onload="ImagePickerChrome.Controller.loadPickWindow();"
+	onunload="ImagePickerChrome.Controller.unloadPickWindow();">
+    <script type="application/x-javascript" src="common.js" />
+    <script type="application/x-javascript" src="images.js" />
 	<script type="application/x-javascript" src="views.js" />
-	<script type="application/x-javascript" src="filters.js" />
 	<script type="application/x-javascript" src="controller.js" />
 	<vbox>
 		<hbox align="center">
@@ -57,19 +53,19 @@
 					</vbox>
 				</hbox>
 			</groupbox>
-			<button label="Filter" oncommand="gController.doFilter();" />
+			<button label="Filter" oncommand="ImagePickerChrome.Controller.doFilter();" />
 			<button type="menu" label="View" id="view-as-button">
 				<menupopup>
 					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeSmallMI"
-						label="Thumbnails(Small)" oncommand="gController.doViewAS();" />
+						label="Thumbnails(Small)" oncommand="ImagePickerChrome.Controller.doViewAS();" />
 					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeNormalMI"
-						label="Thumbnails(Normal)" oncommand="gController.doViewAS();" />
+						label="Thumbnails(Normal)" oncommand="ImagePickerChrome.Controller.doViewAS();" />
 					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeLargeMI"
-						label="Thumbnails(Large)" oncommand="gController.doViewAS();" />
+						label="Thumbnails(Large)" oncommand="ImagePickerChrome.Controller.doViewAS();" />
 					<menuseparator />
-                    <menuitem type="checkbox" id="showImageSizeMI" label="Show Image Size" oncommand="gController.doViewAS();"/>
-					<menuitem type="checkbox" id="showImageNameMI" label="Show Image Name" oncommand="gController.doViewAS();"/>
-					<menuitem type="checkbox" id="showImageUrlMI" label="Show Image URL" oncommand="gController.doViewAS();" disabled="true"/>
+                    <menuitem type="checkbox" id="showImageSizeMI" label="Show Image Size" oncommand="ImagePickerChrome.Controller.doViewAS();"/>
+					<menuitem type="checkbox" id="showImageNameMI" label="Show Image Name" oncommand="ImagePickerChrome.Controller.doViewAS();"/>
+					<menuitem type="checkbox" id="showImageUrlMI" label="Show Image URL" oncommand="ImagePickerChrome.Controller.doViewAS();" disabled="true"/>
 				</menupopup>
 			</button>
 		</hbox>
@@ -81,16 +77,16 @@
 		<hbox flex="1"  align="center" >
 			<label value="Saved Directory" />
 			<textbox id="browsedirTB" height="18" flex="1" />
-			<toolbarbutton id="browsedir" oncommand="gController.browseDir();" tooltiptext="Browse..."
+			<toolbarbutton id="browsedir" oncommand="ImagePickerChrome.Controller.browseDir();" tooltiptext="Browse..."
 				image="chrome://imagepicker/skin/browse.png"  />
 		</hbox>
 		<spacer flex="1" />
-		<button label="Save" oncommand="gController.doSaveImages();" />
+		<button label="Save" oncommand="ImagePickerChrome.Controller.doSaveImages();" />
 		<button label="Close" oncommand="self.close();" />
 	</hbox>
 	<statusbar>
 		<statusbarpanel id="filterStat" flex="1" />
-        <progressmeter  id="downloadMeter"  mode="determined"  value="0" onclick="gController.showDownloadManagerUI();"/>
+        <progressmeter  id="downloadMeter"  mode="determined"  value="0" onclick="ImagePickerChrome.Controller.showDownloadManagerUI();"/>
 		<space flex="1" />
 	</statusbar>
 </window>

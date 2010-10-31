@@ -1,17 +1,19 @@
 /** **************** ImageGrid Object Class ******************** */
-YAHOO.namespace("ip.ImageGrid");
+Components.utils.import("resource://imagepicker/common.js");
+Components.utils.import("resource://imagepicker/model.js");
+
 /**
  * Provides the view for images
- * 
- * @namespace YAHOO.ip
- * @class YAHOO.ip.ImageGrid
+ *
+ * @namespace ImagePicker
+ * @class ImagePickerChrome.ImageGrid
  * @constructor
  * @param {String}
  *            imageContainerId the id of HTML DIV which contains this image grid
  * @param {Number}
  *            gridWidth the width of this image grid
  */
-YAHOO.ip.ImageGrid = function(imageContainerId, gridWidth, thumbnailType, isShowImageSize, isShowImageName,
+ImagePickerChrome.ImageGrid = function(imageContainerId, gridWidth, thumbnailType, isShowImageSize, isShowImageName,
         isShowImageURL) {
     this.imageContainerId = imageContainerId;
     this.gridWidth = gridWidth;
@@ -24,11 +26,11 @@ YAHOO.ip.ImageGrid = function(imageContainerId, gridWidth, thumbnailType, isShow
     this.isShowImageUrl = isShowImageURL;
 };
 
-YAHOO.ip.ImageGrid.prototype = {
+ImagePickerChrome.ImageGrid.prototype = {
 
     /**
      * set the thumbnail type to image grid.
-     * 
+     *
      * @method setThumbnailType
      * @param {String}
      *            thumbnailType "small","normal" and "large"
@@ -52,7 +54,7 @@ YAHOO.ip.ImageGrid.prototype = {
 
     /**
      * Render the image grid in UI.
-     * 
+     *
      * @method render
      * @param {List
      *            <ImageInfo>} imageList The list which contains all ImageInfo objects to render
@@ -70,7 +72,7 @@ YAHOO.ip.ImageGrid.prototype = {
         // calculate row count
         var rowCount = Math.ceil(imageList.length / columnCount);
 
-        YAHOO.ip.Logger.info("Creating Image Grid: " + this + ", columnWidth = " + columnWidth + ", columnCount = "
+        ImagePicker.Logger.info("Creating Image Grid: " + this + ", columnWidth = " + columnWidth + ", columnCount = "
                 + columnCount + ", rowCount = " + rowCount);
 
         // create grid
@@ -143,7 +145,7 @@ YAHOO.ip.ImageGrid.prototype = {
 
     /**
      * Get the additional info (image size, name...) to show on the image grid.
-     * 
+     *
      * @method getAdditionalInfo
      * @param {ImageInfo}
      *            imageInfo
