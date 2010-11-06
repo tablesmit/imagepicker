@@ -1,0 +1,13 @@
+/*  skin/toolbar-button.css  */
+
+#image-pick-button {
+  list-style-image: url("chrome://imagepicker/skin/img-picker_24.png");
+}
+
+toolbar[iconsize="small"] #image-pick-button {
+  list-style-image: url("chrome://imagepicker/skin/img-picker_16.png");
+}
+
+#view-as-button {
+  list-style-image: url("chrome://imagepicker/skin/Pictures.ico");
+}
