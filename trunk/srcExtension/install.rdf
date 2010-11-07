@@ -8,7 +8,7 @@
                    em:version="0.8.2"
                    em:creator="Wesley Chen (topolog@gmail.com)"
                    em:description="Choose (filter) images and save images from web page to local disk."
-                   em:homepageURL="http://code.google.com/p/imagepicker/"
+                   em:homepageURL="https://addons.mozilla.org/firefox/addon/235863"
                    em:iconURL="chrome://imagepicker/skin/img-picker_24.png">
     <em:targetApplication RDF:resource="rdf:#$A4.QS1"/>
   </RDF:Description>

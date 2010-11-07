@@ -24,6 +24,9 @@ ImagePicker.ImageInfo = function(id, image) {
     this.height = image.height;
     this.width = image.width;
     this.fileSize = 0;
+    this.loadFileSizeFromCacheCompleted = false;
+    this.loadFileSizeByAjaxCompleted = false;
+    this.properyChangeListener = null;
 
     this.nameFromURL = this.url.substring(this.url.lastIndexOf('/') + 1, this.url.length);
     this.fileName = this.nameFromURL;
@@ -43,6 +46,32 @@ ImagePicker.ImageInfo = function(id, image) {
 };
 
 ImagePicker.ImageInfo.prototype = {
+
+    /**
+     * Register the given listener for image change
+     * The given listener must have a onPropertyChange(ImageInfo) method.
+     */
+    registerChangeListener : function(changeListener) {
+        this.properyChangeListener = changeListener;
+    },
+
+    setFileSize : function(newFileSize) {
+        this.fileSize = newFileSize;
+
+        // fire update event
+        if (this.properyChangeListener) {
+            this.properyChangeListener.onPropertyChange(this);
+        }
+    },
+
+    setFileName : function(newFileName) {
+        this.fileName = newFileName;
+
+        // fire update event
+        if (this.properyChangeListener) {
+            this.properyChangeListener.onPropertyChange(this);
+        }
+    },
 
     toString : function() {
         return "Image:[id=" + this.id + ", name=" + this.fileName + "]";
