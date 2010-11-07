@@ -48,7 +48,8 @@ ImagePickerChrome.ImageUtils = {
                     fileSize = file.fileSize;
                 }
             } catch (efile) {
-                ImagePicker.Logger.warn("Cannot update file size by fileProtocolHandler for " + imageInfo, efile);
+                //Ignore
+                //ImagePicker.Logger.warn("Cannot update file size by fileProtocolHandler for " + imageInfo, efile);
             }
         }
 
@@ -61,8 +62,9 @@ ImagePickerChrome.ImageUtils = {
                 ImagePicker.Logger.warn("Cannot update file size by HttpCacheSession.asyncOpenCacheEntry for " + url,
                         ecache);
             }
-        } else {
-            imageInfo.fileSize = fileSize;
+        } else if (fileSize > 0){
+            imageInfo.setFileSize(fileSize);
+            ImagePicker.Logger.info("update file size to " + fileSize + " from Cache for " + imageInfo);
         }
     },
 
@@ -74,6 +76,11 @@ ImagePickerChrome.ImageUtils = {
      *            imageInfo The ImageInfo object to updated
      */
     updateFileSizeByAjax : function(imageInfo) {
+
+        if(imageInfo.fileSize && (imageInfo.fileSize > 0)){ // return if have file size
+            return;
+        }
+
         try {
             var xmlhttp = new XMLHttpRequest();
             try {
@@ -87,13 +94,15 @@ ImagePickerChrome.ImageUtils = {
             xmlhttp.onreadystatechange = function() {
                 if (xmlhttp.readyState == 4) {
                     try {
+                        imageInfo.loadFileSizeByAjaxCompleted = true;
 
                         var fileSize = xmlhttp.getResponseHeader("Content-Length");
 
-                        if ((imageInfo.fileSize == null) || (imageInfo.fileSize == 0)) {
-                            imageInfo.fileSize = parseFloat(fileSize);
+                        if ((fileSize && (fileSize > 0)) && ((imageInfo.fileSize == null) || (imageInfo.fileSize == 0))) {
+                            imageInfo.setFileSize(parseFloat(fileSize));
                             ImagePicker.Logger.info("update file size to " + fileSize + " by Ajax for " + imageInfo);
                         }
+
                     } catch (e) {
                         ImagePicker.Logger.warn("Cannot update file size to " + fileSize + " by Ajax for " + imageInfo, e);
                     }
@@ -125,16 +134,17 @@ ImagePickerChrome.ImageUtils = {
             var imageCache = Cc["@mozilla.org/image/cache;1"].getService(imgICache);
             var props = imageCache.findEntryProperties(makeURI(aURL, charset));
 
-            ImagePicker.Logger.debug("find content props = " + props + " for " + imageInfo);
+            //ImagePicker.Logger.debug("find content props = " + props + " for " + imageInfo);
             if (props) {
-                contentType = props.get("type", nsISupportsCString);
                 contentDisposition = props.get("content-disposition", nsISupportsCString);
+                contentType = props.get("type", nsISupportsCString);
 
-                ImagePicker.Logger.debug("contentType = " + contentType + " for " + imageInfo);
                 ImagePicker.Logger.debug("contentDisposition = " + contentDisposition + " for " + imageInfo);
+                ImagePicker.Logger.debug("contentType = " + contentType + " for " + imageInfo);
             }
         } catch (e) {
-            ImagePicker.Logger.warn("Failure to get type and content-disposition of the image " + imageInfo, e);
+            //Ignore
+            //ImagePicker.Logger.warn("Failure to get type and content-disposition of the image " + imageInfo, e);
         }
 
         // look for a filename in the content-disposition header, if any
@@ -157,7 +167,8 @@ ImagePickerChrome.ImageUtils = {
             }
 
             if (fileName != null) {
-                imageInfo.fileName = fileName;
+                imageInfo.setFileName(fileName);
+
                 ImagePicker.Logger.info("update file name to " + fileName + " from content-disposition for " + imageInfo);
             }
         }
@@ -209,10 +220,12 @@ ImagePickerChrome.CacheListener.prototype = {
      */
     accessGranted, /* in nsresult */status) {
 
+        this.imageInfo.loadFileSizeFromCacheCompleted = true;
+
         var fileSize = descriptor.file.dataSize;
 
         if ((fileSize && (fileSize > 0)) && ((this.imageInfo.fileSize == null) || (this.imageInfo.fileSize == 0))) {
-            this.imageInfo.fileSize = fileSize;
+            this.imageInfo.setFileSize(fileSize);
 
             ImagePicker.Logger.info("update file size to " + fileSize + " by async cache listener for "
                     + this.imageInfo);

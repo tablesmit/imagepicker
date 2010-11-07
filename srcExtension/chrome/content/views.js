@@ -52,6 +52,10 @@ ImagePickerChrome.ImageGrid.prototype = {
         }
     },
 
+    _getWidthPerImage : function() {
+        return this.thumbnailSize - 15;
+    },
+
     /**
      * Render the image grid in UI.
      *
@@ -64,6 +68,7 @@ ImagePickerChrome.ImageGrid.prototype = {
         var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
         var columnWidth = this.thumbnailSize;
+        var widthPerImage = this._getWidthPerImage();
 
         // calculate column count
         var columnCount = Math.floor(this.gridWidth / columnWidth);
@@ -97,46 +102,53 @@ ImagePickerChrome.ImageGrid.prototype = {
             for ( var j = 0; j < columnCount; j++) {
 
                 // create grid cell box
-                var vbox = document.createElementNS(XUL_NS, "vbox");
-                vbox.setAttribute("width", columnWidth);
-                vbox.setAttribute("height", columnWidth + 15);
-                vbox.setAttribute("pack", "center");
-                vbox.setAttribute("align", "center");
+                var cellBox = document.createElementNS(XUL_NS, "vbox");
+                cellBox.setAttribute("width", columnWidth);
+                cellBox.setAttribute("height", columnWidth + 15);
+                cellBox.setAttribute("pack", "center");
+                cellBox.setAttribute("align", "center");
 
-                vbox.setAttribute("style", "margin:5px; outline: #98989A solid 1px; background-color: #F3F3F3;");
-                row.appendChild(vbox);
+                cellBox.setAttribute("style", "margin:5px; outline: #98989A solid 1px; background-color: #F3F3F3;");
+                row.appendChild(cellBox);
 
                 if (index < imageList.length) {
 
                     var imgInfo = imageList[index];
 
                     // create image element
-                    var img = document.createElementNS(XUL_NS, "image");
-                    img.setAttribute("id", imgInfo.id);
-                    img.setAttribute("src", imgInfo.url);
+                    var imgElem = document.createElementNS(XUL_NS, "image");
+                    imgElem.setAttribute("id", imgInfo.id);
+                    imgElem.setAttribute("src", imgInfo.url);
 
-                    var widthPerImage = columnWidth - 15;
                     var imageRate = widthPerImage / Math.max(imgInfo.width, imgInfo.height, 1);
                     var width = Math.min(imageRate * imgInfo.width, imgInfo.width);
                     var height = Math.min(imageRate * imgInfo.height, imgInfo.height);
 
-                    img.setAttribute("width", width);
-                    img.setAttribute("height", height);
-                    vbox.appendChild(img);
+                    imgElem.setAttribute("width", width);
+                    imgElem.setAttribute("height", height);
+                    cellBox.appendChild(imgElem);
 
                     // show additional info
-                    var additionalInfos = this.getAdditionalInfo(imgInfo, widthPerImage);
-                    for ( var k = 0; k < additionalInfos.length; k++) {
-                        var additionalLabel = document.createElementNS(XUL_NS, "label");
-                        additionalLabel.setAttribute("value", additionalInfos[k]);
-                        vbox.appendChild(additionalLabel);
-                    }
+                    var adBox = document.createElementNS(XUL_NS, "vbox");
+                    adBox.setAttribute("id", imgInfo.id+"-AdBox");
+                    adBox.setAttribute("align", "center");
+                    this.renderAdditionalInfo(imgInfo, widthPerImage, adBox);
+                    cellBox.appendChild(adBox);
 
                     //Add checkbox
                     var checkbox = document.createElementNS(XUL_NS, "checkbox");
                     checkbox.setAttribute("checked", selectedMap.get(imgInfo.id));
                     checkbox.setAttribute("oncommand", 'ImagePickerChrome.Controller.selectImage('+imgInfo.id+')');
-                    vbox.appendChild(checkbox);
+                    cellBox.appendChild(checkbox);
+
+                    //register change listener
+                    var changeListener = {
+                        imgGrid: this,
+                        onPropertyChange: function(updatedImageInfo){
+                            this.imgGrid.updateImageInfo(updatedImageInfo);
+                        }
+                    };
+                    imgInfo.registerChangeListener(changeListener);
                 }
 
                 index++;
@@ -149,6 +161,34 @@ ImagePickerChrome.ImageGrid.prototype = {
         // add image grid to parent DIV
         var imageContainer = document.getElementById("imageContainer");
         imageContainer.appendChild(imgGrid);
+    },
+
+    renderAdditionalInfo :  function(imageInfo, widthPerImage, adBox) {
+        var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+        var additionalInfos = this.getAdditionalInfo(imageInfo, widthPerImage);
+        for ( var k = 0; k < additionalInfos.length; k++) {
+            var additionalLabel = document.createElementNS(XUL_NS, "label");
+            additionalLabel.setAttribute("value", additionalInfos[k]);
+            adBox.appendChild(additionalLabel);
+        }
+    },
+
+    updateImageInfo : function(imageInfo) {
+
+        var adBox = document.getElementById(imageInfo.id + "-AdBox");
+
+        //ImagePicker.Logger.debug("updateImageInfo to " + adBox + " for " + imageInfo);
+
+        if (adBox != null) {
+            // clean old additional info content
+            while (adBox.hasChildNodes()) {
+                adBox.removeChild(adBox.firstChild);
+            }
+
+            // Re-render
+            var widthPerImage = this._getWidthPerImage();
+            this.renderAdditionalInfo(imageInfo, widthPerImage, adBox);
+        }
     },
 
     /**
@@ -165,8 +205,10 @@ ImagePickerChrome.ImageGrid.prototype = {
 
         if (this.isShowImageSize) { // show image width, height and size
             var info = imageInfo.width + "x" + imageInfo.height + " ";
-            if (imageInfo.fileSize != null) {
+            if (imageInfo.fileSize > 0) {
                 info = info + Math.ceil(imageInfo.fileSize / 1000) + "k ";
+            } else if((imageInfo.loadFileSizeFromCacheCompleted == false) || (imageInfo.loadFileSizeByAjaxCompleted == false)){
+                info = info + " loading ";
             } else {
                 info = info + 0 + "k ";
             }
@@ -184,6 +226,16 @@ ImagePickerChrome.ImageGrid.prototype = {
             additionalInfos.push(info);
         }
         return additionalInfos;
+    },
+
+    updateAdditionalInfo :  function(imageInfo) {
+
+        var additionalInfos = this.getAdditionalInfo(imgInfo, widthPerImage);
+        for ( var k = 0; k < additionalInfos.length; k++) {
+            var additionalLabel = document.createElementNS(XUL_NS, "label");
+            additionalLabel.setAttribute("value", additionalInfos[k]);
+            adBox.appendChild(additionalLabel);
+        }
     },
 
     toString : function() {
