@@ -33,6 +33,9 @@ ImagePickerChrome.Controller = {
         // Get preferences
         var prefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch(
                 "extensions.imagepicker.");
+        this.createdFolderByTitle = prefs.getBoolPref("createdFolderByTitle");
+        this.openExplorerAfterSaved = prefs.getBoolPref("openExplorerAfterSaved");
+        this.openDownloadManagerAfterSaved = prefs.getBoolPref("openDownloadManagerAfterSaved");
 
         // init image grid
         var gridSize = window.innerWidth - 6;
@@ -40,9 +43,8 @@ ImagePickerChrome.Controller = {
         var thumbnailType = prefs.getCharPref("displayrule.thumbnailType");
         var isShowImageSize = prefs.getBoolPref("displayrule.showImageSize");
         var isShowImageName = prefs.getBoolPref("displayrule.showImageName");
-        var isShowImageURL = prefs.getBoolPref("displayrule.showImageURL");
         this.imageGrid = new ImagePickerChrome.ImageGrid("imageContainer", gridSize, thumbnailType, isShowImageSize,
-                isShowImageName, isShowImageURL);
+                isShowImageName);
     },
 
     /**
@@ -87,10 +89,8 @@ ImagePickerChrome.Controller = {
 
         var isShowImageSize = prefs.getBoolPref("displayrule.showImageSize");
         var isShowImageName = prefs.getBoolPref("displayrule.showImageName");
-        var isShowImageURL = prefs.getBoolPref("displayrule.showImageURL");
         document.getElementById("showImageSizeMI").setAttribute("checked", isShowImageSize);
         document.getElementById("showImageNameMI").setAttribute("checked", isShowImageName);
-        document.getElementById("showImageUrlMI").setAttribute("checked", isShowImageURL);
 
         var saveFolderPath = ImagePicker.PrefUtils.getUnicodeChar(prefs, "savedFolderPath");
         document.getElementById("browsedirTB").value = saveFolderPath;
@@ -118,7 +118,6 @@ ImagePickerChrome.Controller = {
         prefs.setCharPref("displayrule.thumbnailType", this.imageGrid.thumbnailType);
         prefs.setBoolPref("displayrule.showImageSize", this.imageGrid.isShowImageSize);
         prefs.setBoolPref("displayrule.showImageName", this.imageGrid.isShowImageName);
-        prefs.setBoolPref("displayrule.showImageURL", this.imageGrid.isShowImageUrl);
 
         // save filter
         prefs.setIntPref("filter.minWidth", document.getElementById("minWidthTB").value);
@@ -220,7 +219,6 @@ ImagePickerChrome.Controller = {
         this.imageGrid.setThumbnailType(thumbnailType);
         this.imageGrid.isShowImageSize = (document.getElementById("showImageSizeMI").getAttribute("checked") == 'true');
         this.imageGrid.isShowImageName = (document.getElementById("showImageNameMI").getAttribute("checked") == 'true');
-        this.imageGrid.isShowImageUrl = (document.getElementById("showImageUrlMI").getAttribute("checked") == 'true');
 
         // refresh image container
         this.refreshImageContainer();
@@ -263,10 +261,7 @@ ImagePickerChrome.Controller = {
         if (dest) {
 
             //Create sub-folder if need
-            var prefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch(
-                    "extensions.imagepicker.");
-            var isCreatedFolderByTitle = prefs.getBoolPref("createdFolderByTitle");
-            if(isCreatedFolderByTitle){
+            if(this.createdFolderByTitle){
                 var subFolder = this._createFolderByTitle(destPath);
                 if(subFolder != null){
                     dest = subFolder;
@@ -312,7 +307,15 @@ ImagePickerChrome.Controller = {
                 this.saveFileByDownloadManager(img.url, file);
             }
 
-            ImagePicker.FileUtils.revealDirectory(dest);
+            //open Explorer after saved if need
+            if(this.openExplorerAfterSaved){
+                ImagePicker.FileUtils.revealDirectory(dest);
+            }
+
+            //open DownloadManager after saved if need
+            if(this.openDownloadManagerAfterSaved){
+                this.showDownloadManagerUI();
+            }
 
         } else {
             alert("dest directory not found! ");

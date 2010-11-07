@@ -1,7 +1,6 @@
 pref('extensions.imagepicker.displayrule.thumbnailType', "small");
 pref('extensions.imagepicker.displayrule.showImageSize', true);
 pref('extensions.imagepicker.displayrule.showImageName', true);
-pref('extensions.imagepicker.displayrule.showImageURL', false);
 
 pref('extensions.imagepicker.filter.minWidth', 80);
 pref('extensions.imagepicker.filter.minHeight', 60);
@@ -13,3 +12,5 @@ pref('extensions.imagepicker.filter.skipImageTypes.gif', true);
 
 pref('extensions.imagepicker.savedFolderPath', "");
 pref('extensions.imagepicker.createdFolderByTitle', true);
+pref('extensions.imagepicker.openExplorerAfterSaved', true);
+pref('extensions.imagepicker.openDownloadManagerAfterSaved', false);

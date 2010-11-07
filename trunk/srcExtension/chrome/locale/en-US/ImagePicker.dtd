@@ -1,0 +1,25 @@
+<!ENTITY toolbarbutton_pick_images.label "Pick Images">
+<!ENTITY toolbarbutton_pick_images.tooltip "Pick Images">
+<!ENTITY menu_pick_images.label "Pick Images">
+
+<!ENTITY pref_created_folder_by_title.label "Create saved folder by title automatically">
+<!ENTITY pref_open_explorer_after_saved.label "Open Explorer after saved automatically">
+<!ENTITY pref_open_download_manager_after_saved.label "Open Download Manager after saved automatically">
+
+<!ENTITY pick_window.title "Pick Images">
+<!ENTITY pick_size_limits.label "Size limits">
+<!ENTITY pick_min_size.label "Min size">
+<!ENTITY pick_min_width.label "Min width">
+<!ENTITY pick_min_height.label "Min height">
+<!ENTITY pick_image_types.label "Image types">
+<!ENTITY pick_button_filter.label "Filter">
+<!ENTITY pick_button_view.label "View">
+<!ENTITY pick_menu_thumbnails_small.label "Thumbnails(Small)">
+<!ENTITY pick_menu_thumbnails_normal.label "Thumbnails(Normal)">
+<!ENTITY pick_menu_thumbnails_large.label "Thumbnails(Large)">
+<!ENTITY pick_menu_show_image_size.label "Show Image Size">
+<!ENTITY pick_menu_show_image_name.label "Show Image Name">
+<!ENTITY pick_saved_directory.label "Saved Directory">
+<!ENTITY pick_browse.tooltip "Browse...">
+<!ENTITY pick_button_save.label "Save">
+<!ENTITY pick_button_close.label "Close">

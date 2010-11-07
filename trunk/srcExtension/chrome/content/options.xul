@@ -1,14 +1,19 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://imagepicker/locale/ImagePicker.dtd">
 
 <prefwindow id="imagepicker-prefs" title="ImagePicker Setting"
      xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 <prefpane id="perf-setting">
   <preferences>
     <preference id="pref-createdFolderByTitle" name="extensions.imagepicker.createdFolderByTitle" type="bool"/>
+    <preference id="pref-openExplorerAfterSaved" name="extensions.imagepicker.openExplorerAfterSaved" type="bool"/>
+    <preference id="pref-openDownloadManagerAfterSaved" name="extensions.imagepicker.openDownloadManagerAfterSaved" type="bool"/>
   </preferences>
   <vbox>
-    <checkbox label="Create saved folder by title automatically" preference="pref-createdFolderByTitle" />
+    <checkbox label="&pref_created_folder_by_title.label;" preference="pref-createdFolderByTitle" />
+    <checkbox label="&pref_open_explorer_after_saved.label;" preference="pref-openExplorerAfterSaved" />
+    <checkbox label="&pref_open_download_manager_after_saved.label;" preference="pref-openDownloadManagerAfterSaved" />
   </vbox>
 </prefpane>
 </prefwindow>
