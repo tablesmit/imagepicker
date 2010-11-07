@@ -12,3 +12,4 @@ pref('extensions.imagepicker.filter.skipImageTypes.png', false);
 pref('extensions.imagepicker.filter.skipImageTypes.gif', true);
 
 pref('extensions.imagepicker.savedFolderPath', "");
+pref('extensions.imagepicker.createdFolderByTitle', true);

@@ -262,23 +262,15 @@ ImagePickerChrome.Controller = {
 
         if (dest) {
 
-            var subFolderName;
-
-            // clone the parent folder, don't use the clone() method.
-            var subFolder = ImagePicker.FileUtils.toDirectory(destPath);
-            // create new folder with window title
-            try {
-
-                subFolderName = ImagePicker.FileUtils.toValidName(window.document.title);
-                subFolder.append(subFolderName);
-                if (!subFolder.exists() || !subFolder.isDirectory()) {
-                    // if it doesn't exist, create
-                    subFolder.create(Ci.nsIFile.DIRECTORY_TYPE, 0777);
+            //Create sub-folder if need
+            var prefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch(
+                    "extensions.imagepicker.");
+            var isCreatedFolderByTitle = prefs.getBoolPref("createdFolderByTitle");
+            if(isCreatedFolderByTitle){
+                var subFolder = this._createFolderByTitle(destPath);
+                if(subFolder != null){
+                    dest = subFolder;
                 }
-                dest = subFolder;
-            } catch (e) {
-                ImagePicker.Logger.info("Cannot create subfolder: " + e);
-                alert("Cannot create subfolder! subFolderName = " + subFolderName + ", e = " + e);
             }
 
             document.getElementById("filterStat").label = "Starting saving file...";
@@ -325,6 +317,31 @@ ImagePickerChrome.Controller = {
         } else {
             alert("dest directory not found! ");
         }
+    },
+
+    _createFolderByTitle : function(parentDirPath) {
+
+        var subFolderName;
+
+        // clone the parent folder, don't use the clone() method.
+        var subFolder = ImagePicker.FileUtils.toDirectory(parentDirPath);
+
+        // create new folder with window title
+        try {
+
+            subFolderName = ImagePicker.FileUtils.toValidName(window.document.title);
+            subFolder.append(subFolderName);
+            if (!subFolder.exists() || !subFolder.isDirectory()) {
+                // if it doesn't exist, create
+                subFolder.create(Ci.nsIFile.DIRECTORY_TYPE, 0777);
+            }
+            return subFolder;
+        } catch (e) {
+            ImagePicker.Logger.info("Cannot create subfolder: " + e);
+            alert("Cannot create subfolder! subFolderName = " + subFolderName + ", e = " + e);
+        }
+
+        return null;
     },
 
     /**

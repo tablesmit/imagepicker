@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<prefwindow id="imagepicker-prefs" title="ImagePicker Setting"
+     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<prefpane id="perf-setting">
+  <preferences>
+    <preference id="pref-createdFolderByTitle" name="extensions.imagepicker.createdFolderByTitle" type="bool"/>
+  </preferences>
+  <vbox>
+    <checkbox label="Create saved folder by title automatically" preference="pref-createdFolderByTitle" />
+  </vbox>
+</prefpane>
+</prefwindow>
