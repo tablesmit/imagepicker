@@ -5,10 +5,11 @@
   <RDF:Description RDF:about="urn:mozilla:install-manifest"
                    em:id="ImagePicker@topolog.org"
                    em:name="Image Picker"
-                   em:version="0.8.2"
+                   em:version="0.9"
                    em:creator="Wesley Chen (topolog@gmail.com)"
                    em:description="Choose (filter) images and save images from web page to local disk."
                    em:homepageURL="https://addons.mozilla.org/firefox/addon/235863"
+                   em:optionsURL="chrome://imagepicker/content/options.xul"
                    em:iconURL="chrome://imagepicker/skin/img-picker_24.png">
     <em:targetApplication RDF:resource="rdf:#$A4.QS1"/>
   </RDF:Description>
