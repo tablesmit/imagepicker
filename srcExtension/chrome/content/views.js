@@ -13,8 +13,7 @@ Components.utils.import("resource://imagepicker/model.js");
  * @param {Number}
  *            gridWidth the width of this image grid
  */
-ImagePickerChrome.ImageGrid = function(imageContainerId, gridWidth, thumbnailType, isShowImageSize, isShowImageName,
-        isShowImageURL) {
+ImagePickerChrome.ImageGrid = function(imageContainerId, gridWidth, thumbnailType, isShowImageSize, isShowImageName) {
     this.imageContainerId = imageContainerId;
     this.gridWidth = gridWidth;
 
@@ -23,7 +22,6 @@ ImagePickerChrome.ImageGrid = function(imageContainerId, gridWidth, thumbnailTyp
 
     this.isShowImageSize = isShowImageSize;
     this.isShowImageName = isShowImageName;
-    this.isShowImageUrl = isShowImageURL;
 };
 
 ImagePickerChrome.ImageGrid.prototype = {
@@ -241,7 +239,7 @@ ImagePickerChrome.ImageGrid.prototype = {
     toString : function() {
         var msg = "[Image Grid: gridWidth=" + this.gridWidth + ", thumbnailType=" + this.thumbnailType + "("
                 + this.thumbnailSize + "), isShowImageName=" + this.isShowImageName + ", isShowImageSize="
-                + this.isShowImageSize + ", isShowImageUrl=" + this.isShowImageUrl + "]";
+                + this.isShowImageSize + "]";
 
         return msg;
     }

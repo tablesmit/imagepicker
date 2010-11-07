@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://imagepicker/skin/ip.css" type="text/css"?>
-<window id="root-windows" title="Pick Image"
+<!DOCTYPE overlay SYSTEM "chrome://imagepicker/locale/ImagePicker.dtd">
+
+<window id="root-windows" title="&pick_window.title;"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	persist="width height screenX screenY" onload="ImagePickerChrome.Controller.loadPickWindow();"
 	onunload="ImagePickerChrome.Controller.unloadPickWindow();">
@@ -13,7 +15,7 @@
 		<hbox align="center">
 			<groupbox>
 				<caption>
-					<label value="Size limits" />
+					<label value="&pick_size_limits.label;" />
 				</caption>
 				<grid>
 					<columns>
@@ -24,15 +26,15 @@
 					</columns>
 					<rows>
 						<row>
-							<label value="Min size" />
+							<label value="&pick_min_size.label;" />
 							<textbox id="minSizeTB" width="70" type="number" />
-							<label value="Min width" />
+							<label value="&pick_min_width.label;" />
 							<textbox id="minWidthTB" width="70" type="number" />
 						</row>
 						<row>
 							<label value="" />
 							<label value="" />
-							<label value="Min height" />
+							<label value="&pick_min_height.label;" />
 							<textbox id="minHeightTB" width="70" type="number" />
 						</row>
 					</rows>
@@ -40,7 +42,7 @@
 			</groupbox>
 			<groupbox>
 				<caption>
-					<label value="Image types" />
+					<label value="&pick_image_types.label;" />
 				</caption>
 				<hbox>
 					<vbox>
@@ -53,19 +55,18 @@
 					</vbox>
 				</hbox>
 			</groupbox>
-			<button label="Filter" oncommand="ImagePickerChrome.Controller.doFilter();" />
-			<button type="menu" label="View" id="view-as-button">
+			<button label="&pick_button_filter.label;" oncommand="ImagePickerChrome.Controller.doFilter();" />
+			<button type="menu" label="&pick_button_view.label;" id="view-as-button">
 				<menupopup>
 					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeSmallMI"
-						label="Thumbnails(Small)" oncommand="ImagePickerChrome.Controller.doViewAS();" />
+						label="&pick_menu_thumbnails_small.label;" oncommand="ImagePickerChrome.Controller.doViewAS();" />
 					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeNormalMI"
-						label="Thumbnails(Normal)" oncommand="ImagePickerChrome.Controller.doViewAS();" />
+						label="&pick_menu_thumbnails_normal.label;" oncommand="ImagePickerChrome.Controller.doViewAS();" />
 					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeLargeMI"
-						label="Thumbnails(Large)" oncommand="ImagePickerChrome.Controller.doViewAS();" />
+						label="&pick_menu_thumbnails_large.label;" oncommand="ImagePickerChrome.Controller.doViewAS();" />
 					<menuseparator />
-                    <menuitem type="checkbox" id="showImageSizeMI" label="Show Image Size" oncommand="ImagePickerChrome.Controller.doViewAS();"/>
-					<menuitem type="checkbox" id="showImageNameMI" label="Show Image Name" oncommand="ImagePickerChrome.Controller.doViewAS();"/>
-					<menuitem type="checkbox" id="showImageUrlMI" label="Show Image URL" oncommand="ImagePickerChrome.Controller.doViewAS();" disabled="true"/>
+                    <menuitem type="checkbox" id="showImageSizeMI" label="&pick_menu_show_image_size.label;" oncommand="ImagePickerChrome.Controller.doViewAS();"/>
+					<menuitem type="checkbox" id="showImageNameMI" label="&pick_menu_show_image_name.label;" oncommand="ImagePickerChrome.Controller.doViewAS();"/>
 				</menupopup>
 			</button>
 		</hbox>
@@ -75,14 +76,14 @@
 	</vbox>
 	<hbox>
 		<hbox flex="1"  align="center" >
-			<label value="Saved Directory" />
+			<label value="&pick_saved_directory.label;" />
 			<textbox id="browsedirTB" height="18" flex="1" />
-			<toolbarbutton id="browsedir" oncommand="ImagePickerChrome.Controller.browseDir();" tooltiptext="Browse..."
+			<toolbarbutton id="browsedir" oncommand="ImagePickerChrome.Controller.browseDir();" tooltiptext="&pick_browse.tooltip;"
 				image="chrome://imagepicker/skin/browse.png"  />
 		</hbox>
 		<spacer flex="1" />
-		<button label="Save" oncommand="ImagePickerChrome.Controller.doSaveImages();" />
-		<button label="Close" oncommand="self.close();" />
+		<button label="&pick_button_save.label;" oncommand="ImagePickerChrome.Controller.doSaveImages();" />
+		<button label="&pick_button_close.label;" oncommand="self.close();" />
 	</hbox>
 	<statusbar>
 		<statusbarpanel id="filterStat" flex="1" />
