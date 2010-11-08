@@ -192,9 +192,7 @@ ImagePickerChrome.Controller = {
         // update status bar
         var oldImageConut = this.rawImageList.length;
         var newImageConut = this.imageList.length;
-        document.getElementById("filterStat").label = "Current: " + newImageConut + ", Total: " + oldImageConut
-                + ", Filter:" + (oldImageConut - newImageConut);
-
+        document.getElementById("filterStat").label = this.getFormattedString("filterStat",[newImageConut,oldImageConut, (oldImageConut - newImageConut)]);
 
         this.selectAllImages();
 
@@ -233,7 +231,7 @@ ImagePickerChrome.Controller = {
 
         var nsIFilePicker = Ci.nsIFilePicker;
         var filePicker = Cc['@mozilla.org/filepicker;1'].createInstance(nsIFilePicker);
-        filePicker.init(window, 'Select Save Folder', nsIFilePicker.modeGetFolder);
+        filePicker.init(window, this.getI18NString('selectFloderTitle'), nsIFilePicker.modeGetFolder);
 
         // locate current directory
         var destPath = document.getElementById("browsedirTB").value;
@@ -268,7 +266,7 @@ ImagePickerChrome.Controller = {
                 }
             }
 
-            document.getElementById("filterStat").label = "Starting saving file...";
+            document.getElementById("filterStat").label = this.getI18NString('startSaveFile');
 
             // Collect saved files
             var savedImages = new Array();
@@ -295,7 +293,7 @@ ImagePickerChrome.Controller = {
 
                 var img = savedImages[i];
 
-                document.getElementById("filterStat").label = "Saving " + img.fileName;
+                document.getElementById("filterStat").label = this.getFormattedString("saveNFile",[img.fileName]);
 
                 // Set default file ext as jpg
                 if ((img.fileExt == null) || (img.fileExt == "")) {
@@ -318,7 +316,7 @@ ImagePickerChrome.Controller = {
             }
 
         } else {
-            alert("dest directory not found! ");
+            alert(this.getI18NString('saveFolderNotFound'));
         }
     },
 
@@ -340,8 +338,8 @@ ImagePickerChrome.Controller = {
             }
             return subFolder;
         } catch (e) {
-            ImagePicker.Logger.info("Cannot create subfolder: " + e);
-            alert("Cannot create subfolder! subFolderName = " + subFolderName + ", e = " + e);
+            ImagePicker.Logger.warn("Cannot create subfolder: " + e);
+            alert(this.getFormattedString("createSaveFolderFailure",[subFolderName]));
         }
 
         return null;
@@ -446,6 +444,22 @@ ImagePickerChrome.Controller = {
     selectImage: function(imageId){
       var isSelected = this.selectedMap.get(imageId);
       this.selectedMap.put(imageId, !isSelected);
+    },
+
+    getI18NString: function(key){
+        // Get a reference to the strings bundle
+        if(this.stringsBundle == null){
+            this.stringsBundle = document.getElementById("string-bundle");
+        }
+        return this.stringsBundle.getString(key);
+    },
+
+    getFormattedString : function(key, parameters){
+        // Get a reference to the strings bundle
+        if(this.stringsBundle == null){
+            this.stringsBundle = document.getElementById("string-bundle");
+        }
+        return this.stringsBundle.getFormattedString(key, parameters);
     }
 };
 
@@ -484,7 +498,7 @@ ImagePickerChrome.DownloadProgressListener.prototype = {
             this.completedCount = this.completedCount + 1;
             var totalProgress = Math.ceil((this.completedCount / this.totalCount) * 100);
             document.getElementById("downloadMeter").value = totalProgress;
-            document.getElementById("filterStat").label = "Downloaded: " + totalProgress + "%";
+            document.getElementById("downloadStat").label =  totalProgress + "%";
 
             ImagePicker.Logger.debug("Listener id =" + this.id + ", Downloaded: " + totalProgress);
         }
