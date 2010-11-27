@@ -21,6 +21,9 @@ if ("undefined" == typeof (ImagePicker)) {
  * @class ImagePicker.Logger
  */
 ImagePicker.Logger = {
+    
+    enabledLog : true,
+    
     /**
      * Object reference to nsIConsoleService
      *
@@ -38,7 +41,9 @@ ImagePicker.Logger = {
      *            msg the message to log
      */
     log : function(msg) {
-        this.consoleService.logStringMessage("ImagePicker: " + msg);
+        if(this.enabledLog){
+            this.consoleService.logStringMessage("ImagePicker: " + msg);
+        }
     },
 
     /**
