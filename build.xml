@@ -6,10 +6,15 @@
     <property name="firefox.dir" value="D:\PortableApps\Browser\Firefox\Firefox" />
     <property name="firefox.exe" location="${firefox.dir}/firefox.exe"/>
     <property name="firefox.profile.path" location="${firefox.dir}/../devtest"/>
-
+    <property name="firefox.arg" value="-jsconsole"/>
+    <!-- 
+    <property name="firefox.arg" value="-safe-mode -jsconsole"/>
+    -->
+    
     <!-- Project directories -->
     <property name="src.dir" location="./srcExtension" />
-    <property name="dist.dir" location="../dist" />
+    <property name="build.dir" location="./build" />
+    <property name="dist.dir" location="./dist" />
 
     <condition property="firefox.present">
         <and>
@@ -43,19 +48,29 @@
     
     <target name="test" depends="install" description="run FireFox with this extension for testing">
         <exec executable="${firefox.exe}" spawn="true">
-            <arg line="-no-remote -jsconsole -profile ${firefox.profile.path}"/>
+            <arg line="-no-remote ${firefox.arg} -profile ${firefox.profile.path}"/>
         </exec>
     </target>
     
-    <target name="package" description="package xpi file for release">
-        <mkdir dir="${dist.dir}/${extension.version}" />
-        <delete file="${dist.dir}/${extension.version}/${ant.project.name}.xpi" failonerror="true" />
-        <zip destfile="${dist.dir}/${extension.version}/${ant.project.name}.xpi">
-            <zipfileset dir="${src.dir}/chrome" includes="**" prefix="chrome" />
-            <zipfileset dir="${src.dir}/defaults" includes="**" prefix="defaults" />
-            <zipfileset dir="${src.dir}/modules" includes="**" prefix="modules" />
-            <zipfileset dir="${src.dir}" includes="install.rdf" />
-            <zipfileset dir="${src.dir}" includes="chrome.manifest" />
+    <target name="build" description="prepare file for release">
+         <delete dir="${build.dir}" />
+         <copy todir="${build.dir}" >
+             <fileset dir="${src.dir}" />
+         </copy>
+        <replace file="${build.dir}/modules/common.js" value="enabledLog : false" summary="true" >
+            <replacetoken>enabledLog : true</replacetoken>
+        </replace>
+    </target>
+        
+    
+    <target name="package" description="package xpi file for release" depends="build">
+        <delete file="${dist.dir}/${ant.project.name}-v${extension.version}.xpi" failonerror="true" />
+        <zip destfile="${dist.dir}/${ant.project.name}-v${extension.version}.xpi">
+            <zipfileset dir="${build.dir}/chrome" includes="**" prefix="chrome" />
+            <zipfileset dir="${build.dir}/defaults" includes="**" prefix="defaults" />
+            <zipfileset dir="${build.dir}/modules" includes="**" prefix="modules" />
+            <zipfileset dir="${build.dir}" includes="install.rdf" />
+            <zipfileset dir="${build.dir}" includes="chrome.manifest" />
         </zip>
     </target>
 </project>
