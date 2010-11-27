@@ -13,7 +13,10 @@ ImagePickerChrome.pickImages = function() {
         var documentImageList = documentList[i].getElementsByTagName('img');
 
         for (j = 0; j < documentImageList.length; j++) {
-            imageList.push(documentImageList[j]);
+            var image = documentImageList[j];
+            if (image.src != null && image.src != "") {
+                imageList.push(image);
+            }
         }
         ImagePicker.Logger.info("document  = " + documentList[i] + ", images  = " + documentImageList.length);
     }
