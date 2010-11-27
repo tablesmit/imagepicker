@@ -302,6 +302,7 @@ ImagePickerChrome.Controller = {
                 var file = ImagePicker.FileUtils.createUniqueFile(img.fileName, dest, fileNames);
 
                 // this.saveImageToFile(img, file);
+                ImagePicker.Logger.debug("save image: " + img);
                 this.saveFileByDownloadManager(img.url, file);
             }
 
