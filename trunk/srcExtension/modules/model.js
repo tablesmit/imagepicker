@@ -25,21 +25,12 @@ ImagePicker.ImageInfo = function(id, image) {
     this.width = image.width;
     this.fileSize = 0;
     this.loadFileSizeFromCacheCompleted = false;
-    this.loadFileSizeByAjaxCompleted = false;
     this.properyChangeListener = null;
 
     this.nameFromURL = this.url.substring(this.url.lastIndexOf('/') + 1, this.url.length);
-    this.fileName = this.nameFromURL;
 
-    // calculate file ext
-    this.fileExt = "jpg"; // default file ext
-
-    var reg = /(\w+\.(\w*))/;
-    var result = reg.exec(this.fileName);
-    if (result != null) {
-        this.fileName = result[1];
-        this.fileExt = result[2];
-    }
+    this.fileExt = null; 
+    this.setFileName(this.nameFromURL);
 
     ImagePicker.Logger.info("Created ImageInfo[id=" + this.id + ", name=" + this.fileName + ", width=" + this.width
             + ", height=" + this.height + ",URL=" + this.url + "]");
@@ -65,7 +56,23 @@ ImagePicker.ImageInfo.prototype = {
     },
 
     setFileName : function(newFileName) {
-        this.fileName = newFileName;
+        var reg = /(\w+\.(\w*))/;
+        var result = reg.exec(newFileName);
+        if (result != null) {
+            this.fileName = result[1];
+            this.fileExt = result[2];
+        } else {
+            this.fileName = newFileName;
+        }
+
+        // fire update event
+        if (this.properyChangeListener) {
+            this.properyChangeListener.onPropertyChange(this);
+        }
+    },
+    
+    setFileExt : function(newFileExt) {
+        this.fileExt = newFileExt;
 
         // fire update event
         if (this.properyChangeListener) {

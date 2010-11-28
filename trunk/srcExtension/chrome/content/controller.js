@@ -266,7 +266,7 @@ ImagePickerChrome.Controller = {
                 }
             }
 
-            document.getElementById("filterStat").label = this.getI18NString('startSaveFile');
+            //document.getElementById("filterStat").label = this.getI18NString('startSaveFile');
 
             // Collect saved files
             var savedImages = new Array();
@@ -293,17 +293,21 @@ ImagePickerChrome.Controller = {
 
                 var img = savedImages[i];
 
-                document.getElementById("filterStat").label = this.getFormattedString("saveNFile",[img.fileName]);
+                //document.getElementById("filterStat").label = this.getFormattedString("saveNFile",[img.fileName]);
 
                 // Set default file ext as jpg
-                if ((img.fileExt == null) || (img.fileExt == "")) {
+                if (img.fileExt == null || img.fileExt == "") {
                     img.fileName = img.fileName + ".jpg";
                 }
+    
                 var file = ImagePicker.FileUtils.createUniqueFile(img.fileName, dest, fileNames);
 
-                // this.saveImageToFile(img, file);
-                ImagePicker.Logger.debug("save image: " + img);
-                this.saveFileByDownloadManager(img.url, file);
+                try {
+                    // this.saveImageToFile(img, file);
+                    this.saveFileByDownloadManager(img.url, file);
+                } catch (ex) {
+                    ImagePicker.Logger.error("Cannot save image: " + img, ex);
+                }
             }
 
             //open Explorer after saved if need
@@ -370,7 +374,7 @@ ImagePickerChrome.Controller = {
             persist.saveURI(uri, cacheKey, null, null, null, file);
 
         } catch (e) {
-            ImagePicker.Logger.info("cannot save file size for URL: " + imageInfo.url + ", exception = " + e);
+            ImagePicker.Logger.info("cannot save file for URL: " + imageInfo.url + ", exception = " + e);
         }
     },
 
@@ -402,7 +406,7 @@ ImagePickerChrome.Controller = {
             var type = msrv.getTypeFromURI(fromURI);
             mime = msrv.getFromTypeAndExtension(type, "");
         } catch (e) {
-            ImagePicker.Logger.info("can not get mine type, e = " + e);
+            ImagePicker.Logger.info("cannot get mine type, e = " + e);
         }
 
         // Observer for download
@@ -517,7 +521,7 @@ ImagePickerChrome.DownloadProgressListener.prototype = {
 };
 
 /**
- * Constructor.
+ * Init Controller.
  */
 (function() {
     this.init();

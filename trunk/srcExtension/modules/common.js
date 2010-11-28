@@ -8,11 +8,7 @@ const Ci = Components.interfaces;
  * ImagePicker namespace.
  */
 if ("undefined" == typeof (ImagePicker)) {
-    ImagePicker = {
-        guid: (new Date()).getTime(),
-        fileProtocolHandler: Cc["@mozilla.org/network/protocol;1?name=file"].createInstance(Ci.nsIFileProtocolHandler),
-        httpCacheSession :  Cc["@mozilla.org/network/cache-service;1"].getService(Ci.nsICacheService).createSession("HTTP", Ci.nsICache.STORE_ANYWHERE, true)
-    };
+    ImagePicker = {};
 };
 
 /**
