@@ -121,6 +121,12 @@ ImagePickerChrome.ImageGrid.prototype = {
                     var imageRate = widthPerImage / Math.max(imgInfo.width, imgInfo.height, 1);
                     var width = Math.min(imageRate * imgInfo.width, imgInfo.width);
                     var height = Math.min(imageRate * imgInfo.height, imgInfo.height);
+                    if(width == 0){
+                        width = widthPerImage;
+                    }
+                    if(height == 0){
+                        height = widthPerImage;
+                    }
 
                     imgElem.setAttribute("width", width);
                     imgElem.setAttribute("height", height);
@@ -172,6 +178,10 @@ ImagePickerChrome.ImageGrid.prototype = {
     },
 
     updateImageInfo : function(imageInfo) {
+        
+        if(document == null){ // sometimes, the pick windows is closed
+            return;
+        }
 
         var adBox = document.getElementById(imageInfo.id + "-AdBox");
 
@@ -205,7 +215,7 @@ ImagePickerChrome.ImageGrid.prototype = {
             var info = imageInfo.width + "x" + imageInfo.height + " ";
             if (imageInfo.fileSize > 0) {
                 info = info + Math.ceil(imageInfo.fileSize / 1000) + "k ";
-            } else if((imageInfo.loadFileSizeFromCacheCompleted == false) || (imageInfo.loadFileSizeByAjaxCompleted == false)){
+            } else if(imageInfo.loadFileSizeFromCacheCompleted == false){
                 info = info + " loading ";
             } else {
                 info = info + 0 + "k ";

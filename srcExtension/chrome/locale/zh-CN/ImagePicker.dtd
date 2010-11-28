@@ -9,9 +9,9 @@
 
 <!ENTITY pick_window.title "拾图">
 <!ENTITY pick_size_limits.label "大小限制">
-<!ENTITY pick_min_size.label "最小长度">
+<!ENTITY pick_min_size.label "文件大于">
 <!ENTITY pick_min_width.label "最小宽度">
-<!ENTITY pick_min_height.label "最小宽度">
+<!ENTITY pick_min_height.label "最小高度">
 <!ENTITY pick_image_types.label "图片类型">
 <!ENTITY pick_button_filter.label "筛选">
 <!ENTITY pick_button_view.label "查看">

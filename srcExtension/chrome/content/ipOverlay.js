@@ -2,7 +2,13 @@ Components.utils.import("resource://imagepicker/common.js");
 Components.utils.import("resource://imagepicker/model.js");
 
 ImagePickerChrome.pickImages = function() {
+    
+    //init cache session
+    var cacheService =  Cc["@mozilla.org/network/cache-service;1"].getService(Ci.nsICacheService);
+    ImagePickerChrome.httpCacheSession = cacheService.createSession("HTTP", Ci.nsICache.STORE_ANYWHERE,  Ci.nsICache.STREAM_BASED);
+    ImagePickerChrome.httpCacheSession.doomEntriesIfExpired = false;
 
+    //Get images
     var mainTabBox = getBrowser().mTabBox;
     var contentWindow = getBrowser().browsers[mainTabBox.selectedIndex].contentWindow;
     var documentList = ImagePickerChrome.getDocumentList(contentWindow);
@@ -33,7 +39,6 @@ ImagePickerChrome.pickImages = function() {
         var image = new ImagePicker.ImageInfo(guid++, tidiedImageList[j]);
 
         ImagePickerChrome.ImageUtils.updateFileSizeFromCache(image);
-        ImagePickerChrome.ImageUtils.updateFileSizeByAjax(image);
         ImagePickerChrome.ImageUtils.updateFileNameFromCache(image);
 
         imageInfoList.push(image);

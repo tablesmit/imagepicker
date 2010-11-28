@@ -31,6 +31,11 @@
                 <propertyref prefix="firefox." />
             </propertyset>
         </echoproperties>
+        
+        <!-- Clean all folders/files under build directory-->
+        <delete includeEmptyDirs="true">
+            <fileset dir="${build.dir}" includes="**/*"/>
+        </delete>
     </target>
 
     <target name="install" depends="init">    
@@ -52,8 +57,7 @@
         </exec>
     </target>
     
-    <target name="build" description="prepare file for release">
-         <delete dir="${build.dir}" />
+    <target name="build" description="prepare file for release" depends="init">
          <copy todir="${build.dir}" >
              <fileset dir="${src.dir}" />
          </copy>
