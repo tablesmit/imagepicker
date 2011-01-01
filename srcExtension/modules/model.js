@@ -24,6 +24,7 @@ ImagePicker.ImageInfo = function(id, image) {
     this.height = image.height;
     this.width = image.width;
     this.fileSize = 0;
+    this.isCached = true;
     this.loadFileSizeFromCacheCompleted = false;
     this.properyChangeListener = null;
 

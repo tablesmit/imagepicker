@@ -32,6 +32,14 @@ ImagePickerChrome.ImageUtils = {
             var updateTimer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
             updateTimer.initWithCallback(callback, 5 * 1000, Ci.nsITimer.TYPE_REPEATING_SLACK); //5s
         }
+        
+        if(!imageInfo.isCached){
+            try{
+                ImagePickerChrome.ImageUtils.storeImageInCache(imageInfo.url);
+            }catch(ex){
+                ImagePicker.Logger.debug("Cannot store cache for " + imageInfo + ", e="+ ex);
+            }
+        }
     },
     
     /**
@@ -49,14 +57,16 @@ ImagePickerChrome.ImageUtils = {
         var fileSize = null;
         try {
             // try to get from http cache, return nsICacheEntryDescriptor            
-            var cacheEntry = ImagePickerChrome.httpCacheSession.openCacheEntry(cacheKey, Ci.nsICache.ACCESS_READ, false);
-            if (cacheEntry) {
-                fileSize = cacheEntry.dataSize;
+            var descriptor = ImagePickerChrome.httpCacheSession.openCacheEntry(cacheKey, Ci.nsICache.ACCESS_READ, false);
+            if (descriptor) {
+                fileSize = descriptor.dataSize;
+                descriptor.close();
             }
         } catch (ex) {
             if (ex.result == 0x804B003D) {
                 //NS_ERROR_CACHE_KEY_NOT_FOUND (0x804B003D): Thrown when the url contents are not in the cache.
                 ImagePicker.Logger.debug("Error: NS_ERROR_CACHE_KEY_NOT_FOUND, cacheKey=" + cacheKey + ", " + imageInfo);
+                imageInfo.isCached = false;
             } else if (ex.result == 0x804b0040) {
                 //NS_ERROR_CACHE_WAIT_FOR_VALIDATION (0x804B0040): Thrown when the url contents are in the cache, but not yet marked valid.
                 ImagePicker.Logger.debug("Error: NS_ERROR_CACHE_WAIT_FOR_VALIDATION, " + imageInfo);
@@ -165,6 +175,50 @@ ImagePickerChrome.ImageUtils = {
                 ImagePicker.Logger.info("update file name to " + fileName + " from content-disposition for " + imageInfo);
             }
         }
+    },
+    
+    getImageDataFromURL : function(url){
+          var ioserv = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService); 
+          var channel = ioserv.newChannel(url, 0, null); 
+          var stream = channel.open(); 
+        
+          if (channel instanceof Components.interfaces.nsIHttpChannel && channel.responseStatus != 200) { 
+            return ""; 
+          }
+        
+          var bstream = Components.classes["@mozilla.org/binaryinputstream;1"] 
+            .createInstance(Components.interfaces.nsIBinaryInputStream); 
+          bstream.setInputStream(stream); 
+        
+          var size = 0; 
+          var file_data = ""; 
+          while((size = bstream.available())) { 
+            file_data += bstream.readBytes(size); 
+          } 
+        
+          return file_data; 
+    },
+    
+    storeImageInCache : function(url){
+          var data = this.getImageDataFromURL(url);
+          if(data == ""){
+              return;
+          }
+          
+          var key = url.toString();
+          
+          ImagePicker.Logger.info(" try to stroe image to cache for " + url +", data size=" +  data.length);
+           
+          var outputEntry = ImagePickerChrome.httpCacheSession.openCacheEntry(key, nsICache.ACCESS_WRITE);
+          var output = outputEntry.transport.openOutputStream(0, -1, 0);
+          var count = output.write(data, data.length);
+    
+          // store some metadata.
+          outputEntry.setMetaDataElement("size", data.length);
+    
+          output.close();
+          outputEntry.markValid();
+          outputEntry.close();
     },
     
     /**
