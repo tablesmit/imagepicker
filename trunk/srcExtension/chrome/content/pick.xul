@@ -4,6 +4,7 @@
 <!DOCTYPE overlay SYSTEM "chrome://imagepicker/locale/ImagePicker.dtd">
 
 <window id="root-windows" title="&pick_window.title;"
+    xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	persist="width height screenX screenY" onload="ImagePickerChrome.Controller.loadPickWindow();"
 	onunload="ImagePickerChrome.Controller.unloadPickWindow();">
@@ -17,7 +18,7 @@
     </stringbundleset>
     
 	<vbox>
-		<hbox align="center">
+		<hbox >
 			<groupbox>
 				<caption>
 					<label value="&pick_size_limits.label;" />
@@ -30,13 +31,13 @@
 						<column flex="1" />
 					</columns>
 					<rows>
-						<row>
-							<label value="&pick_min_size.label;" />
+						<row align="center">
+							<label value="&pick_min_size.label;" valign="bottom"/>
 							<textbox id="minSizeTB" width="70" type="number" />
 							<label value="&pick_min_width.label;" />
 							<textbox id="minWidthTB" width="70" type="number" />
 						</row>
-						<row>
+						<row align="center">
 							<label value="" />
 							<label value="" />
 							<label value="&pick_min_height.label;" />
@@ -60,8 +61,9 @@
 					</vbox>
 				</hbox>
 			</groupbox>
+            <hbox align="center" style="margin-left:10px;">
 			<button label="&pick_button_filter.label;" oncommand="ImagePickerChrome.Controller.doFilter();" />
-			<button type="menu" label="&pick_button_view.label;" id="view-as-button">
+    			<button type="menu" label="&pick_button_view.label;" id="view-as-button" image="chrome://imagepicker/skin/Pictures.ico">
 				<menupopup>
 					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeSmallMI"
 						label="&pick_menu_thumbnails_small.label;" oncommand="ImagePickerChrome.Controller.doViewAS();" />
@@ -74,15 +76,16 @@
 					<menuitem type="checkbox" id="showImageNameMI" label="&pick_menu_show_image_name.label;" oncommand="ImagePickerChrome.Controller.doViewAS();"/>
 				</menupopup>
 			</button>
+            </hbox>
 		</hbox>
 	</vbox>
-	<vbox id="imageContainer" style="overflow: auto; background-color: #FFFFFF; margin:5px;"
+	<vbox id="imageContainer" style="overflow: auto; background-color: #FFFFFF; margin:5px; border-style: groove; border-width: 1px; border-color: #b9ae9d"
 		persist="height" height="300" align="center" flex="1">
 	</vbox>
 	<hbox>
 		<hbox flex="1"  align="center" >
 			<label value="&pick_saved_directory.label;" />
-			<textbox id="browsedirTB" height="18" flex="1" />
+			<textbox id="browsedirTB" flex="1" />
 			<toolbarbutton id="browsedir" oncommand="ImagePickerChrome.Controller.browseDir();" tooltiptext="&pick_browse.tooltip;"
 				image="chrome://imagepicker/skin/browse.png"  />
 		</hbox>

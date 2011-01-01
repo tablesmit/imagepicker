@@ -37,7 +37,7 @@ ImagePickerChrome.ImageGrid.prototype = {
         this.thumbnailType = thumbnailType;
         switch (thumbnailType) {
         case "small":
-            this.thumbnailSize = 150;
+            this.thumbnailSize = 200;
             break;
         case "normal":
             this.thumbnailSize = 300;
@@ -64,6 +64,7 @@ ImagePickerChrome.ImageGrid.prototype = {
     render : function(imageList, selectedMap) {
 
         var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+        var HTML_NS = "http://www.w3.org/1999/xhtml";
 
         var columnWidth = this.thumbnailSize;
         var widthPerImage = this._getWidthPerImage();
@@ -114,9 +115,11 @@ ImagePickerChrome.ImageGrid.prototype = {
                     var imgInfo = imageList[index];
 
                     // create image element
+                    //var imgElem = document.createElementNS(HTML_NS, "img");
                     var imgElem = document.createElementNS(XUL_NS, "image");
                     imgElem.setAttribute("id", imgInfo.id);
                     imgElem.setAttribute("src", imgInfo.url);
+                    //imgElem.setAttribute("validate", "always");
 
                     var imageRate = widthPerImage / Math.max(imgInfo.width, imgInfo.height, 1);
                     var width = Math.min(imageRate * imgInfo.width, imgInfo.width);
@@ -130,20 +133,25 @@ ImagePickerChrome.ImageGrid.prototype = {
 
                     imgElem.setAttribute("width", width);
                     imgElem.setAttribute("height", height);
-                    cellBox.appendChild(imgElem);
-
+                    
+                    var imgBox = document.createElementNS(XUL_NS, "vbox");
+                    imgBox.setAttribute("width", widthPerImage);
+                    imgBox.setAttribute("height", widthPerImage);
+                    imgBox.setAttribute("align", "center");
+                    imgBox.setAttribute("pack", "center");
+                    imgBox.appendChild(imgElem);
+                  
                     // show additional info
                     var adBox = document.createElementNS(XUL_NS, "vbox");
                     adBox.setAttribute("id", imgInfo.id+"-AdBox");
                     adBox.setAttribute("align", "center");
                     this.renderAdditionalInfo(imgInfo, widthPerImage, adBox);
-                    cellBox.appendChild(adBox);
-
+                
                     //Add checkbox
                     var checkbox = document.createElementNS(XUL_NS, "checkbox");
                     checkbox.setAttribute("checked", selectedMap.get(imgInfo.id));
                     checkbox.setAttribute("oncommand", 'ImagePickerChrome.Controller.selectImage('+imgInfo.id+')');
-                    cellBox.appendChild(checkbox);
+                    
 
                     //register change listener
                     var changeListener = {
@@ -153,6 +161,11 @@ ImagePickerChrome.ImageGrid.prototype = {
                         }
                     };
                     imgInfo.registerChangeListener(changeListener);
+                    
+                    //layout
+                    cellBox.appendChild(imgBox);
+                    cellBox.appendChild(adBox);
+                    cellBox.appendChild(checkbox);
                 }
 
                 index++;
@@ -224,9 +237,15 @@ ImagePickerChrome.ImageGrid.prototype = {
         }
 
         if (this.isShowImageName) { // show image name
+            var pxPerChar = 8;
             var info = imageInfo.fileName;
-            if (imageInfo.fileName.length > widthPerImage / 6) {
-                info = imageInfo.fileName.substr(0, widthPerImage / 6 - 6) + "...";
+            if (info.length * pxPerChar > widthPerImage) {
+                var limitLen =  widthPerImage / pxPerChar - "...".length;
+                if (imageInfo.fileExt != null) {
+                    limitLen = limitLen - imageInfo.fileExt.length;
+                }
+                
+                info = imageInfo.fileName.substr(0, limitLen) + "...";
                 if (imageInfo.fileExt != null) {
                     info = info + imageInfo.fileExt;
                 }
