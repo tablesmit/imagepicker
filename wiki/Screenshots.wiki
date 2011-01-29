@@ -1,4 +1,4 @@
-#summary Screenshots for FileLinks plugin.
+#summary Screenshots for ImagePicker plugin.
 #labels Featured
 
 === Feature ===
