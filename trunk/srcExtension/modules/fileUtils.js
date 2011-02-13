@@ -44,7 +44,8 @@ ImagePicker.FileUtils = {
     },
 
     /**
-     * Attempt to create a directory for the given path.
+     * Convert the path to nsILocalFile object.
+     * Attempt to create a directory for the given path if it is a nonexistent directory.
      *
      * @method toDirectory
      * @param {String}
@@ -63,11 +64,13 @@ ImagePicker.FileUtils = {
 
         try {
             directory.initWithPath(path);
-            if (directory.exists()) {
-                return directory;
+            if (!directory.exists()) {
+                directory.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
             }
+            
+            return directory;
         } catch (e) {
-            ImagePicker.Logger.warn("Cannot convert path: " + path + " to directory", e);
+            ImagePicker.Logger.warn("Cannot convert path: " + path + " to directory. ", e);
             return null;
         }
 

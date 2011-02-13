@@ -256,72 +256,71 @@ ImagePickerChrome.Controller = {
         var destPath = document.getElementById("browsedirTB").value;
         var dest = ImagePicker.FileUtils.toDirectory(destPath);
 
-        if (dest) {
+        if (!dest) {
+            alert(this.getI18NString('invalidSaveFolder'));
+            return;
+        }
 
-            //Create sub-folder if need
-            if(this.createdFolderByTitle){
-                var subFolder = this._createFolderByTitle(destPath);
-                if(subFolder != null){
-                    dest = subFolder;
-                }
+        //Create sub-folder if need
+        if(this.createdFolderByTitle){
+            var subFolder = this._createFolderByTitle(destPath);
+            if(subFolder != null){
+                dest = subFolder;
+            }
+        }
+
+        //document.getElementById("filterStat").label = this.getI18NString('startSaveFile');
+
+        // Collect saved files
+        var savedImages = new Array();
+        for ( var i = 0; i < this.imageList.length; i++) {
+            var img = this.imageList[i];
+            if(this.selectedMap.get(img.id) == true){ // saved selected image only
+                savedImages.push(img);
+            }
+        }
+
+        // Got instance of download manager
+        var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
+
+        // Register progress listener
+        if (this.progressListener != null) {
+            dm.removeListener(this.progressListener);
+        }
+        this.progressListener = new ImagePickerChrome.DownloadProgressListener(savedImages.length);
+        dm.addListener(this.progressListener);
+
+        // Handle each file
+        var fileNames = new Array();
+        for ( var i = 0; i < savedImages.length; i++) {
+
+            var img = savedImages[i];
+
+            //document.getElementById("filterStat").label = this.getFormattedString("saveNFile",[img.fileName]);
+
+            // Set default file ext as jpg
+            if (img.fileExt == null || img.fileExt == "") {
+                img.fileName = img.fileName + ".jpg";
             }
 
-            //document.getElementById("filterStat").label = this.getI18NString('startSaveFile');
+            var file = ImagePicker.FileUtils.createUniqueFile(img.fileName, dest, fileNames);
 
-            // Collect saved files
-            var savedImages = new Array();
-            for ( var i = 0; i < this.imageList.length; i++) {
-                var img = this.imageList[i];
-                if(this.selectedMap.get(img.id) == true){ // saved selected image only
-                    savedImages.push(img);
-                }
+            try {
+                // this.saveImageToFile(img, file);
+                this.saveFileByDownloadManager(img.url, file);
+            } catch (ex) {
+                ImagePicker.Logger.error("Cannot save image: " + img, ex);
             }
+        }
 
-            // Got instance of download manager
-            var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
+        //open Explorer after saved if need
+        if(this.openExplorerAfterSaved){
+            ImagePicker.FileUtils.revealDirectory(dest);
+        }
 
-            // Register progress listener
-            if (this.progressListener != null) {
-                dm.removeListener(this.progressListener);
-            }
-            this.progressListener = new ImagePickerChrome.DownloadProgressListener(savedImages.length);
-            dm.addListener(this.progressListener);
-
-            // Handle each file
-            var fileNames = new Array();
-            for ( var i = 0; i < savedImages.length; i++) {
-
-                var img = savedImages[i];
-
-                //document.getElementById("filterStat").label = this.getFormattedString("saveNFile",[img.fileName]);
-
-                // Set default file ext as jpg
-                if (img.fileExt == null || img.fileExt == "") {
-                    img.fileName = img.fileName + ".jpg";
-                }
-    
-                var file = ImagePicker.FileUtils.createUniqueFile(img.fileName, dest, fileNames);
-
-                try {
-                    // this.saveImageToFile(img, file);
-                    this.saveFileByDownloadManager(img.url, file);
-                } catch (ex) {
-                    ImagePicker.Logger.error("Cannot save image: " + img, ex);
-                }
-            }
-
-            //open Explorer after saved if need
-            if(this.openExplorerAfterSaved){
-                ImagePicker.FileUtils.revealDirectory(dest);
-            }
-
-            //open DownloadManager after saved if need
-            if(this.openDownloadManagerAfterSaved){
-                this.showDownloadManagerUI();
-            }
-
-        } else {
-            alert(this.getI18NString('saveFolderNotFound'));
+        //open DownloadManager after saved if need
+        if(this.openDownloadManagerAfterSaved){
+            this.showDownloadManagerUI();
         }
     },
 
