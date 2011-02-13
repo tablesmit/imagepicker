@@ -3,6 +3,6 @@
 
 == Images from URLs without extension test ==
 
-Images from URLs without extensions are saved without extensions. You should use the MIME service to ensure that the URL's current extension is appropriate to the image's MIME type.
+Images from URLs without extensions are saved without extensions. ImagePicker should use the MIME service to ensure that the URL's current extension is appropriate to the image's MIME type.
 
-http://imagepicker.googlecode.com/svn//wiki/img/test-img/jpg-with-error-ext.png
+http://sites.google.com/site/imagepickertest/test
