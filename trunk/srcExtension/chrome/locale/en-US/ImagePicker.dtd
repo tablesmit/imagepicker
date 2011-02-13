@@ -2,6 +2,7 @@
 <!ENTITY toolbarbutton_pick_images.tooltip "Pick Images">
 <!ENTITY menu_pick_images.label "Pick Images">
 
+<!ENTITY options_dialog.title "Image Picker preferences" >
 <!ENTITY pref_created_folder_by_title.label "Create saved folder by title automatically">
 <!ENTITY pref_open_explorer_after_saved.label "Open Explorer after saved automatically">
 <!ENTITY pref_open_download_manager_after_saved.label "Open Download Manager after saved automatically">
