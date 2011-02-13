@@ -12,6 +12,7 @@
                    em:optionsURL="chrome://imagepicker/content/options.xul"
                    em:iconURL="chrome://imagepicker/skin/img-picker_24.png">
     <em:targetApplication RDF:resource="rdf:#$A4.QS1"/>
+    <em:unpack>true</em:unpack>
   </RDF:Description>
   <RDF:Description RDF:about="rdf:#$A4.QS1"
                    em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
