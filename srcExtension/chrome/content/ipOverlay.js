@@ -38,6 +38,7 @@ ImagePickerChrome.pickImages = function() {
         ImagePicker.Logger.info("image" + j + " = " + tidiedImageList[j].src);
         var image = new ImagePicker.ImageInfo(guid++, tidiedImageList[j]);
 
+        ImagePickerChrome.ImageUtils.updateFileExtensionByMIME(image);
         ImagePickerChrome.ImageUtils.updateFileSizeFromCache(image);
         ImagePickerChrome.ImageUtils.updateFileNameFromCache(image);
 

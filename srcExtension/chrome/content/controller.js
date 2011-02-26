@@ -298,12 +298,7 @@ ImagePickerChrome.Controller = {
 
             //document.getElementById("filterStat").label = this.getFormattedString("saveNFile",[img.fileName]);
 
-            // Set default file ext as jpg
-            if (img.fileExt == null || img.fileExt == "") {
-                img.fileName = img.fileName + ".jpg";
-            }
-
-            var file = ImagePicker.FileUtils.createUniqueFile(img.fileName, dest, fileNames);
+            var file = ImagePicker.FileUtils.createUniqueFile(img.getFileNameExt(), dest, fileNames);
 
             try {
                 // this.saveImageToFile(img, file);

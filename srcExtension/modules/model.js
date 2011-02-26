@@ -57,7 +57,7 @@ ImagePicker.ImageInfo.prototype = {
     },
 
     setFileName : function(newFileName) {
-        var reg = /(\w+\.(\w*))/;
+        var reg = /(.+)\.(\w*)/;
         var result = reg.exec(newFileName);
         if (result != null) {
             this.fileName = result[1];
@@ -80,8 +80,12 @@ ImagePicker.ImageInfo.prototype = {
             this.properyChangeListener.onPropertyChange(this);
         }
     },
+    
+    getFileNameExt : function() {
+        return this.fileName + (this.fileExt == null? "": ("." + this.fileExt));
+    },
 
     toString : function() {
-        return "Image:[id=" + this.id + ", name=" + this.fileName + "]";
+        return "Image:[id=" + this.id + ", name=" + this.fileName + ", ext=" + this.fileExt + "]";
     }
 };
