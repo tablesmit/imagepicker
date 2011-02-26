@@ -198,7 +198,7 @@ ImagePickerChrome.ImageGrid.prototype = {
 
         var adBox = document.getElementById(imageInfo.id + "-AdBox");
 
-        //ImagePicker.Logger.debug("updateImageInfo to " + adBox + " for " + imageInfo);
+        ImagePicker.Logger.debug("updateImageInfo to " + adBox + " for " + imageInfo);
 
         if (adBox != null) {
             // clean old additional info content
@@ -233,12 +233,13 @@ ImagePickerChrome.ImageGrid.prototype = {
             } else {
                 info = info + 0 + "k ";
             }
+            ImagePicker.Logger.debug("AdditionalInfo1 " + info + " for " + imageInfo);
             additionalInfos.push(info);
         }
 
         if (this.isShowImageName) { // show image name
             var pxPerChar = 8;
-            var info = imageInfo.fileName;
+            var info = imageInfo.getFileNameExt();
             if (info.length * pxPerChar > widthPerImage) {
                 var limitLen =  widthPerImage / pxPerChar - "...".length;
                 if (imageInfo.fileExt != null) {
@@ -250,6 +251,7 @@ ImagePickerChrome.ImageGrid.prototype = {
                     info = info + imageInfo.fileExt;
                 }
             }
+            ImagePicker.Logger.debug("AdditionalInfo2 " + info + " for " + imageInfo);
             additionalInfos.push(info);
         }
         return additionalInfos;

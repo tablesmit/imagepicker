@@ -122,14 +122,13 @@ ImagePickerChrome.ImageUtils = {
                 if (props.has("type")) {
                     contentType = props.get("type", nsISupportsCString);
                     if (contentType) {
-                        var typeInfo = contentType.toString();
-                        var fileExt = typeInfo.substring(typeInfo.lastIndexOf('/') + 1, typeInfo.length);
-                        if (fileExt == "jpeg") {
-                            fileExt = "jpg";
+                        var msrv = Cc["@mozilla.org/mime;1"].getService(Ci.nsIMIMEService);
+                        var mime = msrv.getFromTypeAndExtension(contentType, "");
+                        if(mime != null && !mime.extensionExists(imageInfo.fileExt)){
+                            imageInfo.setFileExt(mime.primaryExtension);
+                            ImagePicker.Logger.info("update file ext to " + mime.primaryExtension + " from content-type for " + imageInfo);
                         }
-                        imageInfo.setFileExt(fileExt);
-                        ImagePicker.Logger.info("update file ext to " + fileExt + " from content-type for " + imageInfo);
-                    }
+                   }
                 }
                 ImagePicker.Logger.debug("contentDisposition = " + contentDisposition + ", contentType = " + contentType + " for " + imageInfo);
             }
@@ -164,7 +163,33 @@ ImagePickerChrome.ImageUtils = {
             }
         }
     },
-        
+    
+    /**
+     * Attempt to update file ext from MIME service.
+     *
+     * @method updateFileExtensionByMIME
+     * @param {ImageInfo}
+     *            imageInfo The ImageInfo object to updated
+     */
+    updateFileExtensionByMIME: function(imageInfo){
+       
+        try {
+            // Create URI for image
+            var ios = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
+            var fromURI = ios.newURI(imageInfo.url, null, null);
+            
+            var msrv = Cc["@mozilla.org/mime;1"].getService(Ci.nsIMIMEService);
+            var type = msrv.getTypeFromURI(fromURI);
+            var mime = msrv.getFromTypeAndExtension(type, "");
+            if(mime != null && !mime.extensionExists(imageInfo.fileExt)){
+                imageInfo.setFileExt(mime.primaryExtension);
+                ImagePicker.Logger.info("update file extension to " + mime.primaryExtension + " by MIME for image:" + imageInfo);
+            }
+        } catch (e) {
+            ImagePicker.Logger.info("cannot update file extension by MIME for image" + imageInfo + ", e = " + e);
+        }
+    },
+            
     /**
      * Constructs a new URI, using nsIIOService.
      *
