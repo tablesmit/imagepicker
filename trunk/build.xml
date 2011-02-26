@@ -2,7 +2,7 @@
 <project name="ImagePicker" default="package">
 
     <property name="extension.id" value="ImagePicker@topolog.org" />
-    <property name="extension.version" value="0.9" />
+    <property name="extension.version" value="0.9.2" />
     
     <!-- firefox configruation for windows -->
     <property name="firefox.dir" value="D:\PortableApps\Browser\Firefox\Firefox" />

@@ -5,7 +5,7 @@
   <RDF:Description RDF:about="urn:mozilla:install-manifest"
                    em:id="ImagePicker@topolog.org"
                    em:name="Image Picker"
-                   em:version="0.9"
+                   em:version="0.9.2"
                    em:creator="Wesley Chen (topolog@gmail.com)"
                    em:description="Choose (filter) images and save images from web page to local disk."
                    em:homepageURL="https://addons.mozilla.org/firefox/addon/235863"
