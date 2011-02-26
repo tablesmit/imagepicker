@@ -89,12 +89,6 @@ ImagePicker.FileUtils = {
 
         var validName = originalName;
 
-        // remove "- Mozilla Firefox"
-        var parts = originalName.split("-");
-        if (parts.length > 1) {
-            validName = parts[parts.length - 2];
-        }
-
         // replace special char
         var reg = /[\\\/:\*?\"<>|]/g;
         validName = validName.replace(reg, "");

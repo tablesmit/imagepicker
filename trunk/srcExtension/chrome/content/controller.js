@@ -334,7 +334,7 @@ ImagePickerChrome.Controller = {
         // create new folder with window title
         try {
 
-            subFolderName = ImagePicker.FileUtils.toValidName(window.document.title);
+            subFolderName = this._makeFolderNameByTitle(window.document.title);
             subFolder.append(subFolderName);
             if (!subFolder.exists() || !subFolder.isDirectory()) {
                 // if it doesn't exist, create
@@ -349,6 +349,18 @@ ImagePickerChrome.Controller = {
         return null;
     },
 
+    _makeFolderNameByTitle : function(docTitle){
+        var subFolderName = docTitle;
+        
+        //remove unnecessary text
+        subFolderName = subFolderName.replace(/- Mozilla Firefox/g, '');
+        subFolderName = subFolderName.replace(/- Powered by Discuz!/g, '');
+        
+        //TODO: Refactor the above code to use preference
+        
+        return ImagePicker.FileUtils.toValidName(subFolderName);
+    },
+    
     /**
      * save image to local
      *
