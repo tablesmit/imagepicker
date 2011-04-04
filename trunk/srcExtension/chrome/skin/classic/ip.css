@@ -1,9 +1,22 @@
 /*  skin/toolbar-button.css  */
-
 #image-pick-button {
-  list-style-image: url("chrome://imagepicker/skin/img-picker_24.png");
+    list-style-image: url("chrome://imagepicker/skin/img-picker_24.png");
 }
 
-toolbar[iconsize="small"] #image-pick-button {
-  list-style-image: url("chrome://imagepicker/skin/img-picker_16.png");
+toolbar[iconsize ="small"] #image-pick-button {
+    list-style-image: url("chrome://imagepicker/skin/img-picker_16.png");
+}
+
+.image-cell {
+    margin: 5px;
+    outline: #98989A solid 1px;
+    background-color: #F3F3F3;
+}
+
+.image-cell-highlight {
+     background-color: #C8E6ED;
+     -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.6) inset;
+}
+
+.image-cell-selected {
 }
