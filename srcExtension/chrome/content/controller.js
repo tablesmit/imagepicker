@@ -5,6 +5,7 @@ Components.utils.import("resource://imagepicker/common.js");
 Components.utils.import("resource://imagepicker/hashMap.js");
 Components.utils.import("resource://imagepicker/fileUtils.js");
 Components.utils.import("resource://imagepicker/prefUtils.js");
+Components.utils.import("resource://imagepicker/xulUtils.js");
 Components.utils.import("resource://imagepicker/model.js");
 Components.utils.import("resource://imagepicker/filters.js");
 
@@ -151,6 +152,15 @@ ImagePickerChrome.Controller = {
         var gridWidth = window.innerWidth - 6;
         this.imageGrid.gridWidth = gridWidth;
         this.imageGrid.render(this.imageList, this.selectedMap);
+        
+        // display select status
+        var imageIds = this.selectedMap.keys();
+        for(var i=0; i< imageIds.length; i++){
+            var imageId = imageIds[i];
+            if(this.selectedMap.get(imageId) == true){
+                this._selectImage(imageId);
+            }
+        }
     },
 
     /**
@@ -447,14 +457,63 @@ ImagePickerChrome.Controller = {
         this.selectedMap = new ImagePicker.HashMap();
         for ( var i = 0; i < this.imageList.length; i++) {
             var img = this.imageList[i];
-            this.selectedMap.put(img.id, true);
+            this._selectImage(img.id);
         }
         ImagePicker.Logger.debug("select all images ");
     },
+    
+    unselectAllImages: function(){
 
-    selectImage: function(imageId){
+        this.selectedMap = new ImagePicker.HashMap();
+        for ( var i = 0; i < this.imageList.length; i++) {
+            var img = this.imageList[i];
+            this._unselectImage(img.id);
+        }
+        ImagePicker.Logger.debug("Unselect all images ");
+    },
+
+    _selectImage: function(imageId){
+        this.selectedMap.put(imageId, true);
+        var checkbox = document.getElementById(imageId + "-CheckBox");
+        if (checkbox) {
+            checkbox.setAttribute("checked", true);
+        }
+        var imageCell = document.getElementById(imageId + "-CellBox");
+        if(imageCell){
+            ImagePicker.XulUtils.addClass(imageCell,"image-cell-selected");
+        }
+    },
+    
+    _unselectImage: function(imageId){
+        this.selectedMap.put(imageId, false);
+        var checkbox = document.getElementById(imageId + "-CheckBox");
+        if (checkbox) {
+            checkbox.setAttribute("checked", false);
+        }
+        var imageCell = document.getElementById(imageId + "-CellBox");
+        if(imageCell){
+            ImagePicker.XulUtils.removeClass(imageCell,"image-cell-selected");
+        }
+    },
+       
+    handleClickOnImage: function(imageId){
+      ImagePicker.Logger.debug("select image: " + imageId);
       var isSelected = this.selectedMap.get(imageId);
-      this.selectedMap.put(imageId, !isSelected);
+      if(isSelected){//switch status
+          this._unselectImage(imageId);
+      }else{
+          this._selectImage(imageId);
+      }
+    },
+    
+    handleClickOnImageCheckbox: function(imageId){
+      ImagePicker.Logger.debug("select image: " + imageId);
+      var isSelected = this.selectedMap.get(imageId);
+      if(isSelected){//switch status
+          this._unselectImage(imageId);
+      }else{
+          this._selectImage(imageId);
+      }
     },
 
     getI18NString: function(key){

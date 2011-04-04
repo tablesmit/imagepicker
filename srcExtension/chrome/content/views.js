@@ -1,6 +1,7 @@
 /** **************** ImageGrid Object Class ******************** */
 Components.utils.import("resource://imagepicker/common.js");
 Components.utils.import("resource://imagepicker/model.js");
+Components.utils.import("resource://imagepicker/xulUtils.js");
 
 /**
  * Provides the view for images
@@ -53,7 +54,7 @@ ImagePickerChrome.ImageGrid.prototype = {
     _getWidthPerImage : function() {
         return this.thumbnailSize - 15;
     },
-
+    
     /**
      * Render the image grid in UI.
      *
@@ -67,7 +68,6 @@ ImagePickerChrome.ImageGrid.prototype = {
         var HTML_NS = "http://www.w3.org/1999/xhtml";
 
         var columnWidth = this.thumbnailSize;
-        var widthPerImage = this._getWidthPerImage();
 
         // calculate column count
         var columnCount = Math.floor(this.gridWidth / columnWidth);
@@ -100,73 +100,11 @@ ImagePickerChrome.ImageGrid.prototype = {
             row.setAttribute("align", "center");
             for ( var j = 0; j < columnCount; j++) {
 
-                // create grid cell box
-                var cellBox = document.createElementNS(XUL_NS, "vbox");
-                cellBox.setAttribute("width", columnWidth);
-                cellBox.setAttribute("height", columnWidth + 15);
-                cellBox.setAttribute("pack", "center");
-                cellBox.setAttribute("align", "center");
-
-                cellBox.setAttribute("style", "margin:5px; outline: #98989A solid 1px; background-color: #F3F3F3;");
-                row.appendChild(cellBox);
-
-                if (index < imageList.length) {
-
-                    var imgInfo = imageList[index];
-
-                    // create image element
-                    //var imgElem = document.createElementNS(HTML_NS, "img");
-                    var imgElem = document.createElementNS(XUL_NS, "image");
-                    imgElem.setAttribute("id", imgInfo.id);
-                    imgElem.setAttribute("src", imgInfo.url);
-                    //imgElem.setAttribute("validate", "always");
-
-                    var imageRate = widthPerImage / Math.max(imgInfo.width, imgInfo.height, 1);
-                    var width = Math.min(imageRate * imgInfo.width, imgInfo.width);
-                    var height = Math.min(imageRate * imgInfo.height, imgInfo.height);
-                    if(width == 0){
-                        width = widthPerImage;
-                    }
-                    if(height == 0){
-                        height = widthPerImage;
-                    }
-
-                    imgElem.setAttribute("width", width);
-                    imgElem.setAttribute("height", height);
-                    
-                    var imgBox = document.createElementNS(XUL_NS, "vbox");
-                    imgBox.setAttribute("width", widthPerImage);
-                    imgBox.setAttribute("height", widthPerImage);
-                    imgBox.setAttribute("align", "center");
-                    imgBox.setAttribute("pack", "center");
-                    imgBox.appendChild(imgElem);
-                  
-                    // show additional info
-                    var adBox = document.createElementNS(XUL_NS, "vbox");
-                    adBox.setAttribute("id", imgInfo.id+"-AdBox");
-                    adBox.setAttribute("align", "center");
-                    this.renderAdditionalInfo(imgInfo, widthPerImage, adBox);
+                var imgInfo = (index < imageList.length? imageList[index] : null);
                 
-                    //Add checkbox
-                    var checkbox = document.createElementNS(XUL_NS, "checkbox");
-                    checkbox.setAttribute("checked", selectedMap.get(imgInfo.id));
-                    checkbox.setAttribute("oncommand", 'ImagePickerChrome.Controller.selectImage('+imgInfo.id+')');
-                    
-
-                    //register change listener
-                    var changeListener = {
-                        imgGrid: this,
-                        onPropertyChange: function(updatedImageInfo){
-                            this.imgGrid.updateImageInfo(updatedImageInfo);
-                        }
-                    };
-                    imgInfo.registerChangeListener(changeListener);
-                    
-                    //layout
-                    cellBox.appendChild(imgBox);
-                    cellBox.appendChild(adBox);
-                    cellBox.appendChild(checkbox);
-                }
+                // create grid cell box
+                var cellBox = this.createImageCell(imgInfo, columnWidth, selectedMap);
+                row.appendChild(cellBox);
 
                 index++;
             }
@@ -179,12 +117,101 @@ ImagePickerChrome.ImageGrid.prototype = {
         var imageContainer = document.getElementById("imageContainer");
         imageContainer.appendChild(imgGrid);
     },
+    
+    createImageCell : function(imgInfo, cellWidth, selectedMap){
+        
+        var cellBox = ImagePicker.XulUtils.createElement(document, "vbox");
+        cellBox.setAttribute("width", cellWidth);
+        cellBox.setAttribute("height", cellWidth + 30);
+        cellBox.setAttribute("pack", "center");
+        cellBox.setAttribute("align", "center");
+        cellBox.setAttribute("class", "image-cell");
 
-    renderAdditionalInfo :  function(imageInfo, widthPerImage, adBox) {
-        var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+         if (imgInfo) {
+            cellBox.setAttribute("id", imgInfo.id+"-CellBox");
+            cellBox.addEventListener("mouseover", function(){
+                ImagePicker.XulUtils.addClass(this,"image-cell-highlight");
+            }, false);
+            cellBox.addEventListener("mouseout", function(){
+                ImagePicker.XulUtils.removeClass(this,"image-cell-highlight");
+            }, false);
+            cellBox.addEventListener("click", function(){
+                ImagePickerChrome.Controller.handleClickOnImage(imgInfo.id);
+            }, false);
+                     
+            // create image box
+            var imgBox = this.createImageBox(imgInfo);
+          
+            // show additional info
+            var adBox = ImagePicker.XulUtils.createElement(document,"vbox");
+            adBox.setAttribute("id", imgInfo.id+"-AdBox");
+            adBox.setAttribute("align", "center");
+            this.renderAdditionalInfo(imgInfo, adBox);
+        
+            //Add checkbox
+            var checkbox = ImagePicker.XulUtils.createElement(document,"checkbox");
+            checkbox.setAttribute("id", imgInfo.id+"-CheckBox");
+            checkbox.setAttribute("checked", selectedMap.get(imgInfo.id));
+            checkbox.setAttribute("oncommand", 'ImagePickerChrome.Controller.handleClickOnImageCheckbox('+imgInfo.id+')');
+            
+            //register change listener
+            var changeListener = {
+                imgGrid: this,
+                onPropertyChange: function(updatedImageInfo){
+                    this.imgGrid.updateImageInfo(updatedImageInfo);
+                }
+            };
+            imgInfo.registerChangeListener(changeListener);
+            
+            //layout
+            cellBox.appendChild(imgBox);
+            cellBox.appendChild(adBox);
+            cellBox.appendChild(checkbox);
+        }
+        
+        return cellBox;
+    },
+    
+    createImageBox : function(imgInfo){
+        
+        // create image element
+        //var imgElem = document.createElementNS(HTML_NS, "img");
+        var imgElem = ImagePicker.XulUtils.createElement(document,"image");
+        imgElem.setAttribute("id", imgInfo.id);
+        imgElem.setAttribute("src", imgInfo.url);
+        //imgElem.setAttribute("validate", "always");
+
+        // calculate image width and height for display
+        var widthPerImage = this._getWidthPerImage();
+        var imageRate = widthPerImage / Math.max(imgInfo.width, imgInfo.height, 1);
+        var width = Math.min(imageRate * imgInfo.width, imgInfo.width);
+        var height = Math.min(imageRate * imgInfo.height, imgInfo.height);
+        if(width == 0){ //sometimes, image is not load completed
+            width = widthPerImage;
+        }
+        if(height == 0){//sometimes, image is not load completed
+            height = widthPerImage;
+        }
+
+        imgElem.setAttribute("width", width);
+        imgElem.setAttribute("height", height);
+        
+        var imgBox = ImagePicker.XulUtils.createElement(document,"vbox");
+        imgBox.setAttribute("width", widthPerImage);
+        imgBox.setAttribute("height", widthPerImage);
+        imgBox.setAttribute("align", "center");
+        imgBox.setAttribute("pack", "center");
+       
+        imgBox.appendChild(imgElem);
+
+        return imgBox;
+    },
+    
+    renderAdditionalInfo :  function(imageInfo, adBox) {
+        var widthPerImage = this._getWidthPerImage();
         var additionalInfos = this.getAdditionalInfo(imageInfo, widthPerImage);
         for ( var k = 0; k < additionalInfos.length; k++) {
-            var additionalLabel = document.createElementNS(XUL_NS, "label");
+            var additionalLabel = ImagePicker.XulUtils.createElement(document,"label");
             additionalLabel.setAttribute("value", additionalInfos[k]);
             adBox.appendChild(additionalLabel);
         }
@@ -208,7 +235,7 @@ ImagePickerChrome.ImageGrid.prototype = {
 
             // Re-render
             var widthPerImage = this._getWidthPerImage();
-            this.renderAdditionalInfo(imageInfo, widthPerImage, adBox);
+            this.renderAdditionalInfo(imageInfo, adBox);
         }
     },
 
@@ -261,7 +288,7 @@ ImagePickerChrome.ImageGrid.prototype = {
 
         var additionalInfos = this.getAdditionalInfo(imgInfo, widthPerImage);
         for ( var k = 0; k < additionalInfos.length; k++) {
-            var additionalLabel = document.createElementNS(XUL_NS, "label");
+            var additionalLabel = ImagePicker.XulUtils.createElement(document,"label");
             additionalLabel.setAttribute("value", additionalInfos[k]);
             adBox.appendChild(additionalLabel);
         }
