@@ -2,7 +2,7 @@
 <project name="ImagePicker" default="package">
 
     <property name="extension.id" value="ImagePicker@topolog.org" />
-    <property name="extension.version" value="0.9.2" />
+    <property name="extension.version" value="0.9.3beta" />
     
     <!-- firefox configruation for windows -->
     <property name="firefox.dir" value="D:\PortableApps\Browser\Firefox\Firefox" />
@@ -58,6 +58,13 @@
         <!-- touch src.dir for change install.rdf (windows only)-->
         <mkdir dir="${src.dir}\temp"/>
         <delete dir="${src.dir}\temp"/>
+        
+        <!-- update build number-->
+        <buildnumber />
+        <replaceregexp file="${src.dir}/install.rdf" byline="true">
+            <regexp pattern="em:version=&quot;(.*)&quot;"/>
+            <substitution expression="em:version=&quot;${extension.version}-b${build.number}&quot;" />
+        </replaceregexp>
     </target>
     
     <target name="test" depends="install" description="run FireFox with this extension for testing">
