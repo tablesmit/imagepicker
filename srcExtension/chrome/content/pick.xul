@@ -17,9 +17,9 @@
 
     <popupset>
         <menupopup id="context-menu" onpopupshowing="ImagePickerChrome.Controller.handleOpenContextMenu();">
-            <menuitem label="Select Similar" id="selectSimilarMenuItem" oncommand="ImagePickerChrome.Controller.selectSimilarImages(document.popupNode);"/>
-            <menuitem label="Select All" oncommand="ImagePickerChrome.Controller.selectAllImages();"/>
-            <menuitem label="Unselect All" oncommand="ImagePickerChrome.Controller.unselectAllImages();"/>
+            <menuitem label="&pick_contex_menu_select_similar.label;" id="selectSimilarMenuItem" oncommand="ImagePickerChrome.Controller.selectSimilarImages(document.popupNode);"/>
+            <menuitem label="&pick_contex_menu_select_all.label;" oncommand="ImagePickerChrome.Controller.selectAllImages();"/>
+            <menuitem label="&pick_contex_menu_unselect_all.label;" oncommand="ImagePickerChrome.Controller.unselectAllImages();"/>
         </menupopup>
     </popupset>
 

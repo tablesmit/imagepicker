@@ -24,3 +24,7 @@
 <!ENTITY pick_browse.tooltip "Browse...">
 <!ENTITY pick_button_save.label "Save">
 <!ENTITY pick_button_close.label "Close">
+
+<!ENTITY pick_contex_menu_select_similar.label "Select Similar">
+<!ENTITY pick_contex_menu_select_all.label "Select All">
+<!ENTITY pick_contex_menu_unselect_all.label "Unselect All">

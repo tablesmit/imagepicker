@@ -25,3 +25,7 @@
 <!ENTITY pick_browse.tooltip "浏览...">
 <!ENTITY pick_button_save.label "保存">
 <!ENTITY pick_button_close.label "关闭">
+
+<!ENTITY pick_contex_menu_select_similar.label "选择相似的">
+<!ENTITY pick_contex_menu_select_all.label "全选">
+<!ENTITY pick_contex_menu_unselect_all.label "全不选">
