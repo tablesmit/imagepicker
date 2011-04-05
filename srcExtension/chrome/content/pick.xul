@@ -3,100 +3,111 @@
 <?xml-stylesheet href="chrome://imagepicker/skin/ip.css" type="text/css"?>
 <!DOCTYPE overlay SYSTEM "chrome://imagepicker/locale/ImagePicker.dtd">
 
-<window id="root-windows" title="&pick_window.title;"
-    xmlns:html="http://www.w3.org/1999/xhtml"
-	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	persist="width height screenX screenY" onload="ImagePickerChrome.Controller.loadPickWindow();"
-	onunload="ImagePickerChrome.Controller.unloadPickWindow();">
+<window id="root-windows" title="&pick_window.title;" xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" persist="width height screenX screenY"
+    onload="ImagePickerChrome.Controller.loadPickWindow();" onunload="ImagePickerChrome.Controller.unloadPickWindow();">
     <script type="application/x-javascript" src="common.js" />
     <script type="application/x-javascript" src="images.js" />
-	<script type="application/x-javascript" src="views.js" />
-	<script type="application/x-javascript" src="controller.js" />
-    
+    <script type="application/x-javascript" src="views.js" />
+    <script type="application/x-javascript" src="controller.js" />
+
     <stringbundleset id="stringbundleset">
         <stringbundle id="string-bundle" src="chrome://imagepicker/locale/ImagePicker.properties" />
     </stringbundleset>
-    
-	<vbox>
-		<hbox >
-			<groupbox>
-				<caption>
-					<label value="&pick_size_limits.label;" />
-				</caption>
-				<grid>
-					<columns>
-						<column flex="1" />
-						<column flex="1" />
-						<column flex="1" />
-						<column flex="1" />
-					</columns>
-					<rows>
-						<row align="center">
-							<label value="&pick_min_size.label;" valign="bottom"/>
-							<textbox id="minSizeTB" width="70" type="number" />
-							<label value="&pick_min_width.label;" />
-							<textbox id="minWidthTB" width="70" type="number" />
-						</row>
-						<row align="center">
-							<label value="" />
-							<label value="" />
-							<label value="&pick_min_height.label;" />
-							<textbox id="minHeightTB" width="70" type="number" />
-						</row>
-					</rows>
-				</grid>
-			</groupbox>
-			<groupbox>
-				<caption>
-					<label value="&pick_image_types.label;" />
-				</caption>
-				<hbox>
-					<vbox>
-						<checkbox id="imageTypeJpegCB" label="JPEG" />
-						<checkbox id="imageTypePngCB" label="PNG" />
-					</vbox>
-					<vbox>
-						<checkbox id="imageTypeBmpCB" label="BMP" />
-						<checkbox id="imageTypeGifCB" label="GIF" />
-					</vbox>
-				</hbox>
-			</groupbox>
+
+    <popupset>
+        <menupopup id="context-menu" onpopupshowing="ImagePickerChrome.Controller.handleOpenContextMenu();">
+            <menuitem label="Select Similar" id="selectSimilarMenuItem" oncommand="ImagePickerChrome.Controller.selectSimilarImages(document.popupNode);"/>
+            <menuitem label="Select All" oncommand="ImagePickerChrome.Controller.selectAllImages();"/>
+            <menuitem label="Unselect All" oncommand="ImagePickerChrome.Controller.unselectAllImages();"/>
+        </menupopup>
+    </popupset>
+
+    <vbox>
+        <hbox>
+            <groupbox>
+                <caption>
+                    <label value="&pick_size_limits.label;" />
+                </caption>
+                <grid>
+                    <columns>
+                        <column flex="1" />
+                        <column flex="1" />
+                        <column flex="1" />
+                        <column flex="1" />
+                    </columns>
+                    <rows>
+                        <row align="center">
+                            <label value="&pick_min_size.label;" valign="bottom" />
+                            <textbox id="minSizeTB" width="70" type="number" />
+                            <label value="&pick_min_width.label;" />
+                            <textbox id="minWidthTB" width="70" type="number" />
+                        </row>
+                        <row align="center">
+                            <label value="" />
+                            <label value="" />
+                            <label value="&pick_min_height.label;" />
+                            <textbox id="minHeightTB" width="70" type="number" />
+                        </row>
+                    </rows>
+                </grid>
+            </groupbox>
+            <groupbox>
+                <caption>
+                    <label value="&pick_image_types.label;" />
+                </caption>
+                <hbox>
+                    <vbox>
+                        <checkbox id="imageTypeJpegCB" label="JPEG" />
+                        <checkbox id="imageTypePngCB" label="PNG" />
+                    </vbox>
+                    <vbox>
+                        <checkbox id="imageTypeBmpCB" label="BMP" />
+                        <checkbox id="imageTypeGifCB" label="GIF" />
+                    </vbox>
+                </hbox>
+            </groupbox>
             <hbox align="center" style="margin-left:10px;">
-			<button label="&pick_button_filter.label;" oncommand="ImagePickerChrome.Controller.doFilter();" />
-    			<button type="menu" label="&pick_button_view.label;" id="view-as-button" image="chrome://imagepicker/skin/Pictures.ico">
-				<menupopup>
-					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeSmallMI"
-						label="&pick_menu_thumbnails_small.label;" oncommand="ImagePickerChrome.Controller.doViewAS();" />
-					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeNormalMI"
-						label="&pick_menu_thumbnails_normal.label;" oncommand="ImagePickerChrome.Controller.doViewAS();" />
-					<menuitem type="radio" name="thumbnailType" id="thumbnailTypeLargeMI"
-						label="&pick_menu_thumbnails_large.label;" oncommand="ImagePickerChrome.Controller.doViewAS();" />
-					<menuseparator />
-                    <menuitem type="checkbox" id="showImageSizeMI" label="&pick_menu_show_image_size.label;" oncommand="ImagePickerChrome.Controller.doViewAS();"/>
-					<menuitem type="checkbox" id="showImageNameMI" label="&pick_menu_show_image_name.label;" oncommand="ImagePickerChrome.Controller.doViewAS();"/>
-				</menupopup>
-			</button>
+                <button label="&pick_button_filter.label;" oncommand="ImagePickerChrome.Controller.doFilter();" />
+                <button type="menu" label="&pick_button_view.label;" id="view-as-button" image="chrome://imagepicker/skin/Pictures.ico">
+                    <menupopup>
+                        <menuitem type="radio" name="thumbnailType" id="thumbnailTypeSmallMI" label="&pick_menu_thumbnails_small.label;"
+                            oncommand="ImagePickerChrome.Controller.doViewAS();" />
+                        <menuitem type="radio" name="thumbnailType" id="thumbnailTypeNormalMI" label="&pick_menu_thumbnails_normal.label;"
+                            oncommand="ImagePickerChrome.Controller.doViewAS();" />
+                        <menuitem type="radio" name="thumbnailType" id="thumbnailTypeLargeMI" label="&pick_menu_thumbnails_large.label;"
+                            oncommand="ImagePickerChrome.Controller.doViewAS();" />
+                        <menuseparator />
+                        <menuitem type="checkbox" id="showImageSizeMI" label="&pick_menu_show_image_size.label;"
+                            oncommand="ImagePickerChrome.Controller.doViewAS();" />
+                        <menuitem type="checkbox" id="showImageNameMI" label="&pick_menu_show_image_name.label;"
+                            oncommand="ImagePickerChrome.Controller.doViewAS();" />
+                    </menupopup>
+                </button>
             </hbox>
-		</hbox>
-	</vbox>
-	<vbox id="imageContainer" style="overflow: auto; background-color: #FFFFFF; margin:5px; border-style: groove; border-width: 1px; border-color: #b9ae9d"
-		persist="height" height="300" align="center" flex="1">
-	</vbox>
-	<hbox>
-		<hbox flex="1"  align="center" >
-			<label value="&pick_saved_directory.label;" />
-			<textbox id="browsedirTB" flex="1" />
-			<toolbarbutton id="browsedir" oncommand="ImagePickerChrome.Controller.browseDir();" tooltiptext="&pick_browse.tooltip;"
-				image="chrome://imagepicker/skin/browse.png"  />
-		</hbox>
-		<spacer flex="1" />
-		<button label="&pick_button_save.label;" oncommand="ImagePickerChrome.Controller.doSaveImages();" />
-		<button label="&pick_button_close.label;" oncommand="self.close();" />
-	</hbox>
-	<statusbar>
-		<statusbarpanel id="filterStat" flex="1" />
-        <progressmeter  id="downloadMeter"  mode="determined"  value="0" onclick="ImagePickerChrome.Controller.showDownloadManagerUI();"/>
+        </hbox>
+    </vbox>
+    <vbox id="imageContainer"
+        style="overflow: auto; background-color: #FFFFFF; margin:5px; border-style: groove; border-width: 1px; border-color: #b9ae9d"
+        persist="height" height="300" align="center" flex="1"
+        context="context-menu" >
+    </vbox>
+    <hbox>
+        <hbox flex="1" align="center">
+            <label value="&pick_saved_directory.label;" />
+            <textbox id="browsedirTB" flex="1" />
+            <toolbarbutton id="browsedir" oncommand="ImagePickerChrome.Controller.browseDir();"
+                tooltiptext="&pick_browse.tooltip;" image="chrome://imagepicker/skin/browse.png" />
+        </hbox>
+        <spacer flex="1" />
+        <button label="&pick_button_save.label;" oncommand="ImagePickerChrome.Controller.doSaveImages();" />
+        <button label="&pick_button_close.label;" oncommand="self.close();" />
+    </hbox>
+    <statusbar>
+        <statusbarpanel id="filterStat" flex="1" />
+        <progressmeter id="downloadMeter" mode="determined" value="0"
+            onclick="ImagePickerChrome.Controller.showDownloadManagerUI();" />
         <statusbarpanel id="downloadStat" flex="1" />
-		<space flex="1" />
-	</statusbar>
+        <space flex="1" />
+    </statusbar>
 </window>
