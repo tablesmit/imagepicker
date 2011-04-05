@@ -135,8 +135,10 @@ ImagePickerChrome.ImageGrid.prototype = {
             cellBox.addEventListener("mouseout", function(){
                 ImagePicker.XulUtils.removeClass(this,"image-cell-highlight");
             }, false);
-            cellBox.addEventListener("click", function(){
-                ImagePickerChrome.Controller.handleClickOnImage(imgInfo.id);
+            cellBox.addEventListener("click", function(event){
+                if (event.button == 0) { //Left mouse button click
+                    ImagePickerChrome.Controller.handleClickOnImage(imgInfo.id);
+                }
             }, false);
                      
             // create image box
@@ -152,7 +154,6 @@ ImagePickerChrome.ImageGrid.prototype = {
             var checkbox = ImagePicker.XulUtils.createElement(document,"checkbox");
             checkbox.setAttribute("id", imgInfo.id+"-CheckBox");
             checkbox.setAttribute("checked", selectedMap.get(imgInfo.id));
-            checkbox.setAttribute("oncommand", 'ImagePickerChrome.Controller.handleClickOnImageCheckbox('+imgInfo.id+')');
             
             //register change listener
             var changeListener = {

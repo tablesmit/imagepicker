@@ -199,15 +199,12 @@ ImagePickerChrome.Controller = {
         // do filter
         this.imageList = this.filter.filterImageList(this.rawImageList);
 
-        // update status bar
-        var oldImageConut = this.rawImageList.length;
-        var newImageConut = this.imageList.length;
-        document.getElementById("filterStat").label = this.getFormattedString("filterStat",[newImageConut,oldImageConut, (oldImageConut - newImageConut)]);
-
         this.selectAllImages();
 
         // refresh image container
         this.refreshImageContainer();
+        
+        this.updateStatuBar();
     },
     /**
      * view image for thumbnail type
@@ -459,6 +456,7 @@ ImagePickerChrome.Controller = {
             var img = this.imageList[i];
             this._selectImage(img.id);
         }
+        this.updateStatuBar();
         ImagePicker.Logger.debug("select all images ");
     },
     
@@ -469,6 +467,7 @@ ImagePickerChrome.Controller = {
             var img = this.imageList[i];
             this._unselectImage(img.id);
         }
+        this.updateStatuBar();
         ImagePicker.Logger.debug("Unselect all images ");
     },
 
@@ -495,7 +494,70 @@ ImagePickerChrome.Controller = {
             ImagePicker.XulUtils.removeClass(imageCell,"image-cell-selected");
         }
     },
+    
+    selectSimilarImages: function(element){
+
+        //Find match URL
+        var imageInfo = this.getImageFromPopupNode(element);
+        if(!imageInfo){
+            return;
+        }
+        
+        var imageURLDomain = imageInfo.url.substring(0, imageInfo.url.lastIndexOf('/'));
+        ImagePicker.Logger.debug("Popup node: " + element.nodeName + ", ImageInfo = " + imageInfo + ", ImageURLDomain = " + imageURLDomain);
+
+        //Select similar images
+        var re = new RegExp(imageURLDomain);
+        this.selectedMap = new ImagePicker.HashMap();
+        for ( var i = 0; i < this.imageList.length; i++) {
+            var img = this.imageList[i];
+            if(re.test(img.url)){
+                this._selectImage(img.id);
+            }else{
+                this._unselectImage(img.id);
+            }
+        }
+        
+        this.updateStatuBar();
+        ImagePicker.Logger.debug("select similar images ");
+    },
        
+    handleOpenContextMenu: function(){
+        var element = document.popupNode;
+        var isImageCell = (this.getImageFromPopupNode(element) != null);
+        document.getElementById("selectSimilarMenuItem").hidden = !isImageCell;
+    },
+    
+    getImageFromPopupNode: function(popupNode){
+        
+        var imageId = null;
+        if (popupNode.nodeName == 'image') {
+            imageId = popupNode.getAttribute("id");
+        } else {
+            var node = popupNode;
+            while(node != null && node.nodeName != 'row'){
+                var nodeId = node.getAttribute("id");
+                if(nodeId){
+                    imageId = /\d+/.exec(nodeId)
+                    break;
+                }
+                node = node.parentNode;
+            }
+        }
+        
+        //Find match ImageInfo
+        var imageInfo = null;
+         for ( var i = 0; i < this.imageList.length; i++) {
+            var img = this.imageList[i];
+            if(img.id == imageId){
+                imageInfo = img;
+                break;
+            }
+        }
+        
+        return imageInfo;
+    },
+    
     handleClickOnImage: function(imageId){
       ImagePicker.Logger.debug("select image: " + imageId);
       var isSelected = this.selectedMap.get(imageId);
@@ -504,18 +566,23 @@ ImagePickerChrome.Controller = {
       }else{
           this._selectImage(imageId);
       }
+      this.updateStatuBar();
+    },
+        
+    updateStatuBar: function(){
+        // update status bar
+        var oldImageConut = this.rawImageList.length;
+        var newImageConut = this.imageList.length;
+        var selectedImageConut = 0;
+        var values = this.selectedMap.values();
+        for (var i = 0; i < values.length; i++) {
+            if(values[i] == true){
+                selectedImageConut++;
+            }
+        }
+        document.getElementById("filterStat").label = this.getFormattedString("statusBarText",[newImageConut, selectedImageConut, oldImageConut]);
     },
     
-    handleClickOnImageCheckbox: function(imageId){
-      ImagePicker.Logger.debug("select image: " + imageId);
-      var isSelected = this.selectedMap.get(imageId);
-      if(isSelected){//switch status
-          this._unselectImage(imageId);
-      }else{
-          this._selectImage(imageId);
-      }
-    },
-
     getI18NString: function(key){
         // Get a reference to the strings bundle
         if(this.stringsBundle == null){
