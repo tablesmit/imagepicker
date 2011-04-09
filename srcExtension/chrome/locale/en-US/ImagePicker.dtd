@@ -24,6 +24,7 @@
 <!ENTITY pick_browse.tooltip "Browse...">
 <!ENTITY pick_button_save.label "Save">
 <!ENTITY pick_button_close.label "Close">
+<!ENTITY download_progress.tooltip "Open Download Manager">
 <!ENTITY configure_button.tooltip "Configure">
 <!ENTITY about_button.tooltip "About Image Picker">
 
