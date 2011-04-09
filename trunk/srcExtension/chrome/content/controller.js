@@ -583,6 +583,14 @@ ImagePickerChrome.Controller = {
         document.getElementById("filterStat").label = this.getFormattedString("statusBarText",[newImageConut, selectedImageConut, oldImageConut]);
     },
     
+    openOptionsDialog: function(){
+        openDialog('chrome://imagepicker/content/options.xul', 'Options', 'chrome,titlebar,resizable,centerscreen,modal=no,dialog=yes');
+    },
+    
+    openAboutDialog: function(){
+        openDialog('chrome://imagepicker/content/about.xul', '', 'chrome,titlebar,resizable,centerscreen,modal=no,dialog=yes');
+    },
+    
     getI18NString: function(key){
         // Get a reference to the strings bundle
         if(this.stringsBundle == null){

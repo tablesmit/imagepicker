@@ -25,7 +25,16 @@
 <!ENTITY pick_browse.tooltip "浏览...">
 <!ENTITY pick_button_save.label "保存">
 <!ENTITY pick_button_close.label "关闭">
+<!ENTITY configure_button.tooltip "设置">
+<!ENTITY about_button.tooltip "关于 Image Picker">
 
 <!ENTITY pick_contex_menu_select_similar.label "选择相似的">
 <!ENTITY pick_contex_menu_select_all.label "全选">
 <!ENTITY pick_contex_menu_unselect_all.label "全不选">
+
+<!ENTITY about_dialog.title "关于 Image Picker">
+<!ENTITY about_extension_name.label "集图工具 （Image Picker）">
+<!ENTITY about_extension_desc.label "方便易用的集图工具，从浏览中的网页中，过滤并选择喜爱的图片保存。">
+<!ENTITY about_version.label "版本">
+<!ENTITY about_creator.label "创建者">
+<!ENTITY about_homepage.label "访问主页">

@@ -24,7 +24,16 @@
 <!ENTITY pick_browse.tooltip "Browse...">
 <!ENTITY pick_button_save.label "Save">
 <!ENTITY pick_button_close.label "Close">
+<!ENTITY configure_button.tooltip "Configure">
+<!ENTITY about_button.tooltip "About Image Picker">
 
 <!ENTITY pick_contex_menu_select_similar.label "Select Similar">
 <!ENTITY pick_contex_menu_select_all.label "Select All">
 <!ENTITY pick_contex_menu_unselect_all.label "Unselect All">
+
+<!ENTITY about_dialog.title "About Image Picker">
+<!ENTITY about_extension_name.label "Image Picker">
+<!ENTITY about_extension_desc.label "Choose (filter) images and save images from web page to local disk.">
+<!ENTITY about_version.label "Version">
+<!ENTITY about_creator.label "Creator">
+<!ENTITY about_homepage.label "Home page">

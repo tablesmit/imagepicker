@@ -109,5 +109,9 @@
             onclick="ImagePickerChrome.Controller.showDownloadManagerUI();" />
         <statusbarpanel id="downloadStat" flex="1" />
         <space flex="1" />
+        <toolbarbutton image="chrome://imagepicker/skin/configure-16.png" tooltiptext="&configure_button.tooltip;"
+                       oncommand="ImagePickerChrome.Controller.openOptionsDialog();"/>
+        <toolbarbutton image="chrome://imagepicker/skin/help-about-16.png" tooltiptext="&about_button.tooltip;"
+                       oncommand="ImagePickerChrome.Controller.openAboutDialog();"/>
     </statusbar>
 </window>

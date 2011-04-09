@@ -2,21 +2,34 @@
 <RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
          xmlns:NC="http://home.netscape.com/NC-rdf#"
          xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-  <RDF:Description RDF:about="urn:mozilla:install-manifest"
-                   em:id="ImagePicker@topolog.org"
-                   em:name="Image Picker"
-                   em:version="0.9.3beta-b33"
-                   em:creator="Wesley Chen (topolog@gmail.com)"
-                   em:description="Choose (filter) images and save images from web page to local disk."
-                   em:homepageURL="https://addons.mozilla.org/firefox/addon/235863"
-                   em:optionsURL="chrome://imagepicker/content/options.xul"
-                   em:iconURL="chrome://imagepicker/skin/img-picker_24.png">
-    <em:targetApplication RDF:resource="rdf:#$A4.QS1"/>
+  <RDF:Description RDF:about="urn:mozilla:install-manifest" >                
+    <em:id>ImagePicker@topolog.org</em:id>
+    <em:name>Image Picker</em:name>
+    <em:description>Choose (filter) images and save images from web page to local disk.</em:description>
+    <em:version>0.9.5beta</em:version>
+    <em:type>2</em:type> <!-- 2 : Extensions -->
+    <em:homepageURL>https://addons.mozilla.org/firefox/addon/235863</em:homepageURL>
+    <em:optionsURL>chrome://imagepicker/content/options.xul</em:optionsURL>
+    <em:iconURL>chrome://imagepicker/skin/img-picker_24.png</em:iconURL>
+    <em:creator>Wesley Chen (topolog@gmail.com)</em:creator>
     <em:unpack>true</em:unpack>
-    <em:type>2</em:type>
+        
+    <em:localized>
+      <RDF:Description>
+        <em:locale>zh-CN</em:locale>
+        <em:name>集图工具(Image Picker)</em:name>
+        <em:description>从浏览中的网页中，过滤并选择喜爱的图片保存。</em:description>
+      </RDF:Description>
+    </em:localized>
+    
+     <!-- Firefox -->
+    <em:targetApplication>
+        <RDF:Description>
+            <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+            <em:minVersion>3.0</em:minVersion>
+            <em:maxVersion>4.0.*</em:maxVersion>
+        </RDF:Description>
+    </em:targetApplication>
+    
   </RDF:Description>
-  <RDF:Description RDF:about="rdf:#$A4.QS1"
-                   em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-                   em:minVersion="3.0"
-                   em:maxVersion="4.0.*" />
 </RDF:RDF>
