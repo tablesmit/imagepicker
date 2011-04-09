@@ -5,7 +5,7 @@
     <property name="extension.version" value="0.9.5beta" />
     
     <!-- firefox configruation e.g. env.win.firefox4.0.properties, env.linux.firefox3.6.properties-->
-    <property file="env.win.firefox3.0.properties"/>    
+    <property file="env.win.firefox4.0.properties"/>    
     
     <!-- other firefox configruation, e.g. -safe-mode -jsconsole -->
     <property name="firefox.arg" value=""/>
