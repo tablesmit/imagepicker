@@ -106,7 +106,7 @@
     <statusbar>
         <statusbarpanel id="filterStat" flex="1" />
         <progressmeter id="downloadMeter" mode="determined" value="0"
-            onclick="ImagePickerChrome.Controller.showDownloadManagerUI();" />
+            onclick="ImagePickerChrome.Controller.showDownloadManagerUI();" tooltiptext="&download_progress.tooltip;"/>
         <statusbarpanel id="downloadStat" flex="1" />
         <space flex="1" />
         <toolbarbutton image="chrome://imagepicker/skin/configure-16.png" tooltiptext="&configure_button.tooltip;"

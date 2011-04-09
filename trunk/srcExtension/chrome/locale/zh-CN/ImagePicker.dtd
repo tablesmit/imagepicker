@@ -3,7 +3,7 @@
 
 <!ENTITY menu_pick_images.label "拾图">
 
-<!ENTITY options_dialog.title "拾图选项" >
+<!ENTITY options_dialog.title "Image Picker 选项" >
 <!ENTITY pref_created_folder_by_title.label "按标题自动创建保存目录">
 <!ENTITY pref_open_explorer_after_saved.label "保存后，自动打开文件浏览器">
 <!ENTITY pref_open_download_manager_after_saved.label "保存后，自动打开下载管理器">
@@ -25,6 +25,7 @@
 <!ENTITY pick_browse.tooltip "浏览...">
 <!ENTITY pick_button_save.label "保存">
 <!ENTITY pick_button_close.label "关闭">
+<!ENTITY download_progress.tooltip "打开下载管理器">
 <!ENTITY configure_button.tooltip "设置">
 <!ENTITY about_button.tooltip "关于 Image Picker">
 
