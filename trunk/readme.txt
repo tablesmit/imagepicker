@@ -14,5 +14,4 @@ Note:
     
 For release,
     1. Configure "extension.version" in build.xml
-    2. Configure "em:version" in srcExtension/install.rdf.
-    3. Run "ant package"
+    2. Run "ant package"
