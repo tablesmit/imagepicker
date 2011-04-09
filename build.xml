@@ -2,20 +2,10 @@
 <project name="ImagePicker" default="package">
 
     <property name="extension.id" value="ImagePicker@topolog.org" />
-    <property name="extension.version" value="0.9.3beta" />
+    <property name="extension.version" value="0.9.5beta" />
     
-    <!-- firefox configruation for windows -->
-    <property name="firefox.dir" value="D:\PortableApps\Browser\Firefox\Firefox" />
-    <property name="firefox.exe" location="${firefox.dir}/firefox.exe"/>
-    <property name="firefox.profile.path" location="${firefox.dir}/../devtest" />
-    
-
-    <!-- firefox configruation for linux -->
-    <!--
-    <property name="firefox.dir" value="/home/wesley/.mozilla/firefox/" />
-    <property name="firefox.exe" location="/usr/bin/firefox"/>
-    <property name="firefox.profile.path" location="${firefox.dir}/devtest"/>
-    -->
+    <!-- firefox configruation e.g. env.win.firefox3.6.properties, env.linux.firefox3.6.properties-->
+    <property file="env.win.firefox4.0.properties"/>    
     
     <!-- other firefox configruation, e.g. -safe-mode -jsconsole -->
     <property name="firefox.arg" value=""/>
@@ -47,7 +37,20 @@
         </delete>
     </target>
 
-    <target name="install" depends="init">    
+    <target name="version">
+        <!-- update build number-->
+        <buildnumber />
+        <replaceregexp file="${src.dir}/install.rdf" byline="true">
+            <regexp pattern="em:version&gt;(.*)&lt;"/>
+            <substitution expression="em:version&gt;${extension.version}&lt;" />
+        </replaceregexp>
+        <replaceregexp file="${src.dir}/chrome/content/about.xul" byline="true">
+            <regexp pattern="about_version.label;(.*)&quot;"/>
+            <substitution expression="about_version.label; ${extension.version}-b${build.number}&quot;" />
+        </replaceregexp>
+    </target>
+    
+    <target name="install" depends="init, version">    
         <fail unless="firefox.present"/>
         <!-- copy extension proxy file to extensions directory -->
         <copy file="${basedir}/${extension.id}" todir="${firefox.profile.path}/extensions" overwrite="true" verbose="true">
@@ -55,16 +58,10 @@
             <filter token="EXTENSION_SRC_LOCATION" value="${src.dir}"/>
           </filterset>
         </copy>
+        
         <!-- touch src.dir for change install.rdf (windows only)-->
         <mkdir dir="${src.dir}\temp"/>
         <delete dir="${src.dir}\temp"/>
-        
-        <!-- update build number-->
-        <buildnumber />
-        <replaceregexp file="${src.dir}/install.rdf" byline="true">
-            <regexp pattern="em:version=&quot;(.*)&quot;"/>
-            <substitution expression="em:version=&quot;${extension.version}-b${build.number}&quot;" />
-        </replaceregexp>
     </target>
     
     <target name="test" depends="install" description="run FireFox with this extension for testing">
@@ -73,7 +70,7 @@
         </exec>
     </target>
     
-    <target name="build" description="prepare file for release" depends="init">
+    <target name="build" description="prepare file for release" depends="init, version">
          <copy todir="${build.dir}" >
              <fileset dir="${src.dir}" />
          </copy>
