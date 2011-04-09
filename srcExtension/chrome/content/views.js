@@ -119,8 +119,8 @@ ImagePickerChrome.ImageGrid.prototype = {
     },
     
     createImageCell : function(imgInfo, cellWidth, selectedMap){
-        
-        var cellBox = ImagePicker.XulUtils.createElement(document, "vbox");
+        var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+        var cellBox = document.createElementNS(XUL_NS, "vbox");
         cellBox.setAttribute("width", cellWidth);
         cellBox.setAttribute("height", cellWidth + 30);
         cellBox.setAttribute("pack", "center");
@@ -145,13 +145,13 @@ ImagePickerChrome.ImageGrid.prototype = {
             var imgBox = this.createImageBox(imgInfo);
           
             // show additional info
-            var adBox = ImagePicker.XulUtils.createElement(document,"vbox");
+            var adBox = document.createElementNS(XUL_NS, "vbox");
             adBox.setAttribute("id", imgInfo.id+"-AdBox");
             adBox.setAttribute("align", "center");
             this.renderAdditionalInfo(imgInfo, adBox);
         
             //Add checkbox
-            var checkbox = ImagePicker.XulUtils.createElement(document,"checkbox");
+            var checkbox = document.createElementNS(XUL_NS, "checkbox");
             checkbox.setAttribute("id", imgInfo.id+"-CheckBox");
             checkbox.setAttribute("checked", selectedMap.get(imgInfo.id));
             
@@ -174,10 +174,11 @@ ImagePickerChrome.ImageGrid.prototype = {
     },
     
     createImageBox : function(imgInfo){
-        
+        var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+         
         // create image element
         //var imgElem = document.createElementNS(HTML_NS, "img");
-        var imgElem = ImagePicker.XulUtils.createElement(document,"image");
+        var imgElem = document.createElementNS(XUL_NS, "image");
         imgElem.setAttribute("id", imgInfo.id);
         imgElem.setAttribute("src", imgInfo.url);
         //imgElem.setAttribute("validate", "always");
@@ -197,7 +198,7 @@ ImagePickerChrome.ImageGrid.prototype = {
         imgElem.setAttribute("width", width);
         imgElem.setAttribute("height", height);
         
-        var imgBox = ImagePicker.XulUtils.createElement(document,"vbox");
+        var imgBox = document.createElementNS(XUL_NS, "vbox");
         imgBox.setAttribute("width", widthPerImage);
         imgBox.setAttribute("height", widthPerImage);
         imgBox.setAttribute("align", "center");
@@ -209,10 +210,12 @@ ImagePickerChrome.ImageGrid.prototype = {
     },
     
     renderAdditionalInfo :  function(imageInfo, adBox) {
+        var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+        
         var widthPerImage = this._getWidthPerImage();
         var additionalInfos = this.getAdditionalInfo(imageInfo, widthPerImage);
         for ( var k = 0; k < additionalInfos.length; k++) {
-            var additionalLabel = ImagePicker.XulUtils.createElement(document,"label");
+            var additionalLabel = document.createElementNS(XUL_NS, "label");
             additionalLabel.setAttribute("value", additionalInfos[k]);
             adBox.appendChild(additionalLabel);
         }
@@ -286,10 +289,11 @@ ImagePickerChrome.ImageGrid.prototype = {
     },
 
     updateAdditionalInfo :  function(imageInfo) {
+        var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
         var additionalInfos = this.getAdditionalInfo(imgInfo, widthPerImage);
         for ( var k = 0; k < additionalInfos.length; k++) {
-            var additionalLabel = ImagePicker.XulUtils.createElement(document,"label");
+            var additionalLabel = document.createElementNS(XUL_NS, "label");
             additionalLabel.setAttribute("value", additionalInfos[k]);
             adBox.appendChild(additionalLabel);
         }

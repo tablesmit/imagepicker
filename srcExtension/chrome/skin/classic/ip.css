@@ -20,3 +20,9 @@ toolbar[iconsize ="small"] #image-pick-button {
 
 .image-cell-selected {
 }
+
+.note {
+  padding: 2px 0px 3px 0px;
+  margin-top: 20px;
+  font-weight: bold;
+}

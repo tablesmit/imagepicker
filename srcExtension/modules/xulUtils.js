@@ -14,12 +14,7 @@ Cu.import("resource://imagepicker/common.js");
  * @class ImagePicker.XulUtils
  */
 ImagePicker.XulUtils = {
-    
-    createElement: function(document, name){
-        var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
-        return document.createElementNS(XUL_NS, name);
-    },
-    
+        
     hasClass: function(element, className) {
         var elementClassName = element.className;
         return (elementClassName.length > 0 && (elementClassName == className ||
