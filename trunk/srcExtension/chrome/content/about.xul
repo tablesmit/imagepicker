@@ -8,7 +8,7 @@
     defaultButton="accept" title="&about_dialog.title;">
     <vbox id="clientBox" flex="1">
         <label id="extensionName" crop="right" value="&about_extension_name.label;" />
-        <label id="extensionVersion" crop="right" value="&about_version.label; 0.9.5beta-b62" />
+        <label id="extensionVersion" crop="right" value="&about_version.label; 0.9.5beta-b76" />
         <description id="extensionDescription" class="boxIndent">
             &about_extension_desc.label;
         </description>
