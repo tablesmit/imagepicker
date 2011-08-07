@@ -14,3 +14,4 @@ pref('extensions.imagepicker.savedFolderPath', "");
 pref('extensions.imagepicker.createdFolderByTitle', true);
 pref('extensions.imagepicker.openExplorerAfterSaved', true);
 pref('extensions.imagepicker.openDownloadManagerAfterSaved', false);
+pref('extensions.imagepicker.closeImagePickerAfterSaved', true);

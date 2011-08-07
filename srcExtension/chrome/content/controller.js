@@ -37,6 +37,7 @@ ImagePickerChrome.Controller = {
         this.createdFolderByTitle = prefs.getBoolPref("createdFolderByTitle");
         this.openExplorerAfterSaved = prefs.getBoolPref("openExplorerAfterSaved");
         this.openDownloadManagerAfterSaved = prefs.getBoolPref("openDownloadManagerAfterSaved");
+        this.closeImagePickerAfterSaved = prefs.getBoolPref("closeImagePickerAfterSaved");
 
         // init image grid
         var gridSize = window.innerWidth - 6;
@@ -323,6 +324,11 @@ ImagePickerChrome.Controller = {
         //open DownloadManager after saved if need
         if(this.openDownloadManagerAfterSaved){
             this.showDownloadManagerUI();
+        }
+        
+        //close ImagePicker dialog after saved if need
+        if(this.closeImagePickerAfterSaved){
+            self.close();
         }
     },
 

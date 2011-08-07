@@ -11,11 +11,13 @@
     <preference id="pref-createdFolderByTitle" name="extensions.imagepicker.createdFolderByTitle" type="bool"/>
     <preference id="pref-openExplorerAfterSaved" name="extensions.imagepicker.openExplorerAfterSaved" type="bool"/>
     <preference id="pref-openDownloadManagerAfterSaved" name="extensions.imagepicker.openDownloadManagerAfterSaved" type="bool"/>
+    <preference id="pref-closeImagePickerAfterSaved" name="extensions.imagepicker.closeImagePickerAfterSaved" type="bool"/>
   </preferences>
   <vbox>
     <checkbox label="&pref_created_folder_by_title.label;" preference="pref-createdFolderByTitle" />
     <checkbox label="&pref_open_explorer_after_saved.label;" preference="pref-openExplorerAfterSaved" />
     <checkbox label="&pref_open_download_manager_after_saved.label;" preference="pref-openDownloadManagerAfterSaved" />
+    <checkbox label="&pref_close_image_picker_after_saved.label;" preference="pref-closeImagePickerAfterSaved" />
   </vbox>
   <label value="&pref_notes.label;" class="note" />
 </prefpane>
