@@ -4,7 +4,7 @@ const Ci = Components.interfaces;
 Components.utils.import("resource://imagepicker/common.js");
 Components.utils.import("resource://imagepicker/hashMap.js");
 Components.utils.import("resource://imagepicker/fileUtils.js");
-Components.utils.import("resource://imagepicker/prefUtils.js");
+Components.utils.import("resource://imagepicker/settings.js");
 Components.utils.import("resource://imagepicker/xulUtils.js");
 Components.utils.import("resource://imagepicker/model.js");
 Components.utils.import("resource://imagepicker/filters.js");
@@ -32,19 +32,14 @@ ImagePickerChrome.Controller = {
         this.progressListener = null;
 
         // Get preferences
-        var prefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch(
-                "extensions.imagepicker.");
-        this.createdFolderByTitle = prefs.getBoolPref("createdFolderByTitle");
-        this.openExplorerAfterSaved = prefs.getBoolPref("openExplorerAfterSaved");
-        this.openDownloadManagerAfterSaved = prefs.getBoolPref("openDownloadManagerAfterSaved");
-        this.closeImagePickerAfterSaved = prefs.getBoolPref("closeImagePickerAfterSaved");
-
+        this.settings = ImagePicker.Settings;
+         
         // init image grid
         var gridSize = window.innerWidth - 6;
 
-        var thumbnailType = prefs.getCharPref("displayrule.thumbnailType");
-        var isShowImageSize = prefs.getBoolPref("displayrule.showImageSize");
-        var isShowImageName = prefs.getBoolPref("displayrule.showImageName");
+        var thumbnailType = this.settings.getThumbnailType();
+        var isShowImageSize = this.settings.isShowImageSize();
+        var isShowImageName = this.settings.isShowImageName();
         this.imageGrid = new ImagePickerChrome.ImageGrid("imageContainer", gridSize, thumbnailType, isShowImageSize,
                 isShowImageName);
     },
@@ -60,21 +55,17 @@ ImagePickerChrome.Controller = {
         var windowTitle = window.opener.document.title;
         window.document.title = windowTitle;
 
-        // Get preferences
-        var prefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch(
-                "extensions.imagepicker.");
-
         // init window from preferences
-        document.getElementById("minWidthTB").value = prefs.getIntPref("filter.minWidth");
-        document.getElementById("minHeightTB").value = prefs.getIntPref("filter.minHeight");
-        document.getElementById("minSizeTB").value = prefs.getIntPref("filter.minSize");
+        document.getElementById("minWidthTB").value = this.settings.getMinWidth();
+        document.getElementById("minHeightTB").value = this.settings.getMinHeight();
+        document.getElementById("minSizeTB").value = this.settings.getMinSize();
 
-        document.getElementById("imageTypeBmpCB").checked = !prefs.getBoolPref("filter.skipImageTypes.bmp");
-        document.getElementById("imageTypeJpegCB").checked = !prefs.getBoolPref("filter.skipImageTypes.jpg");
-        document.getElementById("imageTypePngCB").checked = !prefs.getBoolPref("filter.skipImageTypes.png") == true;
-        document.getElementById("imageTypeGifCB").checked = !prefs.getBoolPref("filter.skipImageTypes.gif");
+        document.getElementById("imageTypeBmpCB").checked = !this.settings.isSkipImageTypeBMP();
+        document.getElementById("imageTypeJpegCB").checked = !this.settings.isSkipImageTypeJPG();
+        document.getElementById("imageTypePngCB").checked = !this.settings.isSkipImageTypePNG();
+        document.getElementById("imageTypeGifCB").checked = !this.settings.isSkipImageTypeGIF();
 
-        var thumbnailType = prefs.getCharPref("displayrule.thumbnailType");
+        var thumbnailType = this.settings.getThumbnailType();
         switch (thumbnailType) {
         case 'small':
             document.getElementById("thumbnailTypeSmallMI").setAttribute("checked", true);
@@ -89,12 +80,12 @@ ImagePickerChrome.Controller = {
             ImagePicker.Logger.info("gDisplayRule.thumbnailType = " + thumbnailType);
         }
 
-        var isShowImageSize = prefs.getBoolPref("displayrule.showImageSize");
-        var isShowImageName = prefs.getBoolPref("displayrule.showImageName");
+        var isShowImageSize = this.settings.isShowImageSize();
+        var isShowImageName = this.settings.isShowImageName();
         document.getElementById("showImageSizeMI").setAttribute("checked", isShowImageSize);
         document.getElementById("showImageNameMI").setAttribute("checked", isShowImageName);
 
-        var saveFolderPath = ImagePicker.PrefUtils.getUnicodeChar(prefs, "savedFolderPath");
+        var saveFolderPath = this.settings.getSavedFolderPath();
         document.getElementById("browsedirTB").value = saveFolderPath;
 
         this.doFilter();
@@ -113,26 +104,23 @@ ImagePickerChrome.Controller = {
     unloadPickWindow : function() {
 
         // Get preferences
-        var prefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch(
-                "extensions.imagepicker.");
-
         // save display rule
-        prefs.setCharPref("displayrule.thumbnailType", this.imageGrid.thumbnailType);
-        prefs.setBoolPref("displayrule.showImageSize", this.imageGrid.isShowImageSize);
-        prefs.setBoolPref("displayrule.showImageName", this.imageGrid.isShowImageName);
+        this.settings.setThumbnailType(this.imageGrid.thumbnailType);
+        this.settings.setShowImageSize(this.imageGrid.isShowImageSize);
+        this.settings.setShowImageName(this.imageGrid.isShowImageName);
 
         // save filter
-        prefs.setIntPref("filter.minWidth", document.getElementById("minWidthTB").value);
-        prefs.setIntPref("filter.minHeight", document.getElementById("minHeightTB").value);
-        prefs.setIntPref("filter.minSize", document.getElementById("minSizeTB").value);
-
-        prefs.setBoolPref("filter.skipImageTypes.jpg", !document.getElementById("imageTypeJpegCB").checked);
-        prefs.setBoolPref("filter.skipImageTypes.png", !document.getElementById("imageTypePngCB").checked);
-        prefs.setBoolPref("filter.skipImageTypes.bmp", !document.getElementById("imageTypeBmpCB").checked);
-        prefs.setBoolPref("filter.skipImageTypes.gif", !document.getElementById("imageTypeGifCB").checked);
-
+        this.settings.setMinWidth(document.getElementById("minWidthTB").value);
+        this.settings.setMinHeight(document.getElementById("minHeightTB").value);
+        this.settings.setMinSize(document.getElementById("minSizeTB").value);
+        
+        this.settings.setSkipImageTypeJPG(!document.getElementById("imageTypeJpegCB").checked);
+        this.settings.setSkipImageTypePNG(!document.getElementById("imageTypePngCB").checked);
+        this.settings.setSkipImageTypeBMP(!document.getElementById("imageTypeBmpCB").checked);
+        this.settings.setSkipImageTypeGIF(!document.getElementById("imageTypeGifCB").checked);
+        
         // save saved folder
-        ImagePicker.PrefUtils.setUnicodeChar(prefs, "savedFolderPath", document.getElementById("browsedirTB").value);
+        this.settings.setSavedFolderPath(document.getElementById("browsedirTB").value);
     },
 
     /**
@@ -270,7 +258,7 @@ ImagePickerChrome.Controller = {
         }
 
         //Create sub-folder if need
-        if(this.createdFolderByTitle){
+        if(this.settings.isCreatedFolderByTitle()){
             var subFolder = this._createFolderByTitle(destPath);
             if(subFolder != null){
                 dest = subFolder;
@@ -317,17 +305,17 @@ ImagePickerChrome.Controller = {
         }
 
         //open Explorer after saved if need
-        if(this.openExplorerAfterSaved){
+        if(this.settings.isOpenExplorerAfterSaved()){
             ImagePicker.FileUtils.revealDirectory(dest);
         }
 
         //open DownloadManager after saved if need
-        if(this.openDownloadManagerAfterSaved){
+        if(this.settings.isOpenDownloadManagerAfterSaved()){
             this.showDownloadManagerUI();
         }
         
         //close ImagePicker dialog after saved if need
-        if(this.closeImagePickerAfterSaved){
+        if(this.settings.isCloseImagePickerAfterSaved()){
             self.close();
         }
     },

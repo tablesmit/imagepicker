@@ -19,6 +19,5 @@
     <checkbox label="&pref_open_download_manager_after_saved.label;" preference="pref-openDownloadManagerAfterSaved" />
     <checkbox label="&pref_close_image_picker_after_saved.label;" preference="pref-closeImagePickerAfterSaved" />
   </vbox>
-  <label value="&pref_notes.label;" class="note" />
 </prefpane>
 </prefwindow>
