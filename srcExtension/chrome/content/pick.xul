@@ -39,15 +39,15 @@
                     <rows>
                         <row align="center">
                             <label value="&pick_min_size.label;" valign="bottom" />
-                            <textbox id="minSizeTB" width="70" type="number" />
+                            <textbox id="minSizeTB" width="70" type="number" increment="10"/>
                             <label value="&pick_min_width.label;" />
-                            <textbox id="minWidthTB" width="70" type="number" />
+                            <textbox id="minWidthTB" width="70" type="number" increment="10"/>
                         </row>
                         <row align="center">
                             <label value="" />
                             <label value="" />
                             <label value="&pick_min_height.label;" />
-                            <textbox id="minHeightTB" width="70" type="number" />
+                            <textbox id="minHeightTB" width="70" type="number" increment="10"/>
                         </row>
                     </rows>
                 </grid>
