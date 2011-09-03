@@ -68,7 +68,10 @@
                 </hbox>
             </groupbox>
             <hbox align="center" style="margin-left:10px;">
-                <button label="&pick_button_filter.label;" oncommand="ImagePickerChrome.Controller.doFilter();" />
+                <button label="&pick_button_filter.label;" oncommand="ImagePickerChrome.Controller.doFilter();" 
+                        tooltiptext="&pick_button_filter.tooltip;" />
+                <button label="&pick_button_showall.label;" oncommand="ImagePickerChrome.Controller.doShowAll();" 
+                        tooltiptext="&pick_button_showall.tooltip;" />
                 <button type="menu" label="&pick_button_view.label;" id="view-as-button" image="chrome://imagepicker/skin/Pictures.ico">
                     <menupopup>
                         <menuitem type="radio" name="thumbnailType" id="thumbnailTypeSmallMI" label="&pick_menu_thumbnails_small.label;"
@@ -100,8 +103,8 @@
                 tooltiptext="&pick_browse.tooltip;" image="chrome://imagepicker/skin/browse.png" />
         </hbox>
         <spacer flex="1" />
-        <button label="&pick_button_save.label;" oncommand="ImagePickerChrome.Controller.doSaveImages();" />
-        <button label="&pick_button_close.label;" oncommand="self.close();" />
+        <button label="&pick_button_save.label;" oncommand="ImagePickerChrome.Controller.doSaveImages();" 
+                tooltiptext="&pick_button_save.tooltip;" />
     </hbox>
     <statusbar>
         <statusbarpanel id="filterStat" flex="1" />

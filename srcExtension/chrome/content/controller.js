@@ -195,6 +195,24 @@ ImagePickerChrome.Controller = {
         
         this.updateStatuBar();
     },
+    
+    /**
+     * Show all images
+     *
+     * @method doShowAll
+     */
+    doShowAll : function() {
+            // do filter
+        this.imageList = this.rawImageList;
+
+        this.unselectAllImages();
+
+        // refresh image container
+        this.refreshImageContainer();
+        
+        this.updateStatuBar();
+    },
+        
     /**
      * view image for thumbnail type
      *
