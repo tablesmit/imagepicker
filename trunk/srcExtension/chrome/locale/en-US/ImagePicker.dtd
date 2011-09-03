@@ -16,6 +16,9 @@
 <!ENTITY pick_min_height.label "Min height">
 <!ENTITY pick_image_types.label "Image types">
 <!ENTITY pick_button_filter.label "Filter">
+<!ENTITY pick_button_filter.tooltip "Filter images by Site limits and Image types">
+<!ENTITY pick_button_showall.label "Show All">
+<!ENTITY pick_button_showall.tooltip "Show all images without Site limits and Image types limits">
 <!ENTITY pick_button_view.label "View">
 <!ENTITY pick_menu_thumbnails_small.label "Thumbnails(Small)">
 <!ENTITY pick_menu_thumbnails_normal.label "Thumbnails(Normal)">
@@ -25,6 +28,7 @@
 <!ENTITY pick_saved_directory.label "Saved Directory">
 <!ENTITY pick_browse.tooltip "Browse...">
 <!ENTITY pick_button_save.label "Save">
+<!ENTITY pick_button_save.tooltip "Save selected images">
 <!ENTITY pick_button_close.label "Close">
 <!ENTITY download_progress.tooltip "Open Download Manager">
 <!ENTITY configure_button.tooltip "Configure">

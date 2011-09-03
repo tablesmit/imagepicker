@@ -17,7 +17,10 @@
 <!ENTITY pick_min_height.label "最小高度">
 <!ENTITY pick_image_types.label "图片类型">
 <!ENTITY pick_button_filter.label "筛选">
+<!ENTITY pick_button_filter.tooltip "根据图片的大小和类型筛选图片并显示">
 <!ENTITY pick_button_view.label "查看">
+<!ENTITY pick_button_showall.label "显示所有">
+<!ENTITY pick_button_showall.tooltip "显示所有图片（忽略所有限制）">
 <!ENTITY pick_menu_thumbnails_small.label "缩略图（小）">
 <!ENTITY pick_menu_thumbnails_normal.label "缩略图（中）">
 <!ENTITY pick_menu_thumbnails_large.label "缩略图（大）">
@@ -26,6 +29,7 @@
 <!ENTITY pick_saved_directory.label "保存目录">
 <!ENTITY pick_browse.tooltip "浏览...">
 <!ENTITY pick_button_save.label "保存">
+<!ENTITY pick_button_save.tooltip "保存选择的图片">
 <!ENTITY pick_button_close.label "关闭">
 <!ENTITY download_progress.tooltip "打开下载管理器">
 <!ENTITY configure_button.tooltip "设置">
