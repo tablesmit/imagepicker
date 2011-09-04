@@ -133,7 +133,7 @@ ImagePicker.Settings =  {
 
         
         var results = new Array();
-        for(i=0; i<textLines.length; i++){
+        for(var i=0; i<textLines.length; i++){
             if (textLines[i] != null && textLines[i].trim() != "") {
                 results.push(textLines[i]);
             }

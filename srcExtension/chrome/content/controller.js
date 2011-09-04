@@ -671,8 +671,21 @@ ImagePickerChrome.DownloadProgressListener.prototype = {
         if (isFinished) {
             this.completedCount = this.completedCount + 1;
             var totalProgress = Math.ceil((this.completedCount / this.totalCount) * 100);
-            document.getElementById("downloadMeter").value = totalProgress;
-            document.getElementById("downloadStat").label =  totalProgress + "%";
+            
+            
+            if (document) {
+                var downloadMeter = document.getElementById("downloadMeter");
+                var downloadStat = document.getElementById("downloadStat");
+                                
+                if (downloadMeter) { //check null since the ImagePicker dialog may be closed
+                    downloadMeter.value = totalProgress;
+                }
+                
+                if (downloadStat) { //check null since the ImagePicker dialog may be closed
+                    downloadStat.label = totalProgress + "%";
+                }
+            }
+            
 
             ImagePicker.Logger.debug("Listener id =" + this.id + ", Downloaded: " + totalProgress);
         }
