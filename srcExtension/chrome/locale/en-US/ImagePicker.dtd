@@ -3,12 +3,18 @@
 <!ENTITY menu_pick_images.label "Pick Images">
 
 <!ENTITY options_dialog.title "Image Picker preferences" >
-<!ENTITY pref_folder_file_creation.label "Folder and File Creation">
+<!ENTITY pref_button_extra2_label "Restore Default Settings">
+
+<!ENTITY pref_folder_creation.label "Folder Creation">
 <!ENTITY pref_created_folder_by_title.label "Create saved folder by title automatically">
 <!ENTITY pref_remove_text_from_title_textbox.label "Remove the following text from title">
 <!ENTITY pref_remove_text_from_title_menulist.label "Remove text:">
 <!ENTITY pref_remove_text_from_title_button.label "Add">
 <!ENTITY pref_remove_text_from_title_button.tooltip "add text to be remove from title">
+
+<!ENTITY pref_file_creation.label "File Creation">
+<!ENTITY pref_rename_image_by_sequence_num.label "Rename image by sequence number">
+<!ENTITY pref_rename_image_by_sequence_num.tooltip "e.g. 001.jpg, 002.jpg, 003.jpg, ...">
 
 <!ENTITY pref_after_saved_behavior.label "After saved">
 <!ENTITY pref_open_explorer_after_saved.label "Open Explorer automatically">
