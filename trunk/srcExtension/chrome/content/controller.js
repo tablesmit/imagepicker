@@ -686,7 +686,7 @@ ImagePickerChrome.DownloadProgressListener.prototype = {
                 }
             }
             
-            if (ImagePicker && ImagePicker.Logger) {  //check null since the ImagePicker dialog may be closed
+            if ((typeof ImagePicker != "undefined") && (ImagePicker != null)) {  //check null since the ImagePicker dialog may be closed
                  ImagePicker.Logger.debug("Listener id =" + this.id + ", Downloaded: " + totalProgress);
             }
         }
