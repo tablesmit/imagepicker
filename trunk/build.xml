@@ -2,7 +2,7 @@
 <project name="ImagePicker" default="package">
 
     <property name="extension.id" value="ImagePicker@topolog.org" />
-    <property name="extension.version" value="0.9.5beta" />
+    <property name="extension.version" value="0.9.6" />
     
     <!-- firefox configruation e.g. env.win.firefox4.0.properties, env.linux.firefox3.6.properties-->
     <property file="env.win.firefox3.6.properties"/>    
