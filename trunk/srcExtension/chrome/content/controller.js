@@ -3,6 +3,7 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 Components.utils.import("resource://imagepicker/common.js");
 Components.utils.import("resource://imagepicker/hashMap.js");
+Components.utils.import("resource://imagepicker/sequence.js");
 Components.utils.import("resource://imagepicker/fileUtils.js");
 Components.utils.import("resource://imagepicker/settings.js");
 Components.utils.import("resource://imagepicker/xulUtils.js");
@@ -293,6 +294,11 @@ ImagePickerChrome.Controller = {
                 savedImages.push(img);
             }
         }
+        
+        //Auto rename
+        if(this.settings.isRenameImageBySequenceNum()){
+            this._renameBySequence(savedImages);
+        }
 
         // Got instance of download manager
         var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
@@ -374,6 +380,16 @@ ImagePickerChrome.Controller = {
         }
         
         return ImagePicker.FileUtils.toValidName(subFolderName);
+    },
+    
+    _renameBySequence : function(images){
+        var maxDigits = images.length.toString().length;
+        var seq = new ImagePicker.Sequence(0,maxDigits);
+        
+        for ( var i = 0; i < images.length; i++) {
+            var img = images[i];
+            img.fileName = seq.next();
+        }
     },
     
     /**

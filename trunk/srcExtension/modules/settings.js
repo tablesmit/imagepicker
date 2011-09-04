@@ -109,6 +109,10 @@ ImagePicker.Settings =  {
         return this._prefs.getBoolPref("createdFolderByTitle");
     },
     
+    isRenameImageBySequenceNum: function(){
+        return this._prefs.getBoolPref("renameImageBySequenceNum");
+    },
+    
     isOpenExplorerAfterSaved: function(){
         return this._prefs.getBoolPref("openExplorerAfterSaved");
     },
