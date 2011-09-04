@@ -120,6 +120,30 @@ ImagePicker.Settings =  {
     isCloseImagePickerAfterSaved: function(){
         return this._prefs.getBoolPref("closeImagePickerAfterSaved");
     },
+    
+    getRemoveTextFromTitle: function(){
+
+        var text = this.getUnicodeChar(this._prefs, "removeTextFromTitle");
+        var textLines = text.split("\n");
+        
+
+        
+        var results = new Array();
+        for(i=0; i<textLines.length; i++){
+            if (textLines[i] != null && textLines[i].trim() != "") {
+                results.push(textLines[i]);
+            }
+        }
+        
+        //sort by length desc
+        results = results.sort(
+             function(a,b){
+                   return b.length - a.length;
+             }
+        );
+        
+        return results;
+    },
                  
     /**
      * Get a unicode char value from preference system for the given prefName

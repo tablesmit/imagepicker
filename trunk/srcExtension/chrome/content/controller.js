@@ -367,10 +367,11 @@ ImagePickerChrome.Controller = {
         var subFolderName = docTitle;
         
         //remove unnecessary text
-        subFolderName = subFolderName.replace(/- Mozilla Firefox/g, '');
-        subFolderName = subFolderName.replace(/- Powered by Discuz!/g, '');
-        
-        //TODO: Refactor the above code to use preference
+        var textLines = this.settings.getRemoveTextFromTitle();
+        for (var i = 0; i < textLines.length; i++){
+            var reg = new RegExp(textLines[i],"gi");
+            subFolderName = subFolderName.replace(reg, '');
+        }
         
         return ImagePicker.FileUtils.toValidName(subFolderName);
     },
