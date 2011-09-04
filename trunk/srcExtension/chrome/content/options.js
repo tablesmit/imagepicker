@@ -70,10 +70,10 @@ ImagePickerChrome.Options = {
     },
     
     restoreAll: function(){
-        
+
         //restore
         var preferences = document.getElementById("ipPreferences");
-        var children = preferences.children;
+        var children = preferences.childNodes;
         for (var i = 0; i < children.length; i++) {
             if(children[i].hasUserValue){
                 children[i].reset(); // preference.reset()

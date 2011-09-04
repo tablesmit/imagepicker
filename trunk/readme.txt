@@ -1,6 +1,9 @@
 FireFox +
     1. Console2 (enable log from "Chrome" on Info level)
     2. Extension Developer (enable Debugging Preferences)
+    3. Quick Locale Swicher
+    4. DOM Inspector
+    5. ChromeBug
     
 https://developer.mozilla.org/en/Setting_up_extension_development_environment#Development_extensions
 
@@ -13,5 +16,7 @@ Note:
     2. Need touch "srcExtension" directory if changed the "install.rdf" file (Implemented in Ant task)
     
 For release,
-    1. Configure "extension.version" in build.xml
-    2. Run "ant package"
+    1. Test for FireFox v3.0, FireFox v3.6, FireFox v4.0, FireFox v6.0
+    2. Configure "extension.version" in build.xml
+    3. Run "ant package"
+    4. Verify by https://addons.mozilla.org/zh-CN/developers/addon/validate
