@@ -199,10 +199,11 @@ ImagePickerChrome.ImageGrid.prototype = {
         imgElem.setAttribute("height", height);
         
         var imgBox = document.createElementNS(XUL_NS, "vbox");
-        imgBox.setAttribute("width", widthPerImage);
-        imgBox.setAttribute("height", widthPerImage);
+        //imgBox.setAttribute("width", widthPerImage);
+        //imgBox.setAttribute("height", widthPerImage);
         imgBox.setAttribute("align", "center");
         imgBox.setAttribute("pack", "center");
+        imgBox.setAttribute("class", "image-box");
        
         imgBox.appendChild(imgElem);
 
