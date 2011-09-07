@@ -1,0 +1,60 @@
+<!ENTITY toolbarbutton_pick_images.label "Pick Images">
+<!ENTITY toolbarbutton_pick_images.tooltip "Pick Images">
+<!ENTITY menu_pick_images.label "Pick Images">
+
+<!ENTITY options_dialog.title "Image Picker preferences" >
+<!ENTITY pref_button_extra2_label "Restore Default Settings">
+
+<!ENTITY pref_folder_creation.label "Folder Creation">
+<!ENTITY pref_created_folder_by_title.label "Create saved folder by title automatically">
+<!ENTITY pref_remove_text_from_title_textbox.label "Remove the following text from title">
+<!ENTITY pref_remove_text_from_title_menulist.label "Remove text:">
+<!ENTITY pref_remove_text_from_title_button.label "Add">
+<!ENTITY pref_remove_text_from_title_button.tooltip "add text to be remove from title">
+
+<!ENTITY pref_file_creation.label "File Creation">
+<!ENTITY pref_rename_image_by_sequence_num.label "Rename image by sequence number">
+<!ENTITY pref_rename_image_by_sequence_num.tooltip "e.g. 001.jpg, 002.jpg, 003.jpg, ...">
+
+<!ENTITY pref_after_saved_behavior.label "After saved">
+<!ENTITY pref_open_explorer_after_saved.label "Open Explorer automatically">
+<!ENTITY pref_open_download_manager_after_saved.label "Open Download Manager automatically">
+<!ENTITY pref_close_image_picker_after_saved.label "Close Image Picker automatically">
+<!ENTITY pref_notes.label "NOTE: You must re-open the Image Picker dialog for the changes to take effect">
+
+
+<!ENTITY pick_window.title "Pick Images">
+<!ENTITY pick_size_limits.label "Size limits">
+<!ENTITY pick_min_size.label "Min size">
+<!ENTITY pick_min_width.label "Min width">
+<!ENTITY pick_min_height.label "Min height">
+<!ENTITY pick_image_types.label "Image types">
+<!ENTITY pick_button_filter.label "Filter">
+<!ENTITY pick_button_filter.tooltip "Filter images by Site limits and Image types">
+<!ENTITY pick_button_showall.label "Show All">
+<!ENTITY pick_button_showall.tooltip "Show all images without Site limits and Image types limits">
+<!ENTITY pick_button_view.label "View">
+<!ENTITY pick_menu_thumbnails_small.label "Thumbnails(Small)">
+<!ENTITY pick_menu_thumbnails_normal.label "Thumbnails(Normal)">
+<!ENTITY pick_menu_thumbnails_large.label "Thumbnails(Large)">
+<!ENTITY pick_menu_show_image_size.label "Show Image Size">
+<!ENTITY pick_menu_show_image_name.label "Show Image Name">
+<!ENTITY pick_saved_directory.label "Saved Directory">
+<!ENTITY pick_browse.tooltip "Browse...">
+<!ENTITY pick_button_save.label "Save">
+<!ENTITY pick_button_save.tooltip "Save selected images">
+<!ENTITY pick_button_close.label "Close">
+<!ENTITY download_progress.tooltip "Open Download Manager">
+<!ENTITY configure_button.tooltip "Configure">
+<!ENTITY about_button.tooltip "About Image Picker">
+
+<!ENTITY pick_contex_menu_select_similar.label "Select Similar">
+<!ENTITY pick_contex_menu_select_all.label "Select All">
+<!ENTITY pick_contex_menu_unselect_all.label "Unselect All">
+
+<!ENTITY about_dialog.title "About Image Picker">
+<!ENTITY about_extension_name.label "Image Picker">
+<!ENTITY about_extension_desc.label "Choose (filter) images and save images from web page to local disk.">
+<!ENTITY about_version.label "Version">
+<!ENTITY about_creator.label "Creator">
+<!ENTITY about_homepage.label "Home page">

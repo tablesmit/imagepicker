@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://imagepicker/skin/ip.css" type="text/css"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://imagepicker/locale/ImagePicker.dtd">
+
+<prefwindow id="imagepicker-prefs" title="&options_dialog.title;"
+     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+     buttons="accept,cancel,extra2"
+     buttonlabelextra2="&pref_button_extra2_label;"
+     onload="ImagePickerChrome.Options.onLoad();"
+     ondialogextra2="ImagePickerChrome.Options.restoreAll();"
+     persist="lastSelected screenX screenY">
+    <prefpane id="perf-setting">
+      <preferences id="ipPreferences">
+        <preference id="pref-createdFolderByTitle" name="extensions.imagepicker.createdFolderByTitle" type="bool"/>
+        <preference id="pref-removeTextFromTitle" name="extensions.imagepicker.removeTextFromTitle" type="unichar"/>
+        <preference id="pref-renameImageBySequenceNum" name="extensions.imagepicker.renameImageBySequenceNum" type="bool"/>
+        <preference id="pref-openExplorerAfterSaved" name="extensions.imagepicker.openExplorerAfterSaved" type="bool"/>
+        <preference id="pref-openDownloadManagerAfterSaved" name="extensions.imagepicker.openDownloadManagerAfterSaved" type="bool"/>
+        <preference id="pref-closeImagePickerAfterSaved" name="extensions.imagepicker.closeImagePickerAfterSaved" type="bool"/>
+      </preferences>
+      <vbox>
+        <groupbox>
+            <caption label="&pref_after_saved_behavior.label;" />
+            <checkbox label="&pref_open_explorer_after_saved.label;" preference="pref-openExplorerAfterSaved" />
+            <checkbox label="&pref_open_download_manager_after_saved.label;" preference="pref-openDownloadManagerAfterSaved" />
+            <checkbox label="&pref_close_image_picker_after_saved.label;" preference="pref-closeImagePickerAfterSaved" />
+        </groupbox>
+        <groupbox>
+            <caption label="&pref_folder_creation.label;" />
+            <checkbox label="&pref_created_folder_by_title.label;" preference="pref-createdFolderByTitle" 
+                      oncommand="ImagePickerChrome.Options.selectCreatedFolderByTitle(event);"/>
+            <label value="&pref_remove_text_from_title_textbox.label;" />
+            <textbox multiline="true"  cols="80" rows="10" preference="pref-removeTextFromTitle" id="removeTextTB"/>  
+            <hbox align="center">
+                <label value="&pref_remove_text_from_title_menulist.label;" />
+                <menulist editable="true" flex="1" id="removeTextMenulist">
+                  <menupopup>
+                  </menupopup>
+                </menulist>
+                <button label="&pref_remove_text_from_title_button.label;" oncommand="ImagePickerChrome.Options.addRemoveText();" 
+                        tooltiptext="&pref_remove_text_from_title_button.tooltip;"  id="removeTextBtn"/>
+            </hbox>
+        </groupbox>
+        <groupbox>
+             <caption label="&pref_file_creation.label;" />
+             <checkbox label="&pref_rename_image_by_sequence_num.label;" preference="pref-renameImageBySequenceNum" 
+                       tooltiptext="&pref_rename_image_by_sequence_num.tooltip;"/>
+        </groupbox>
+      </vbox>
+    </prefpane>
+    <script type="application/x-javascript" src="common.js" />
+    <script type="application/x-javascript" src="options.js" />
+</prefwindow>
