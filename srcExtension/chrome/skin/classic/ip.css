@@ -7,6 +7,7 @@ toolbar[iconsize ="small"] #image-pick-button {
     list-style-image: url("chrome://imagepicker/skin/img-picker_16.png");
 }
 
+/*  css for image cell  */
 .image-cell {
     margin: 5px;
     border: #98989A solid 1px;
@@ -21,12 +22,23 @@ toolbar[iconsize ="small"] #image-pick-button {
    border:#62B8C6 solid 1px;
 }
 
+/*  css for image box  */
 .image-box {
     margin: 5px;
 }
 
 .image-cell-selected .image-box {
     -moz-box-shadow: 3px 3px 5px black;
+}
+
+/*  css for additional info box, not use  */
+.ad-box {
+    margin-bottom: 0px;
+}
+
+/*  css for checkbox, not use  */
+.image-cell checkbox {
+    margin-bottom: 0px;
 }
 
 .note {

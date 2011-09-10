@@ -52,7 +52,7 @@ ImagePickerChrome.ImageGrid.prototype = {
     },
 
     _getWidthPerImage : function() {
-        return this.thumbnailSize - 15;
+        return this.thumbnailSize - 20;
     },
     
     /**
@@ -122,7 +122,7 @@ ImagePickerChrome.ImageGrid.prototype = {
         var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
         var cellBox = document.createElementNS(XUL_NS, "vbox");
         cellBox.setAttribute("width", cellWidth);
-        cellBox.setAttribute("height", cellWidth + 30);
+        cellBox.setAttribute("height", cellWidth + 40);
         cellBox.setAttribute("pack", "center");
         cellBox.setAttribute("align", "center");
         cellBox.setAttribute("class", "image-cell");
@@ -148,6 +148,7 @@ ImagePickerChrome.ImageGrid.prototype = {
             var adBox = document.createElementNS(XUL_NS, "vbox");
             adBox.setAttribute("id", imgInfo.id+"-AdBox");
             adBox.setAttribute("align", "center");
+            adBox.setAttribute("class", "ad-box");
             this.renderAdditionalInfo(imgInfo, adBox);
         
             //Add checkbox
@@ -199,10 +200,6 @@ ImagePickerChrome.ImageGrid.prototype = {
         imgElem.setAttribute("height", height);
         
         var imgBox = document.createElementNS(XUL_NS, "vbox");
-        //imgBox.setAttribute("width", widthPerImage);
-        //imgBox.setAttribute("height", widthPerImage);
-        imgBox.setAttribute("align", "center");
-        imgBox.setAttribute("pack", "center");
         imgBox.setAttribute("class", "image-box");
        
         imgBox.appendChild(imgElem);
