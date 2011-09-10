@@ -18,7 +18,7 @@ toolbar[iconsize ="small"] #image-pick-button {
 }
 
 .image-cell-selected  {
-   border:#316AC5 solid 1px;
+   border:#62B8C6 solid 1px;
 }
 
 .image-box {
@@ -27,7 +27,6 @@ toolbar[iconsize ="small"] #image-pick-button {
 
 .image-cell-selected .image-box {
     -moz-box-shadow: 3px 3px 5px black;
-    padding-bottom: 3px;
 }
 
 .note {
