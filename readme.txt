@@ -1,7 +1,7 @@
 FireFox +
     1. Console2 (enable log from "Chrome" on Info level)
-    2. Extension Developer (enable Debugging Preferences)
-    3. Quick Locale Swicher
+    2. Extension Developer or Developer Assistant (enable Debugging Preferences)
+    3. Quick Locale Switcher
     4. DOM Inspector
     5. ChromeBug
     
