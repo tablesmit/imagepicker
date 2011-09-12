@@ -43,6 +43,10 @@ ImagePickerChrome.Controller = {
         var isShowImageName = this.settings.isShowImageName();
         this.imageGrid = new ImagePickerChrome.ImageGrid("imageContainer", gridSize, thumbnailType, isShowImageSize,
                 isShowImageName);
+                
+        // Store the resize flag for first open
+        this.MIN_WINDOW_WIDTH = 700;
+        this.isResizeToMinWidth = false;
     },
 
     /**
@@ -93,7 +97,7 @@ ImagePickerChrome.Controller = {
 
         // add event
         window.addEventListener("resize", function() {
-            ImagePickerChrome.Controller.refreshImageContainer();
+            ImagePickerChrome.Controller.onResize();
         }, true);
     },
 
@@ -122,7 +126,29 @@ ImagePickerChrome.Controller = {
         
         // save saved folder
         this.settings.setSavedFolderPath(document.getElementById("browsedirTB").value);
+        
+        // Remove progress listener from Download Manager if have
+        var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
+
+        // unregister progress listener
+        if (this.progressListener != null) {
+            dm.removeListener(this.progressListener);
+        }
     },
+    
+     onResize : function() {
+         
+        if(!this.isResizeToMinWidth){
+            this.isResizeToMinWidth = true;
+            var windowWidth = window.outerWidth;
+            if (windowWidth < this.MIN_WINDOW_WIDTH) {
+                window.resizeTo(this.MIN_WINDOW_WIDTH, window.outerHeight);
+                ImagePicker.Logger.debug("ResizeToMinWidth: from " + windowWidth + " to " + window.outerWidth);
+            }
+        }
+        
+        this.refreshImageContainer();
+     },
 
     /**
      * refresh image container
