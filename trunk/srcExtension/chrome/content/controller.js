@@ -45,7 +45,7 @@ ImagePickerChrome.Controller = {
                 isShowImageName);
                 
         // Store the resize flag for first open
-        this.MIN_WINDOW_WIDTH = 700;
+        this.MIN_WINDOW_WIDTH = 772;
         this.isResizeToMinWidth = false;
     },
 
@@ -142,7 +142,8 @@ ImagePickerChrome.Controller = {
             this.isResizeToMinWidth = true;
             var windowWidth = window.outerWidth;
             if (windowWidth < this.MIN_WINDOW_WIDTH) {
-                window.resizeTo(this.MIN_WINDOW_WIDTH, window.outerHeight);
+                window.sizeToContent();
+                //window.resizeTo(this.MIN_WINDOW_WIDTH, window.outerHeight);
                 ImagePicker.Logger.debug("ResizeToMinWidth: from " + windowWidth + " to " + window.outerWidth);
             }
         }
