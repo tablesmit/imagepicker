@@ -40,6 +40,7 @@
 <!ENTITY pick_menu_show_image_size.label "显示图片大小">
 <!ENTITY pick_menu_show_image_name.label "显示图片名称">
 <!ENTITY pick_saved_directory.label "保存目录">
+<!ENTITY pick_clear_saved_directories.label "清除所有目录">
 <!ENTITY pick_browse.tooltip "浏览...">
 <!ENTITY pick_button_save.label "保存">
 <!ENTITY pick_button_save.tooltip "保存选择的图片">

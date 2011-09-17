@@ -10,7 +10,7 @@ pref('extensions.imagepicker.filter.skipImageTypes.jpg', false);
 pref('extensions.imagepicker.filter.skipImageTypes.png', false);
 pref('extensions.imagepicker.filter.skipImageTypes.gif', true);
 
-pref('extensions.imagepicker.savedFolderPath', "");
+pref('extensions.imagepicker.savedFolderPathList', "");
 pref('extensions.imagepicker.createdFolderByTitle', true);
 pref('extensions.imagepicker.removeTextFromTitle', "- Mozilla Firefox\n- Powered by Discuz!");
 pref('extensions.imagepicker.renameImageBySequenceNum', false);
