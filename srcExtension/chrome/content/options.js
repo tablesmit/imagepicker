@@ -16,24 +16,44 @@ ImagePickerChrome.Options = {
     onLoad: function(){
     
         //populate windows title for "remove text"
+        var removeTextMenulist = document.getElementById("removeTextMenulist");
+                
         var windowTitle = window.opener.document.title;
-        
-        if (windowTitle != null && windowTitle != "") {
-        
-            var removeTextMenulist = document.getElementById("removeTextMenulist");
-            
-            var separatorRE = /\t|-|_/g;
-            var result = separatorRE.exec(windowTitle);
-            while (result != null) {
-                var text = windowTitle.substring(result.index);
-                var item = removeTextMenulist.appendItem(text);
-                item.setAttribute("crop", "none");
-                result = separatorRE.exec(windowTitle);
-            }
+        var removeTexts = this._splitTitle(windowTitle);
+        for (var i = 0; i < removeTexts.length; i++){
+            var item = removeTextMenulist.appendItem(removeTexts[i]);
+            item.setAttribute("crop", "none");
         }
         
         //init RemoveText Elements
         this.enableOrDisableRemoveTextElements(ImagePicker.Settings.isCreatedFolderByTitle());
+    },
+    
+    _splitTitle: function(windowTitle){
+    
+       var results = new Array();
+       
+       if (windowTitle != null && windowTitle != "") {
+                    
+            var headTexts = new Array();
+            var tailTexts = new Array();
+            
+            var separatorRE = /\t|-|_/g;
+            var result = separatorRE.exec(windowTitle);
+            while (result != null) {
+                var hText = windowTitle.substring(0, separatorRE.lastIndex);
+                headTexts.push(hText);
+
+                var tText = windowTitle.substring(result.index);
+                tailTexts.push(tText);
+
+                result = separatorRE.exec(windowTitle);
+            }
+            
+            results = headTexts.concat(tailTexts);
+        }
+
+        return results;
     },
     
     addRemoveText: function(){
