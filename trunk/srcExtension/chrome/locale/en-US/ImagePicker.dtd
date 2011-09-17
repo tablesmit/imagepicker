@@ -40,6 +40,7 @@
 <!ENTITY pick_menu_show_image_size.label "Show Image Size">
 <!ENTITY pick_menu_show_image_name.label "Show Image Name">
 <!ENTITY pick_saved_directory.label "Saved Directory">
+<!ENTITY pick_clear_saved_directories.label "Clear all directories">
 <!ENTITY pick_browse.tooltip "Browse...">
 <!ENTITY pick_button_save.label "Save">
 <!ENTITY pick_button_save.tooltip "Save selected images">

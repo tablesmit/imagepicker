@@ -96,13 +96,39 @@ ImagePicker.Settings =  {
     setSkipImageTypeGIF: function(isSkip){
         return this._prefs.setBoolPref("filter.skipImageTypes.gif", isSkip);
     },
-    
-    getSavedFolderPath: function(){
-        return this.getUnicodeChar(this._prefs, "savedFolderPath");
+        
+    getSavedFolderPaths: function(){
+        
+        var pathList = this.getUnicodeChar(this._prefs, "savedFolderPathList");
+        var paths = new Array();
+        if(pathList.trim() != ""){
+           paths = pathList.split("\n");
+        }
+
+        return paths;
     },
     
-    setSavedFolderPath: function(path){
-        return this.setUnicodeChar(this._prefs, "savedFolderPath", path);
+    addSavedFolderPath: function(path){
+        var MAX_PATH_COUNT = 10;
+        var paths = this.getSavedFolderPaths();
+        
+        var pathList = path;
+        var pathCount = 1;
+        for(var i=0; i< paths.length; i++){
+            if(paths[i] != path){ // filter duplicate path
+                pathList = pathList + "\n" + paths[i];
+                pathCount++
+            }
+            if(pathCount >= MAX_PATH_COUNT){ //quit loop when reach the max limit
+                break;
+            }
+        }
+        
+        this.setUnicodeChar(this._prefs, "savedFolderPathList", pathList);
+    },
+    
+    clearSavedFolderPaths: function(){
+        this.setUnicodeChar(this._prefs, "savedFolderPathList", "");
     },
     
     isCreatedFolderByTitle: function(){
@@ -129,9 +155,7 @@ ImagePicker.Settings =  {
 
         var text = this.getUnicodeChar(this._prefs, "removeTextFromTitle");
         var textLines = text.split("\n");
-        
 
-        
         var results = new Array();
         for(var i=0; i<textLines.length; i++){
             if (textLines[i] != null && textLines[i].trim() != "") {

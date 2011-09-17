@@ -90,8 +90,7 @@ ImagePickerChrome.Controller = {
         document.getElementById("showImageSizeMI").setAttribute("checked", isShowImageSize);
         document.getElementById("showImageNameMI").setAttribute("checked", isShowImageName);
 
-        var saveFolderPath = this.settings.getSavedFolderPath();
-        document.getElementById("browsedirTB").value = saveFolderPath;
+        this._renderSavedFolderPathMenuList();
 
         this.doFilter();
 
@@ -99,6 +98,51 @@ ImagePickerChrome.Controller = {
         window.addEventListener("resize", function() {
             ImagePickerChrome.Controller.onResize();
         }, true);
+    },
+    
+    _renderSavedFolderPathMenuList : function() {
+        
+        var savedPathMenulist = document.getElementById("savedPathMenulist");
+        
+        // Remove all menu items except menu separator and "Clear all" menu items 
+        var endIndex = savedPathMenulist.itemCount - 3;
+        for (var i = endIndex; i >=0; i--) {
+            savedPathMenulist.removeItemAt(i);
+        }
+        savedPathMenulist.selectedIndex = -1;
+        
+        // Add menu items from settings
+        var paths = this.settings.getSavedFolderPaths();
+        for(var i=0; i< paths.length; i++){
+           var item = savedPathMenulist.insertItemAt(i,paths[i]);
+        }
+        
+        // select one
+        if(paths.length > 0){
+            savedPathMenulist.selectedIndex = 0;
+        }else{
+            savedPathMenulist.selectedIndex = -1;
+        }
+        
+        //enable "Clear All" menu item only if have path
+        var clearAllSavedPathsMenuItem = document.getElementById("clearAllSavedPathsMenuItem");
+        clearAllSavedPathsMenuItem.disabled = (paths.length == 0);
+    },
+    
+    _addSavedFolderPath : function(path) {
+                
+        this.settings.addSavedFolderPath(path);
+        
+        //update UI                
+        this._renderSavedFolderPathMenuList();
+    },
+    
+    clearAllSavedPaths : function(path) {
+        
+        this.settings.clearSavedFolderPaths(path);
+        
+        //update UI                
+        this._renderSavedFolderPathMenuList();
     },
 
     /**
@@ -125,7 +169,7 @@ ImagePickerChrome.Controller = {
         this.settings.setSkipImageTypeGIF(!document.getElementById("imageTypeGifCB").checked);
         
         // save saved folder
-        this.settings.setSavedFolderPath(document.getElementById("browsedirTB").value);
+        this._addSavedFolderPath(document.getElementById("savedPathMenulist").value);
         
         // Remove progress listener from Download Manager if have
         var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
@@ -276,14 +320,14 @@ ImagePickerChrome.Controller = {
         filePicker.init(window, this.getI18NString('selectFloderTitle'), nsIFilePicker.modeGetFolder);
 
         // locate current directory
-        var destPath = document.getElementById("browsedirTB").value;
+        var destPath = document.getElementById("savedPathMenulist").value;
         var dest = ImagePicker.FileUtils.toDirectory(destPath);
         if (dest) {
             filePicker.displayDirectory = dest;
         }
         var result = filePicker.show();
         if (result == nsIFilePicker.returnOK) {
-            document.getElementById("browsedirTB").value = filePicker.file.path;
+            this._addSavedFolderPath(filePicker.file.path);
         }
     },
 
@@ -295,7 +339,7 @@ ImagePickerChrome.Controller = {
     doSaveImages : function() {
 
         // locate current directory
-        var destPath = document.getElementById("browsedirTB").value;
+        var destPath = document.getElementById("savedPathMenulist").value;
         var dest = ImagePicker.FileUtils.toDirectory(destPath);
 
         if (!dest) {

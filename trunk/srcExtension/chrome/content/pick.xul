@@ -98,9 +98,15 @@
         context="context-menu" >
     </vbox>
     <hbox>
-        <hbox flex="1" align="center">
+        <hbox flex="3" align="center">
             <label value="&pick_saved_directory.label;" />
-            <textbox id="browsedirTB" flex="1" />
+            <menulist editable="true"  id="savedPathMenulist" flex="1">
+                <menupopup>
+                    <menuseparator />
+                    <menuitem label="&pick_clear_saved_directories.label;" id="clearAllSavedPathsMenuItem"
+                              oncommand="ImagePickerChrome.Controller.clearAllSavedPaths();"/>
+                </menupopup>
+            </menulist>
             <toolbarbutton id="browsedir" oncommand="ImagePickerChrome.Controller.browseDir();"
                 tooltiptext="&pick_browse.tooltip;" image="chrome://imagepicker/skin/browse.png" />
         </hbox>
