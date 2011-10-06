@@ -73,16 +73,20 @@ ImagePickerChrome.Options = {
     },
     
     enableOrDisableRemoveTextElements: function(enable){
-    
+        
+        var showSubfolderNameConfirmationPopupCheckbox = document.getElementById("showSubfolderNameConfirmationPopupCheckbox");
         var removeTextMenulist = document.getElementById("removeTextMenulist");
         var removeTextTB = document.getElementById("removeTextTB");
         var removeTextBtn = document.getElementById("removeTextBtn");
         
         if (enable) {
+            showSubfolderNameConfirmationPopupCheckbox.disabled = false;
             removeTextMenulist.disabled = false;
             removeTextTB.disabled = false;
             removeTextBtn.disabled = false;
         } else {
+            showSubfolderNameConfirmationPopupCheckbox.disabled = true;
+            showSubfolderNameConfirmationPopupCheckbox.checked = false;
             removeTextMenulist.disabled = true;
             removeTextTB.disabled = true;
             removeTextBtn.disabled = true;

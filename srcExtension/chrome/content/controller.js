@@ -329,6 +329,66 @@ ImagePickerChrome.Controller = {
             this._addSavedFolderPath(filePicker.file.path);
         }
     },
+    
+    askSavedFolder : function() {
+        
+        // locate current directory
+        var destPath = document.getElementById("savedPathMenulist").value;
+        var dest = ImagePicker.FileUtils.toDirectory(destPath);
+
+        if (!dest) {
+            alert(this.getI18NString('invalidSaveFolder'));
+            return null;;
+        }
+
+        //Create sub-folder if need
+        if(this.settings.isCreatedFolderByTitle()){
+            
+            var subFolderName = this._makeFolderNameByTitle(window.document.title);
+
+            
+            //open FolderName Confirmation Popup
+            if (this.settings.isShowSubfolderNameConfirmationPopup()) {
+                
+                //prepare parameter
+                var folderNames = [subFolderName];
+                if (dest.isDirectory()) {
+                    var dirEntries = dest.directoryEntries;
+                    while (dirEntries.hasMoreElements()) {
+                        var entry = dirEntries.getNext();
+                        entry.QueryInterface(Components.interfaces.nsIFile);
+                        if(entry.isDirectory()){
+                            folderNames.push(entry.leafName);
+                        }
+                    }
+                }
+                var params = {
+                    input: {
+                        savedfolderNames: folderNames
+                    },
+                    output: {
+                        savedFolderName: null
+                    }
+                };
+                
+                var confirmDialog = window.openDialog("chrome://imagepicker/content/folderConfirmation.xul", "", "chrome, dialog, modal, centerscreen, resizable=yes", params);
+                confirmDialog.focus();
+
+                //handle result
+                var result = params.output.savedFolderName;
+                if(result!=null && result.trim() != ""){
+                    subFolderName = result;
+                }
+            }
+            
+            var subFolder = this._createFolder(destPath, subFolderName);
+            if(subFolder != null){
+                dest = subFolder;
+            }
+        }
+        
+        return dest;
+    },
 
     /**
      * save image to local
@@ -337,24 +397,11 @@ ImagePickerChrome.Controller = {
      */
     doSaveImages : function() {
 
-        // locate current directory
-        var destPath = document.getElementById("savedPathMenulist").value;
-        var dest = ImagePicker.FileUtils.toDirectory(destPath);
-
+        // locate saved directory
+        var dest = this.askSavedFolder();
         if (!dest) {
-            alert(this.getI18NString('invalidSaveFolder'));
             return;
         }
-
-        //Create sub-folder if need
-        if(this.settings.isCreatedFolderByTitle()){
-            var subFolder = this._createFolderByTitle(destPath);
-            if(subFolder != null){
-                dest = subFolder;
-            }
-        }
-
-        //document.getElementById("filterStat").label = this.getI18NString('startSaveFile');
 
         // Collect saved files
         var savedImages = new Array();
@@ -414,17 +461,13 @@ ImagePickerChrome.Controller = {
         }
     },
 
-    _createFolderByTitle : function(parentDirPath) {
-
-        var subFolderName;
+    _createFolder : function(parentDirPath, subFolderName) {
 
         // clone the parent folder, don't use the clone() method.
         var subFolder = ImagePicker.FileUtils.toDirectory(parentDirPath);
 
         // create new folder with window title
         try {
-
-            subFolderName = this._makeFolderNameByTitle(window.document.title);
             subFolder.append(subFolderName);
             if (!subFolder.exists() || !subFolder.isDirectory()) {
                 // if it doesn't exist, create

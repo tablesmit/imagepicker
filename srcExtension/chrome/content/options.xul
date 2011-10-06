@@ -14,6 +14,7 @@
     <prefpane id="perf-setting">
       <preferences id="ipPreferences">
         <preference id="pref-createdFolderByTitle" name="extensions.imagepicker.createdFolderByTitle" type="bool"/>
+        <preference id="pref-showSubfolderNameConfirmationPopup" name="extensions.imagepicker.showSubfolderNameConfirmationPopup" type="bool"/>
         <preference id="pref-removeTextFromTitle" name="extensions.imagepicker.removeTextFromTitle" type="unichar"/>
         <preference id="pref-renameImageBySequenceNum" name="extensions.imagepicker.renameImageBySequenceNum" type="bool"/>
         <preference id="pref-openExplorerAfterSaved" name="extensions.imagepicker.openExplorerAfterSaved" type="bool"/>
@@ -31,17 +32,21 @@
             <caption label="&pref_folder_creation.label;" />
             <checkbox label="&pref_created_folder_by_title.label;" preference="pref-createdFolderByTitle" 
                       oncommand="ImagePickerChrome.Options.selectCreatedFolderByTitle(event);"/>
-            <label value="&pref_remove_text_from_title_textbox.label;" />
-            <textbox multiline="true"  cols="80" rows="10" preference="pref-removeTextFromTitle" id="removeTextTB"/>  
-            <hbox align="center">
-                <label value="&pref_remove_text_from_title_menulist.label;" />
-                <menulist editable="true" flex="1" id="removeTextMenulist">
-                  <menupopup>
-                  </menupopup>
-                </menulist>
-                <button label="&pref_remove_text_from_title_button.label;" oncommand="ImagePickerChrome.Options.addRemoveText();" 
-                        tooltiptext="&pref_remove_text_from_title_button.tooltip;"  id="removeTextBtn"/>
-            </hbox>
+            <groupbox>
+                <caption label="&pref_remove_text_from_title_textbox.label;" />
+                <textbox multiline="true"  cols="80" rows="10" preference="pref-removeTextFromTitle" id="removeTextTB"/>  
+                <hbox align="center" style="border: 1px blue;">
+                    <label value="&pref_remove_text_from_title_menulist.label;" />
+                    <menulist editable="true" flex="1" id="removeTextMenulist">
+                      <menupopup>
+                      </menupopup>
+                    </menulist>
+                    <button label="&pref_remove_text_from_title_button.label;" oncommand="ImagePickerChrome.Options.addRemoveText();" 
+                            tooltiptext="&pref_remove_text_from_title_button.tooltip;"  id="removeTextBtn"/>
+                </hbox>
+            </groupbox>
+            <checkbox label="&pref_show_folder_name_confirmation.label;" preference="pref-showSubfolderNameConfirmationPopup" 
+                      id="showSubfolderNameConfirmationPopupCheckbox"/>
         </groupbox>
         <groupbox>
              <caption label="&pref_file_creation.label;" />

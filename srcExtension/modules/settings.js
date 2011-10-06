@@ -135,6 +135,10 @@ ImagePicker.Settings =  {
         return this._prefs.getBoolPref("createdFolderByTitle");
     },
     
+    isShowSubfolderNameConfirmationPopup: function(){
+        return this._prefs.getBoolPref("showSubfolderNameConfirmationPopup");
+    },
+    
     isRenameImageBySequenceNum: function(){
         return this._prefs.getBoolPref("renameImageBySequenceNum");
     },
