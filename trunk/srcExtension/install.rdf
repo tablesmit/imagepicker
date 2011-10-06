@@ -33,5 +33,15 @@
       </RDF:Description>
     </em:localized>
     
+    <em:localized>
+      <RDF:Description>
+        <em:locale>zh-TW</em:locale>
+        <em:name>集圖工具(Image Picker)</em:name>
+        <em:description>從瀏覽中的網頁中，過濾並選擇喜愛的圖片保存。</em:description>
+        <em:creator>Wesley Chen (topolog@gmail.com)</em:creator>
+        <em:homepageURL>https://addons.mozilla.org/firefox/addon/235863</em:homepageURL>
+      </RDF:Description>
+    </em:localized>
+    
 </RDF:Description>
 </RDF:RDF>

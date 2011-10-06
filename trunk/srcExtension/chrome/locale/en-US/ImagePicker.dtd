@@ -9,7 +9,8 @@
 <!ENTITY pref_button_extra2_label "Restore Default Settings">
 
 <!ENTITY pref_folder_creation.label "Folder Creation">
-<!ENTITY pref_created_folder_by_title.label "Create saved folder by title automatically">
+<!ENTITY pref_created_folder_by_title.label "Create saved folder by title">
+<!ENTITY pref_show_folder_name_confirmation.label "Show saved folder name confirmation popup">
 <!ENTITY pref_remove_text_from_title_textbox.label "Remove the following text from title">
 <!ENTITY pref_remove_text_from_title_menulist.label "Remove text:">
 <!ENTITY pref_remove_text_from_title_button.label "Add">
@@ -55,6 +56,9 @@
 <!ENTITY pick_contex_menu_select_similar.label "Select Similar">
 <!ENTITY pick_contex_menu_select_all.label "Select All">
 <!ENTITY pick_contex_menu_unselect_all.label "Unselect All">
+
+<!ENTITY folder_confirmation_dialog.title "Saved folder name confirmation">
+<!ENTITY folder_confirmation_dialog.label "Please select or input folder name for saving">
 
 <!ENTITY about_dialog.title "About Image Picker">
 <!ENTITY about_extension_name.label "Image Picker">
