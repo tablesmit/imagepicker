@@ -12,7 +12,7 @@ For development,
     2. Configure "firefox.profile.path" in build.xml if need.
     3. Run "ant test"
 Note:
-    1. Need restart FireFox if changed the "chrome.manifest" file
+    1. Need restart FireFox if changed the "chrome.manifest" file or JS files under the "srcExtension/modules" directory
     2. Need touch "srcExtension" directory if changed the "install.rdf" file (Implemented in Ant task)
     
 For release,

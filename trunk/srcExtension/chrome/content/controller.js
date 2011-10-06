@@ -57,8 +57,7 @@ ImagePickerChrome.Controller = {
     loadPickWindow : function() {
 
         // init window title
-        var windowTitle = window.opener.document.title;
-        window.document.title = windowTitle;
+        window.document.title = window.arguments[0].title;
 
         // init window from preferences
         document.getElementById("minWidthTB").value = this.settings.getMinWidth();
