@@ -38,7 +38,7 @@ ImagePickerChrome.Options = {
             var headTexts = new Array();
             var tailTexts = new Array();
             
-            var separatorRE = /\t|-|_/g;
+            var separatorRE = /\t|-|_|\|/g;
             var result = separatorRE.exec(windowTitle);
             while (result != null) {
                 var hText = windowTitle.substring(0, separatorRE.lastIndex);

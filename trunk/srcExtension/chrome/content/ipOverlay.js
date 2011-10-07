@@ -171,7 +171,7 @@ ImagePickerChrome.generatePickImageMenuItems = function(event){
     //Split current tab title to collect feeds
     var currentTabTitle = ImagePickerChrome.getCurrentTab().contentDocument.title;
     
-    var separator = /-|_|\(|\)|\[|\]/;
+    var separator = /-|_|\(|\)|\[|\]|\|/;
     var feedTexts = currentTabTitle.split(separator);
     var feeds = new Array();
     for (var i = 0; i < feedTexts.length; i++) {
