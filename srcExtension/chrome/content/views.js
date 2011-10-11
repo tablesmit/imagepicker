@@ -122,7 +122,7 @@ ImagePickerChrome.ImageGrid.prototype = {
         var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
         var cellBox = document.createElementNS(XUL_NS, "vbox");
         cellBox.setAttribute("width", cellWidth);
-        cellBox.setAttribute("height", cellWidth + 40);
+        cellBox.setAttribute("height", cellWidth + 50);
         cellBox.setAttribute("pack", "center");
         cellBox.setAttribute("align", "center");
         cellBox.setAttribute("class", "image-cell");

@@ -24,11 +24,11 @@ toolbar[iconsize ="small"] #image-pick-button {
 
 /*  css for image box  */
 .image-box {
-    margin: 5px;
+    margin: 4px;
 }
 
 .image-cell-selected .image-box {
-    -moz-box-shadow: 3px 3px 5px black;
+   /*  -moz-box-shadow: 3px 3px 5px black;   */
 }
 
 /*  css for additional info box, not use  */
