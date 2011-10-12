@@ -12,4 +12,8 @@ http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker.PNG
 
 http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker2.PNG
 
+http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker-CN.PNG
+
+http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker-TW.PNG
+
 http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker-start2(en).PNG
