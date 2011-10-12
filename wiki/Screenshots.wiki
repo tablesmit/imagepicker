@@ -8,10 +8,6 @@ http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker-open1(en).PNG
 
 http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker-open2(en).PNG
 
-http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker.PNG
-
-http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker2.PNG
-
 http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker-CN.PNG
 
 http://imagepicker.googlecode.com/svn//wiki/img/ImagePicker-TW.PNG
