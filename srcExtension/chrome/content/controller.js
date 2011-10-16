@@ -351,17 +351,28 @@ ImagePickerChrome.Controller = {
             if (this.settings.isShowSubfolderNameConfirmationPopup()) {
                 
                 //prepare parameter
-                var folderNames = [subFolderName];
+                var folders = [];
                 if (dest.isDirectory()) {
                     var dirEntries = dest.directoryEntries;
                     while (dirEntries.hasMoreElements()) {
                         var entry = dirEntries.getNext();
                         entry.QueryInterface(Components.interfaces.nsIFile);
                         if(entry.isDirectory()){
-                            folderNames.push(entry.leafName);
+                            folders.push(entry);
                         }
                     }
                 }
+                
+                // sort by last modified time DESC 
+                folders.sort(function(folder1, folder2){
+                    return -(folder1.lastModifiedTime - folder2.lastModifiedTime);
+                });
+                
+                var folderNames = [subFolderName];
+                folders.forEach(function(folder){
+                    folderNames.push(folder.leafName);
+                });
+                
                 var params = {
                     input: {
                         savedfolderNames: folderNames
