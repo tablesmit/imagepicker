@@ -13,16 +13,21 @@ Cu.import("resource://imagepicker/common.js");
  * @namespace ImagePicker
  * @class ImagePicker.ImageInfo
  * @constructor
+ * @param {Number}
+ *            UUID
  * @param {HTMLElement}
  *            image element
+ * @param {Number}
+ *            the top of image (absolute position)     
  */
-ImagePicker.ImageInfo = function(id, image) {
+ImagePicker.ImageInfo = function(id, image, imageTop) {
 
     this.id = id;
     this.imageSrc = image;
     this.url = image.src;
     this.height = image.height;
     this.width = image.width;
+    this.top = imageTop;
     this.fileSize = 0;
     this.isCached = true;
     this.loadFileSizeFromCacheCompleted = false;
@@ -34,7 +39,7 @@ ImagePicker.ImageInfo = function(id, image) {
     this.setFileName(this.nameFromURL);
 
     ImagePicker.Logger.info("Created ImageInfo[id=" + this.id + ", name=" + this.fileName + ", width=" + this.width
-            + ", height=" + this.height + ",URL=" + this.url + "]");
+            + ", height=" + this.height + ",URL=" + this.url  + ",top=" + this.top + "]");
 };
 
 ImagePicker.ImageInfo.prototype = {

@@ -98,8 +98,11 @@ ImagePickerChrome.pickImages = function(documentList, title){
     var imageInfoList = new Array();
     var guid = (new Date()).getTime();
     for (var j = 0; j < tidiedImageList.length; j++) {
-        ImagePicker.Logger.info("image" + j + " = " + tidiedImageList[j].src);
-        var image = new ImagePicker.ImageInfo(guid++, tidiedImageList[j]);
+        var tImg = tidiedImageList[j];
+        
+        ImagePicker.Logger.info("image" + j + " = " + tImg.src);
+        
+        var image = new ImagePicker.ImageInfo(guid++, tImg, ImagePickerChrome.getImageTop(tImg));
         
         ImagePickerChrome.ImageUtils.updateFileExtensionByMIME(image);
         ImagePickerChrome.ImageUtils.updateFileSizeFromCache(image);
@@ -108,6 +111,8 @@ ImagePickerChrome.pickImages = function(documentList, title){
         imageInfoList.push(image);
     }
     
+    //sort by the image top
+    imageInfoList.sort(ImagePickerChrome.sortImagesByTop);
     var params = {
         "imageList": imageInfoList,
         "title": title
@@ -135,7 +140,7 @@ ImagePickerChrome.tidyImages = function(imageList){
 
     var tidiedImageList = new Array();
     
-    imageList.sort(ImagePickerChrome.sortImages);
+    imageList.sort(ImagePickerChrome.sortImagesBySrc);
     
     for (var i = 0; i < imageList.length; i++) {
         if ((i + 1 < imageList.length) && (imageList[i].src == imageList[i + 1].src)) {
@@ -148,7 +153,12 @@ ImagePickerChrome.tidyImages = function(imageList){
     return tidiedImageList;
 };
 
-ImagePickerChrome.sortImages = function(imageOne, imageTwo){
+/**
+ * Sort image by image src
+ * @param {HTMLElement} imageOne
+ * @param {HTMLElement} imageTwo
+ */
+ImagePickerChrome.sortImagesBySrc = function(imageOne, imageTwo){
     var imageOneSrc = imageOne.src;
     var imageTwoSrc = imageTwo.src;
     
@@ -163,6 +173,32 @@ ImagePickerChrome.sortImages = function(imageOne, imageTwo){
     return sortValue;
 };
 
+/**
+ * Sort image by image top
+ * @param {ImagePicker.ImageInfo} imageOne
+ * @param {ImagePicker.ImageInfo} imageTwo
+ */
+ImagePickerChrome.sortImagesByTop = function(imageOne, imageTwo){
+    var imageOneTop = imageOne.top;
+    var imageTwoTop = imageTwo.top;
+    
+    var sortValue = 1;
+    
+    if (imageOneTop == imageTwoTop) {
+        sortValue = 0;
+    } else if (imageOneTop < imageTwoTop) {
+        sortValue = -1;
+    }
+    
+    return sortValue;
+};
+
+ImagePickerChrome.getImageTop = function(image){
+    
+    var top =image.getBoundingClientRect().top + document.documentElement.scrollTop;
+    
+    return top;
+};
 
 ImagePickerChrome.generatePickImageMenuItems = function(event){
 
