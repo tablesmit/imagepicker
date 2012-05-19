@@ -21,6 +21,9 @@
                 <menuseparator id="ipbtn-menuseparator" />
             </menupopup>
         </toolbarbutton>
+        <toolbarbutton id="image-pick-button-simple" class="toolbarbutton-1"
+                label="&toolbarbutton_pick_images_simple.label;" tooltiptext="&toolbarbutton_pick_images_simple.tooltip;" oncommand="ImagePickerChrome.pickImagesFromCurrentTab(event);" >
+        </toolbarbutton>
     </toolbarpalette>
     
     <popup id="contentAreaContextMenu">

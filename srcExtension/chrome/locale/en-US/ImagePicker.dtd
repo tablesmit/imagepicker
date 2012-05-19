@@ -1,5 +1,7 @@
 <!ENTITY toolbarbutton_pick_images.label "Pick Images">
 <!ENTITY toolbarbutton_pick_images.tooltip "Pick Images">
+<!ENTITY toolbarbutton_pick_images_simple.label "Pick Images">
+<!ENTITY toolbarbutton_pick_images_simple.tooltip "Pick images from current tab">
 <!ENTITY toolbarbutton_pick_images.menuitem.currenttab "Pick images from current tab">
 <!ENTITY toolbarbutton_pick_images.menuitem.alltabs "Pick images from all tabs">
 

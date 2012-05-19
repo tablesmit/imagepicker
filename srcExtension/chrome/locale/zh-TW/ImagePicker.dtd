@@ -1,5 +1,7 @@
 <!ENTITY toolbarbutton_pick_images.label "拾圖">
 <!ENTITY toolbarbutton_pick_images.tooltip "拾圖，並下載到本地">
+<!ENTITY toolbarbutton_pick_images_simple.label "拾圖">
+<!ENTITY toolbarbutton_pick_images_simple.tooltip "從當前標簽頁拾圖">
 <!ENTITY toolbarbutton_pick_images.menuitem.currenttab "從當前標簽頁拾圖">
 <!ENTITY toolbarbutton_pick_images.menuitem.alltabs "從所有標簽頁拾圖">
 
