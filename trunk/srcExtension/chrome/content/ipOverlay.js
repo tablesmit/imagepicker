@@ -18,6 +18,7 @@ ImagePickerChrome.getCurrentBrowser = function(){
  *     gBrowser.selectedTab == gBrowser.mCurrentTab
  * and gBrowser.selectedBrowser == gBrowser.getBrowserAtIndex(gBrowser.tabContainer.selectedIndex)
  * and gBrowser.selectedBrowser == gBrowser.getBrowserForTab(gBrowser.selectedTab)
+ * and gBrowser.tabs == gBrowser..tabContainer.childNodes
  */
 ImagePickerChrome.getCurrentTab = function(){
     return gBrowser.selectedTab;
@@ -50,8 +51,8 @@ ImagePickerChrome.pickImagesFromAllTabs = function(event){
 
     //Collect tabs
     var tabs = [];
-    for(var i=0; i<gBrowser.tabs.length; i++){
-        tabs.push(gBrowser.tabs[i])
+    for(var i=0; i<gBrowser.tabContainer.childNodes.length; i++){
+        tabs.push(gBrowser.tabContainer.childNodes[i])
     }
 
     //Get document title
@@ -115,7 +116,7 @@ ImagePickerChrome.pickImagesFromTabs = function(event, tabTitle){
         var curBrowser = gBrowser.getBrowserAtIndex(i);
         var curTitle = curBrowser.contentDocument.title;
         if (curTitle.indexOf(tabTitle) != -1) {
-            tabs.push(gBrowser.tabs[i]);
+            tabs.push(gBrowser.tabContainer.childNodes[i]);
         }
     }
 
@@ -384,7 +385,7 @@ ImagePickerChrome.CloseTabListener.prototype = {
         if (this.tabs && ImagePicker.Settings.isCloseBrowserTabAfterSaved()) {
 
             //Create a blank tab if close all tabs to avoid Firefox is closed.
-            if(this.tabs.length == gBrowser.tabs.length){
+            if(this.tabs.length == gBrowser.tabContainer.childNodes.length){
                 gBrowser.addTab("about:blank");
             }
 
