@@ -27,6 +27,12 @@ ImagePickerChrome.Controller = {
     init : function() {
 
         this.rawImageList = window.arguments[0].imageList;
+        /**
+         * Register the given listener to extend the after image saving behavior
+         * The given listener must have a afterSavedImages() method.
+         */
+        this.listeners = window.arguments[0].listeners;
+
         this.imageList = this.rawImageList;
         this.selectedMap = new ImagePicker.HashMap();
         this.filter = null;
@@ -34,7 +40,7 @@ ImagePickerChrome.Controller = {
 
         // Get preferences
         this.settings = ImagePicker.Settings;
-         
+
         // init image grid
         var gridSize = window.innerWidth - 6;
 
@@ -43,7 +49,7 @@ ImagePickerChrome.Controller = {
         var isShowImageName = this.settings.isShowImageName();
         this.imageGrid = new ImagePickerChrome.ImageGrid("imageContainer", gridSize, thumbnailType, isShowImageSize,
                 isShowImageName);
-                
+
         // Store the resize flag for first open
         this.MIN_WINDOW_WIDTH = 772;
         this.isResizeToMinWidth = false;
@@ -98,49 +104,49 @@ ImagePickerChrome.Controller = {
             ImagePickerChrome.Controller.onResize();
         }, true);
     },
-    
+
     _renderSavedFolderPathMenuList : function() {
-        
+
         var savedPathMenulist = document.getElementById("savedPathMenulist");
-        
-        // Remove all menu items except menu separator and "Clear all" menu items 
+
+        // Remove all menu items except menu separator and "Clear all" menu items
         var endIndex = savedPathMenulist.itemCount - 3;
         for (var i = endIndex; i >=0; i--) {
             savedPathMenulist.removeItemAt(i);
         }
         savedPathMenulist.selectedIndex = -1;
-        
+
         // Add menu items from settings
         var paths = this.settings.getSavedFolderPaths();
         for(var i=0; i< paths.length; i++){
            var item = savedPathMenulist.insertItemAt(i,paths[i]);
         }
-        
+
         // select one
         if(paths.length > 0){
             savedPathMenulist.selectedIndex = 0;
         }else{
             savedPathMenulist.selectedIndex = -1;
         }
-        
+
         //enable "Clear All" menu item only if have path
         var clearAllSavedPathsMenuItem = document.getElementById("clearAllSavedPathsMenuItem");
         clearAllSavedPathsMenuItem.disabled = (paths.length == 0);
     },
-    
+
     _addSavedFolderPath : function(path) {
-                
+
         this.settings.addSavedFolderPath(path);
-        
-        //update UI                
+
+        //update UI
         this._renderSavedFolderPathMenuList();
     },
-    
+
     clearAllSavedPaths : function(path) {
-        
+
         this.settings.clearSavedFolderPaths(path);
-        
-        //update UI                
+
+        //update UI
         this._renderSavedFolderPathMenuList();
     },
 
@@ -161,15 +167,15 @@ ImagePickerChrome.Controller = {
         this.settings.setMinWidth(document.getElementById("minWidthTB").value);
         this.settings.setMinHeight(document.getElementById("minHeightTB").value);
         this.settings.setMinSize(document.getElementById("minSizeTB").value);
-        
+
         this.settings.setSkipImageTypeJPG(!document.getElementById("imageTypeJpegCB").checked);
         this.settings.setSkipImageTypePNG(!document.getElementById("imageTypePngCB").checked);
         this.settings.setSkipImageTypeBMP(!document.getElementById("imageTypeBmpCB").checked);
         this.settings.setSkipImageTypeGIF(!document.getElementById("imageTypeGifCB").checked);
-        
+
         // save saved folder
         this._addSavedFolderPath(document.getElementById("savedPathMenulist").value);
-        
+
         // Remove progress listener from Download Manager if have
         var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
 
@@ -178,9 +184,9 @@ ImagePickerChrome.Controller = {
             dm.removeListener(this.progressListener);
         }
     },
-    
+
      onResize : function() {
-         
+
         if(!this.isResizeToMinWidth){
             this.isResizeToMinWidth = true;
             var windowWidth = window.outerWidth;
@@ -190,7 +196,7 @@ ImagePickerChrome.Controller = {
                 ImagePicker.Logger.debug("ResizeToMinWidth: from " + windowWidth + " to " + window.outerWidth);
             }
         }
-        
+
         this.refreshImageContainer();
      },
 
@@ -212,7 +218,7 @@ ImagePickerChrome.Controller = {
         var gridWidth = window.innerWidth - 6;
         this.imageGrid.gridWidth = gridWidth;
         this.imageGrid.render(this.imageList, this.selectedMap);
-        
+
         // display select status
         var imageIds = this.selectedMap.keys();
         for(var i=0; i< imageIds.length; i++){
@@ -263,10 +269,10 @@ ImagePickerChrome.Controller = {
 
         // refresh image container
         this.refreshImageContainer();
-        
+
         this.updateStatuBar();
     },
-    
+
     /**
      * Show all images
      *
@@ -280,10 +286,10 @@ ImagePickerChrome.Controller = {
 
         // refresh image container
         this.refreshImageContainer();
-        
+
         this.updateStatuBar();
     },
-        
+
     /**
      * view image for thumbnail type
      *
@@ -329,9 +335,9 @@ ImagePickerChrome.Controller = {
             this._addSavedFolderPath(filePicker.file.path);
         }
     },
-    
+
     askSavedFolder : function() {
-        
+
         // locate current directory
         var destPath = document.getElementById("savedPathMenulist").value;
         var dest = ImagePicker.FileUtils.toDirectory(destPath);
@@ -343,13 +349,13 @@ ImagePickerChrome.Controller = {
 
         //Create sub-folder if need
         if(this.settings.isCreatedFolderByTitle()){
-            
+
             var subFolderName = this._makeFolderNameByTitle(window.document.title);
 
-            
+
             //open FolderName Confirmation Popup
             if (this.settings.isShowSubfolderNameConfirmationPopup()) {
-                
+
                 //prepare parameter
                 var folders = [];
                 if (dest.isDirectory()) {
@@ -362,17 +368,17 @@ ImagePickerChrome.Controller = {
                         }
                     }
                 }
-                
-                // sort by last modified time DESC 
+
+                // sort by last modified time DESC
                 folders.sort(function(folder1, folder2){
                     return -(folder1.lastModifiedTime - folder2.lastModifiedTime);
                 });
-                
+
                 var folderNames = [subFolderName];
                 folders.forEach(function(folder){
                     folderNames.push(folder.leafName);
                 });
-                
+
                 var params = {
                     input: {
                         savedfolderNames: folderNames
@@ -381,7 +387,7 @@ ImagePickerChrome.Controller = {
                         savedFolderName: null
                     }
                 };
-                
+
                 var confirmDialog = window.openDialog("chrome://imagepicker/content/folderConfirmation.xul", "", "chrome, dialog, modal, centerscreen, resizable=yes", params);
                 confirmDialog.focus();
 
@@ -391,13 +397,13 @@ ImagePickerChrome.Controller = {
                     subFolderName = result;
                 }
             }
-            
+
             var subFolder = this._createFolder(destPath, subFolderName);
             if(subFolder != null){
                 dest = subFolder;
             }
         }
-        
+
         return dest;
     },
 
@@ -422,7 +428,7 @@ ImagePickerChrome.Controller = {
                 savedImages.push(img);
             }
         }
-        
+
         //Auto rename
         if(this.settings.isRenameImageBySequenceNum()){
             this._renameBySequence(savedImages);
@@ -456,20 +462,38 @@ ImagePickerChrome.Controller = {
             }
         }
 
+        this._postSaveImages(dest);
+    },
+
+    _postSaveImages : function(savedFolder) {
+
         //open Explorer after saved if need
         if(this.settings.isOpenExplorerAfterSaved()){
-            ImagePicker.FileUtils.revealDirectory(dest);
+            ImagePicker.FileUtils.revealDirectory(savedFolder);
         }
 
         //open DownloadManager after saved if need
         if(this.settings.isOpenDownloadManagerAfterSaved()){
             this.showDownloadManagerUI();
         }
-        
+
         //close ImagePicker dialog after saved if need
         if(this.settings.isCloseImagePickerAfterSaved()){
             self.close();
         }
+
+        if(this.listeners){
+            this.listeners.forEach(function(listener){
+                if (listener) {
+                    try {
+                        listener.afterSavedImages();
+                    } catch (ex) {
+                        ImagePicker.Logger.error("Occured Error " + ex + " when execute Image Save Listener: " + listener);
+                    }
+                }
+            });
+        }
+
     },
 
     _createFolder : function(parentDirPath, subFolderName) {
@@ -495,27 +519,27 @@ ImagePickerChrome.Controller = {
 
     _makeFolderNameByTitle : function(docTitle){
         var subFolderName = docTitle;
-        
+
         //remove unnecessary text
         var textLines = this.settings.getRemoveTextFromTitle();
         for (var i = 0; i < textLines.length; i++){
             var reg = new RegExp(textLines[i],"gi");
             subFolderName = subFolderName.replace(reg, '');
         }
-        
+
         return ImagePicker.FileUtils.toValidName(subFolderName);
     },
-    
+
     _renameBySequence : function(images){
         var maxDigits = images.length.toString().length;
         var seq = new ImagePicker.Sequence(0,maxDigits);
-        
+
         for ( var i = 0; i < images.length; i++) {
             var img = images[i];
             img.fileName = seq.next();
         }
     },
-    
+
     /**
      * save image to local
      *
@@ -612,7 +636,7 @@ ImagePickerChrome.Controller = {
         this.updateStatuBar();
         ImagePicker.Logger.debug("select all images ");
     },
-    
+
     unselectAllImages: function(){
 
         this.selectedMap = new ImagePicker.HashMap();
@@ -635,7 +659,7 @@ ImagePickerChrome.Controller = {
             ImagePicker.XulUtils.addClass(imageCell,"image-cell-selected");
         }
     },
-    
+
     _unselectImage: function(imageId){
         this.selectedMap.put(imageId, false);
         var checkbox = document.getElementById(imageId + "-CheckBox");
@@ -647,7 +671,7 @@ ImagePickerChrome.Controller = {
             ImagePicker.XulUtils.removeClass(imageCell,"image-cell-selected");
         }
     },
-    
+
     selectSimilarImages: function(element){
 
         //Find match URL
@@ -655,7 +679,7 @@ ImagePickerChrome.Controller = {
         if(!imageInfo){
             return;
         }
-        
+
         var imageURLDomain = imageInfo.url.substring(0, imageInfo.url.lastIndexOf('/'));
         ImagePicker.Logger.debug("Popup node: " + element.nodeName + ", ImageInfo = " + imageInfo + ", ImageURLDomain = " + imageURLDomain);
 
@@ -670,19 +694,19 @@ ImagePickerChrome.Controller = {
                 this._unselectImage(img.id);
             }
         }
-        
+
         this.updateStatuBar();
         ImagePicker.Logger.debug("select similar images ");
     },
-       
+
     handleOpenContextMenu: function(){
         var element = document.popupNode;
         var isImageCell = (this.getImageFromPopupNode(element) != null);
         document.getElementById("selectSimilarMenuItem").hidden = !isImageCell;
     },
-    
+
     getImageFromPopupNode: function(popupNode){
-        
+
         var imageId = null;
         if (popupNode.nodeName == 'image') {
             imageId = popupNode.getAttribute("id");
@@ -697,7 +721,7 @@ ImagePickerChrome.Controller = {
                 node = node.parentNode;
             }
         }
-        
+
         //Find match ImageInfo
         var imageInfo = null;
          for ( var i = 0; i < this.imageList.length; i++) {
@@ -707,10 +731,10 @@ ImagePickerChrome.Controller = {
                 break;
             }
         }
-        
+
         return imageInfo;
     },
-    
+
     handleClickOnImage: function(imageId){
       ImagePicker.Logger.debug("select image: " + imageId);
       var isSelected = this.selectedMap.get(imageId);
@@ -721,7 +745,7 @@ ImagePickerChrome.Controller = {
       }
       this.updateStatuBar();
     },
-        
+
     updateStatuBar: function(){
         // update status bar
         var oldImageConut = this.rawImageList.length;
@@ -735,15 +759,15 @@ ImagePickerChrome.Controller = {
         }
         document.getElementById("filterStat").label = this.getFormattedString("statusBarText",[newImageConut, selectedImageConut, oldImageConut]);
     },
-    
+
     openOptionsDialog: function(){
         openDialog('chrome://imagepicker/content/options.xul', 'Options', 'chrome,titlebar,resizable,centerscreen,modal=no,dialog=yes');
     },
-    
+
     openAboutDialog: function(){
         openDialog('chrome://imagepicker/content/about.xul', '', 'chrome,titlebar,resizable,centerscreen,modal=no,dialog=yes');
     },
-    
+
     getI18NString: function(key){
         // Get a reference to the strings bundle
         if(this.stringsBundle == null){
@@ -795,21 +819,21 @@ ImagePickerChrome.DownloadProgressListener.prototype = {
         if (isFinished) {
             this.completedCount = this.completedCount + 1;
             var totalProgress = Math.ceil((this.completedCount / this.totalCount) * 100);
-            
-            
+
+
             if (document) {
                 var downloadMeter = document.getElementById("downloadMeter");
                 var downloadStat = document.getElementById("downloadStat");
-                                
+
                 if (downloadMeter) { //check null since the ImagePicker dialog may be closed
                     downloadMeter.value = totalProgress;
                 }
-                
+
                 if (downloadStat) { //check null since the ImagePicker dialog may be closed
                     downloadStat.label = totalProgress + "%";
                 }
             }
-            
+
             if ((typeof ImagePicker != "undefined") && (ImagePicker != null)) {  //check null since the ImagePicker dialog may be closed
                  ImagePicker.Logger.debug("Listener id =" + this.id + ", Downloaded: " + totalProgress);
             }

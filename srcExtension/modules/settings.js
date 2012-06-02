@@ -13,92 +13,92 @@ Cu.import("resource://imagepicker/common.js");
  * @class ImagePicker.Settings
  */
 ImagePicker.Settings =  {
-    
+
     _prefs : Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch(
                 "extensions.imagepicker."),
-                
+
     getThumbnailType: function(){
         return this._prefs.getCharPref("displayrule.thumbnailType");
     },
-    
+
     setThumbnailType: function(tnType){
         return this._prefs.setCharPref("displayrule.thumbnailType", tnType);
     },
-    
+
     isShowImageSize: function(){
         return this._prefs.getBoolPref("displayrule.showImageSize");
     },
-    
+
     setShowImageSize: function(isShowImageSize){
         return this._prefs.setBoolPref("displayrule.showImageSize", isShowImageSize);
     },
-    
+
     isShowImageName: function(){
         return this._prefs.getBoolPref("displayrule.showImageName");
     },
-    
+
     setShowImageName: function(isShowImageName){
         return this._prefs.setBoolPref("displayrule.showImageName", isShowImageName);
     },
-    
+
     getMinWidth: function(){
         return this._prefs.getIntPref("filter.minWidth");
     },
-    
+
     setMinWidth: function(minWidth){
         return this._prefs.setIntPref("filter.minWidth", minWidth);
     },
-    
+
     getMinHeight: function(){
         return this._prefs.getIntPref("filter.minHeight");
     },
-    
+
     setMinHeight: function(minHeight){
         return this._prefs.setIntPref("filter.minHeight", minHeight);
     },
-    
+
     getMinSize: function(){
         return this._prefs.getIntPref("filter.minSize");
     },
-    
+
     setMinSize: function(minSize){
         return this._prefs.setIntPref("filter.minSize", minSize);
     },
-    
+
     isSkipImageTypeBMP: function(){
         return this._prefs.getBoolPref("filter.skipImageTypes.bmp");
     },
-    
+
     setSkipImageTypeBMP: function(isSkip){
         return this._prefs.setBoolPref("filter.skipImageTypes.bmp", isSkip);
     },
-    
+
     isSkipImageTypeJPG: function(){
         return this._prefs.getBoolPref("filter.skipImageTypes.jpg");
     },
-    
+
     setSkipImageTypeJPG: function(isSkip){
         return this._prefs.setBoolPref("filter.skipImageTypes.jpg", isSkip);
     },
-    
+
     isSkipImageTypePNG: function(){
         return this._prefs.getBoolPref("filter.skipImageTypes.png");
     },
-    
+
     setSkipImageTypePNG: function(isSkip){
         return this._prefs.setBoolPref("filter.skipImageTypes.png", isSkip);
     },
-    
+
     isSkipImageTypeGIF: function(){
         return this._prefs.getBoolPref("filter.skipImageTypes.gif");
     },
-    
+
     setSkipImageTypeGIF: function(isSkip){
         return this._prefs.setBoolPref("filter.skipImageTypes.gif", isSkip);
     },
-        
+
     getSavedFolderPaths: function(){
-        
+
         var pathList = this.getUnicodeChar(this._prefs, "savedFolderPathList");
         var paths = new Array();
         if(pathList.trim() != ""){
@@ -107,11 +107,11 @@ ImagePicker.Settings =  {
 
         return paths;
     },
-    
+
     addSavedFolderPath: function(path){
         var MAX_PATH_COUNT = 10;
         var paths = this.getSavedFolderPaths();
-        
+
         var pathList = path;
         var pathCount = 1;
         for(var i=0; i< paths.length; i++){
@@ -123,38 +123,42 @@ ImagePicker.Settings =  {
                 break;
             }
         }
-        
+
         this.setUnicodeChar(this._prefs, "savedFolderPathList", pathList);
     },
-    
+
     clearSavedFolderPaths: function(){
         this.setUnicodeChar(this._prefs, "savedFolderPathList", "");
     },
-    
+
     isCreatedFolderByTitle: function(){
         return this._prefs.getBoolPref("createdFolderByTitle");
     },
-    
+
     isShowSubfolderNameConfirmationPopup: function(){
         return this._prefs.getBoolPref("showSubfolderNameConfirmationPopup");
     },
-    
+
     isRenameImageBySequenceNum: function(){
         return this._prefs.getBoolPref("renameImageBySequenceNum");
     },
-    
+
     isOpenExplorerAfterSaved: function(){
         return this._prefs.getBoolPref("openExplorerAfterSaved");
     },
-    
+
     isOpenDownloadManagerAfterSaved: function(){
         return this._prefs.getBoolPref("openDownloadManagerAfterSaved");
     },
-    
+
     isCloseImagePickerAfterSaved: function(){
         return this._prefs.getBoolPref("closeImagePickerAfterSaved");
     },
-    
+
+    isCloseBrowserTabAfterSaved: function(){
+        return this._prefs.getBoolPref("closeBrowserTabAfterSaved");
+    },
+
     getRemoveTextFromTitle: function(){
 
         var text = this.getUnicodeChar(this._prefs, "removeTextFromTitle");
@@ -166,17 +170,17 @@ ImagePicker.Settings =  {
                 results.push(textLines[i]);
             }
         }
-        
+
         //sort by length desc
         results = results.sort(
              function(a,b){
                    return b.length - a.length;
              }
         );
-        
+
         return results;
     },
-                 
+
     /**
      * Get a unicode char value from preference system for the given prefName
      * @method getUnicodeChar

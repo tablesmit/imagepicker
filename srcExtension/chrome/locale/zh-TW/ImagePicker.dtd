@@ -19,13 +19,14 @@
 <!ENTITY pref_remove_text_from_title_button.tooltip "添加要刪除的內容">
 
 <!ENTITY pref_file_creation.label "創建文件">
-<!ENTITY pref_rename_image_by_sequence_num.label "按圖片的順序，自動重命名圖片">
+<!ENTITY pref_rename_image_by_sequence_num.label "按圖片的出現順序，自動重命名圖片">
 <!ENTITY pref_rename_image_by_sequence_num.tooltip "例如： 001.jpg, 002.jpg, 003.jpg, ...">
 
 <!ENTITY pref_after_saved_behavior.label "保存後">
 <!ENTITY pref_open_explorer_after_saved.label "自動打開文件瀏覽器">
 <!ENTITY pref_open_download_manager_after_saved.label "自動打開下載管理器">
 <!ENTITY pref_close_image_picker_after_saved.label "自動關閉拾圖對話框">
+<!ENTITY pref_close_browser_tab_after_saved.label "自動關閉標簽頁">
 <!ENTITY pref_notes.label "註意：需要重新打開 Image Picker，配置才能生效。">
 
 <!ENTITY pick_window.title "拾圖">

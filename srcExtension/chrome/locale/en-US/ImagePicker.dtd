@@ -26,6 +26,7 @@
 <!ENTITY pref_open_explorer_after_saved.label "Open Explorer automatically">
 <!ENTITY pref_open_download_manager_after_saved.label "Open Download Manager automatically">
 <!ENTITY pref_close_image_picker_after_saved.label "Close Image Picker automatically">
+<!ENTITY pref_close_browser_tab_after_saved.label "Close Browser Tab automatically">
 <!ENTITY pref_notes.label "NOTE: You must re-open the Image Picker dialog for the changes to take effect">
 
 
