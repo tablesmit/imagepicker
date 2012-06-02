@@ -19,4 +19,5 @@ pref('extensions.imagepicker.renameImageBySequenceNum', false);
 pref('extensions.imagepicker.openExplorerAfterSaved', true);
 pref('extensions.imagepicker.openDownloadManagerAfterSaved', false);
 pref('extensions.imagepicker.closeImagePickerAfterSaved', true);
+pref('extensions.imagepicker.closeBrowserTabAfterSaved', false);
 
