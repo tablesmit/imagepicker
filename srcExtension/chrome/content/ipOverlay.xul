@@ -18,6 +18,8 @@
                 <menuitem id="ipbtn-menucurrent" label="&toolbarbutton_pick_images.menuitem.currenttab;"
                     oncommand="ImagePickerChrome.pickImagesFromCurrentTab(event);" />
                 <menuitem id="ipbtn-menuall" label="&toolbarbutton_pick_images.menuitem.alltabs;" oncommand="ImagePickerChrome.pickImagesFromAllTabs(event);" />
+                <menuitem id="ipbtn-menuright" label="&toolbarbutton_pick_images.menuitem.righttabs;" oncommand="ImagePickerChrome.pickImagesFromRightTabs(event);" />
+                <menuitem id="ipbtn-menuleft" label="&toolbarbutton_pick_images.menuitem.lefttabs;" oncommand="ImagePickerChrome.pickImagesFromLeftTabs(event);" />
                 <menuseparator id="ipbtn-menuseparator" />
             </menupopup>
         </toolbarbutton>
@@ -25,10 +27,10 @@
                 label="&toolbarbutton_pick_images_simple.label;" tooltiptext="&toolbarbutton_pick_images_simple.tooltip;" oncommand="ImagePickerChrome.pickImagesFromCurrentTab(event);" >
         </toolbarbutton>
     </toolbarpalette>
-    
+
     <popup id="contentAreaContextMenu">
         <menuitem id="pick-images" label="&menu_pick_images.label;" accesskey="p" insertbefore="context-sep-properties"
-            class="menuitem-iconic" image="chrome://imagepicker/skin/img-picker_16.png" 
+            class="menuitem-iconic" image="chrome://imagepicker/skin/img-picker_16.png"
             oncommand="ImagePickerChrome.pickImagesFromCurrentTab(event);" >
         </menuitem>
     </popup>
