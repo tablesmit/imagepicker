@@ -12,7 +12,23 @@ toolbar[iconsize ="small"] #image-pick-button {
 }
 
 toolbar[iconsize ="small"] #image-pick-button-simple {
-    list-style-image: url("chrome://imagepicker/skin/img-picker_16.png");
+    list-style-image: url("chrome://imagepicker/skin/img-picker-p1_16.png");
+}
+
+#ipbtn-menucurrent {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-p1_16.png");
+}
+
+#ipbtn-menuall {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-all_16.png");
+}
+
+#ipbtn-menuright {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-right_16.png");
+}
+
+#ipbtn-menuleft {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-left_16.png");
 }
 
 /*  css for image cell  */
