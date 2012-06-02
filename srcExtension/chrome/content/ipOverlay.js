@@ -339,7 +339,7 @@ ImagePickerChrome.generatePickImageMenuItems = function(event){
     });
 
     // update menu items
-    var menuPopup = document.getElementById("image-pick-button-popup");
+    var menuPopup = event.target;
     var children = menuPopup.children;
     // Remove all dynamic menu items
     for (var i = children.length - 1; i >= 0; i--) {
@@ -355,6 +355,7 @@ ImagePickerChrome.generatePickImageMenuItems = function(event){
             var label = ImagePickerChrome.getFormattedString("pickButtonDynamicMenuItem", [feed.text, feed.occurrence]);
             var menuitem = document.createElementNS(XUL_NS, "menuitem");
             menuitem.setAttribute("label", label);
+            menuitem.setAttribute("class", "menuitem-iconic dynamic-pick-menu-item");
             menuitem.addEventListener("command", function(e){
                 ImagePickerChrome.pickImagesFromTabs(e, feed.text);
             }, false);
