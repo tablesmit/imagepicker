@@ -3,11 +3,19 @@
     list-style-image: url("chrome://imagepicker/skin/img-picker_16.png");
 }
 
+toolbar[iconsize ="small"] .ip-buttons {
+    list-style-image: url("chrome://imagepicker/skin/img-picker_16.png");
+}
+
 toolbar[iconsize ="large"] .ip-buttons {
     list-style-image: url("chrome://imagepicker/skin/img-picker_24.png");
 }
 
 .ip-button-1 {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-p1_16.png");
+}
+
+toolbar[iconsize ="small"] .ip-button-1 {
     list-style-image: url("chrome://imagepicker/skin/img-picker-p1_16.png");
 }
 
@@ -19,6 +27,10 @@ toolbar[iconsize ="large"] .ip-button-1 {
     list-style-image: url("chrome://imagepicker/skin/img-picker-all_16.png");
 }
 
+toolbar[iconsize ="small"] .ip-button-all {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-all_16.png");
+}
+
 toolbar[iconsize ="large"] .ip-button-all {
     list-style-image: url("chrome://imagepicker/skin/img-picker-all_24.png");
 }
@@ -27,11 +39,20 @@ toolbar[iconsize ="large"] .ip-button-all {
     list-style-image: url("chrome://imagepicker/skin/img-picker-right_16.png");
 }
 
+toolbar[iconsize ="small"] .ip-button-right {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-right_16.png");
+}
+
 toolbar[iconsize ="large"] .ip-button-right {
     list-style-image: url("chrome://imagepicker/skin/img-picker-right_24.png");
 }
 
+
 .ip-button-left {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-left_16.png");
+}
+
+toolbar[iconsize ="small"] .ip-button-left {
     list-style-image: url("chrome://imagepicker/skin/img-picker-left_16.png");
 }
 

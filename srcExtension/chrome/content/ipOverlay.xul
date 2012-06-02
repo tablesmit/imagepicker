@@ -44,7 +44,7 @@
         <menuitem id="pick-images-context" label="&menu_pick_images.label;" accesskey="p" insertbefore="context-sep-properties"
             class="menuitem-iconic ip-button-1" oncommand="ImagePickerChrome.pickImagesFromCurrentTab(event);">
         </menuitem>
-        <menu id="image-pick-buttons-context" class="menu-iconic ip-buttons" label="&menu_pick_images.label;" insertafter="context-sep-properties">
+        <menu id="image-pick-buttons-context" class="menu-iconic ip-buttons" label="&menu_pick_images.label;" insertbefore="context-sep-properties">
             <menupopup id="image-pick-button-popup-context" onpopupshowing="ImagePickerChrome.generatePickImageMenuItems(event);">
                 <menuitem id="ipbtn-menucurrent-context" label="&toolbarbutton_pick_images.menuitem.currenttab;"
                     oncommand="ImagePickerChrome.pickImagesFromCurrentTab(event);" class="menuitem-iconic ip-button-1" />
