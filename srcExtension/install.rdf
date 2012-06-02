@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<RDF:RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
-         xmlns:NC="http://home.netscape.com/NC-rdf#" 
+<RDF:RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
          xmlns:em="http://www.mozilla.org/2004/em-rdf#">
-<RDF:Description RDF:about="urn:mozilla:install-manifest">                
+<RDF:Description RDF:about="urn:mozilla:install-manifest">
     <em:id>ImagePicker@topolog.org</em:id>
     <em:name>Image Picker</em:name>
     <em:description>Choose (filter) images and save images from web page to local disk.</em:description>
-    <em:version>1.0.0</em:version>
+    <em:version>1.2</em:version>
     <em:type>2</em:type> <!-- 2 : Extensions -->
     <em:homepageURL>https://addons.mozilla.org/firefox/addon/235863</em:homepageURL>
     <em:optionsURL>chrome://imagepicker/content/options.xul</em:optionsURL>
@@ -19,10 +19,10 @@
         <RDF:Description>
             <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
             <em:minVersion>3.5</em:minVersion>
-            <em:maxVersion>9.*</em:maxVersion>
+            <em:maxVersion>13.*</em:maxVersion>
         </RDF:Description>
     </em:targetApplication>
-    
+
     <em:localized>
       <RDF:Description>
         <em:locale>zh-CN</em:locale>
@@ -32,7 +32,7 @@
         <em:homepageURL>https://addons.mozilla.org/firefox/addon/235863</em:homepageURL>
       </RDF:Description>
     </em:localized>
-    
+
     <em:localized>
       <RDF:Description>
         <em:locale>zh-TW</em:locale>
@@ -42,6 +42,6 @@
         <em:homepageURL>https://addons.mozilla.org/firefox/addon/235863</em:homepageURL>
       </RDF:Description>
     </em:localized>
-    
+
 </RDF:Description>
 </RDF:RDF>

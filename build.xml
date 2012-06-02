@@ -2,14 +2,14 @@
 <project name="ImagePicker" default="package">
 
     <property name="extension.id" value="ImagePicker@topolog.org" />
-    <property name="extension.version" value="1.0.0" />
-    
+    <property name="extension.version" value="1.2" />
+
     <!-- firefox configruation e.g. env.win.firefox4.0.properties, env.linux.firefox3.6.properties-->
-    <property file="env.win.firefox4.0.properties"/>    
-    
+    <property file="env.win.firefox4.0.properties"/>
+
     <!-- other firefox configruation, e.g. -safe-mode -jsconsole -->
     <property name="firefox.arg" value=""/>
-    
+
     <!-- Project directories -->
     <property name="src.dir" location="./srcExtension" />
     <property name="build.dir" location="./build" />
@@ -21,7 +21,7 @@
             <available file="${firefox.dir}" type="dir" />
         </and>
     </condition>
-    
+
     <!-- Custom tasks -->
     <target name="init">
         <echoproperties>
@@ -30,7 +30,7 @@
                 <propertyref prefix="firefox." />
             </propertyset>
         </echoproperties>
-        
+
         <!-- Clean all folders/files under build directory-->
         <delete includeEmptyDirs="true">
             <fileset dir="${build.dir}" includes="**/*"/>
@@ -49,8 +49,8 @@
             <substitution expression="about_version.label; ${extension.version}-b${build.number}&quot;" />
         </replaceregexp>
     </target>
-    
-    <target name="install" depends="init, version">    
+
+    <target name="install" depends="init, version">
         <fail unless="firefox.present"/>
         <!-- copy extension proxy file to extensions directory -->
         <copy file="${basedir}/${extension.id}" todir="${firefox.profile.path}/extensions" overwrite="true" verbose="true">
@@ -58,18 +58,18 @@
             <filter token="EXTENSION_SRC_LOCATION" value="${src.dir}"/>
           </filterset>
         </copy>
-        
+
         <!-- touch src.dir for change install.rdf (windows only)-->
         <mkdir dir="${src.dir}\temp"/>
         <delete dir="${src.dir}\temp"/>
     </target>
-    
+
     <target name="test" depends="install" description="run FireFox with this extension for testing">
         <exec executable="${firefox.exe}" spawn="true">
             <arg line="-no-remote ${firefox.arg} -profile ${firefox.profile.path}"/>
         </exec>
     </target>
-    
+
     <target name="build" description="prepare file for release" depends="init, version">
          <copy todir="${build.dir}" >
              <fileset dir="${src.dir}" />
@@ -78,8 +78,8 @@
             <replacetoken>enabledLog : true</replacetoken>
         </replace>
     </target>
-        
-    
+
+
     <target name="package" description="package xpi file for release" depends="build">
         <delete file="${dist.dir}/${ant.project.name}-v${extension.version}.xpi" failonerror="true" />
         <zip destfile="${dist.dir}/${ant.project.name}-v${extension.version}.xpi">

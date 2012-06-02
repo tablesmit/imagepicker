@@ -19,4 +19,4 @@ For release,
     1. Test for FireFox v3.0, FireFox v3.6, FireFox v4.0, FireFox v6.0
     2. Configure "extension.version" in build.xml
     3. Run "ant package"
-    4. Verify by https://addons.mozilla.org/zh-CN/developers/addon/validate
+    4. Verify by https://addons.mozilla.org/zh-CN/developers/addon/validate or https://addons.mozilla.org/zh-CN/developers/addon/check-compatibility
