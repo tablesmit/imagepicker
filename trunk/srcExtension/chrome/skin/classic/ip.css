@@ -1,34 +1,46 @@
 /*  skin/toolbar-button.css  */
-#image-pick-button {
-    list-style-image: url("chrome://imagepicker/skin/img-picker_24.png");
-}
-
-toolbar[iconsize ="small"] #image-pick-button {
+.ip-buttons {
     list-style-image: url("chrome://imagepicker/skin/img-picker_16.png");
 }
 
-#image-pick-button-simple {
+toolbar[iconsize ="large"] .ip-buttons {
     list-style-image: url("chrome://imagepicker/skin/img-picker_24.png");
 }
 
-toolbar[iconsize ="small"] #image-pick-button-simple {
+.ip-button-1 {
     list-style-image: url("chrome://imagepicker/skin/img-picker-p1_16.png");
 }
 
-#ipbtn-menucurrent {
-    list-style-image: url("chrome://imagepicker/skin/img-picker-p1_16.png");
+toolbar[iconsize ="large"] .ip-button-1 {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-p1_24.png");
 }
 
-#ipbtn-menuall {
+.ip-button-all {
     list-style-image: url("chrome://imagepicker/skin/img-picker-all_16.png");
 }
 
-#ipbtn-menuright {
+toolbar[iconsize ="large"] .ip-button-all {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-all_24.png");
+}
+
+.ip-button-right {
     list-style-image: url("chrome://imagepicker/skin/img-picker-right_16.png");
 }
 
-#ipbtn-menuleft {
+toolbar[iconsize ="large"] .ip-button-right {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-right_24.png");
+}
+
+.ip-button-left {
     list-style-image: url("chrome://imagepicker/skin/img-picker-left_16.png");
+}
+
+toolbar[iconsize ="large"] .ip-button-left {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-left_24.png");
+}
+
+.dynamic-pick-menu-item {
+    list-style-image: url("chrome://imagepicker/skin/light_16.png");
 }
 
 /*  css for image cell  */
