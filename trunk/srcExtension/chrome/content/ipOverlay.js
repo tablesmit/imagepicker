@@ -61,6 +61,50 @@ ImagePickerChrome.pickImagesFromAllTabs = function(event){
     ImagePickerChrome.pickImages(tabs, currentTabTitle);
 };
 
+ImagePickerChrome.pickImagesFromRightTabs = function(event){
+
+    event.stopPropagation();
+
+    //Collect tabs
+    var tabs = [];
+    var tab = ImagePickerChrome.getCurrentTab();
+    while(tab){
+       var browser = gBrowser.getBrowserForTab(tab);
+       if(browser){
+           tabs.push(tab);
+       }
+       tab = tab.boxObject.nextSibling;
+    }
+
+    //Get document title
+    var currentTabTitle = ImagePickerChrome.getCurrentBrowser().contentDocument.title;
+
+    //Pick image
+    ImagePickerChrome.pickImages(tabs, currentTabTitle);
+};
+
+ImagePickerChrome.pickImagesFromLeftTabs = function(event){
+
+    event.stopPropagation();
+
+    //Collect tabs
+    var tabs = [];
+    var tab = ImagePickerChrome.getCurrentTab();
+    while(tab){
+       var browser = gBrowser.getBrowserForTab(tab);
+       if(browser){
+           tabs.push(tab);
+       }
+       tab = tab.boxObject.previousSibling;
+    }
+
+    //Get document title
+    var currentTabTitle = ImagePickerChrome.getCurrentBrowser().contentDocument.title;
+
+    //Pick image
+    ImagePickerChrome.pickImages(tabs, currentTabTitle);
+};
+
 ImagePickerChrome.pickImagesFromTabs = function(event, tabTitle){
 
     event.stopPropagation();
@@ -95,6 +139,7 @@ ImagePickerChrome.pickImages = function(tabs, title){
     //Get images from all given tabs
     var imageInfoList = new Array();
     tabs.forEach(function(tab){
+        ImagePicker.Logger.debug("handling tab = " + tab);
         var browser = gBrowser.getBrowserForTab(tab);
         var contentWindow = browser.contentWindow;
 
@@ -296,10 +341,10 @@ ImagePickerChrome.generatePickImageMenuItems = function(event){
     // update menu items
     var menuPopup = document.getElementById("image-pick-button-popup");
     var children = menuPopup.children;
-    // Remove all dynamic menu items except menu separator, "pick current tab" and "pick all tabs" menu items
+    // Remove all dynamic menu items
     for (var i = children.length - 1; i >= 0; i--) {
         var child = children[i];
-        if (child.id != "ipbtn-menucurrent" && child.id != "ipbtn-menuall" && child.id != "ipbtn-menuseparator") {
+        if (child.id == null || child.id == "") {
             menuPopup.removeChild(child);
         }
     }

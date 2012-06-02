@@ -4,6 +4,8 @@
 <!ENTITY toolbarbutton_pick_images_simple.tooltip "從當前標簽頁拾圖">
 <!ENTITY toolbarbutton_pick_images.menuitem.currenttab "從當前標簽頁拾圖">
 <!ENTITY toolbarbutton_pick_images.menuitem.alltabs "從所有標簽頁拾圖">
+<!ENTITY toolbarbutton_pick_images.menuitem.righttabs "從右邊標簽頁拾圖">
+<!ENTITY toolbarbutton_pick_images.menuitem.lefttabs "從左邊標簽頁拾圖">
 
 <!ENTITY menu_pick_images.label "拾圖">
 
