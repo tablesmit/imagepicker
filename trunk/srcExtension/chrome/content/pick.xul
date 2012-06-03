@@ -4,7 +4,7 @@
 <!DOCTYPE overlay SYSTEM "chrome://imagepicker/locale/ImagePicker.dtd">
 
 <window id="root-windows" title="&pick_window.title;" xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
     persist="width height screenX screenY"
     onload="ImagePickerChrome.Controller.loadPickWindow();" onunload="ImagePickerChrome.Controller.unloadPickWindow();"
     >
@@ -13,8 +13,8 @@
     <script type="application/x-javascript" src="views.js" />
     <script type="application/x-javascript" src="controller.js" />
 
-    <stringbundleset id="stringbundleset">
-        <stringbundle id="string-bundle" src="chrome://imagepicker/locale/ImagePicker.properties" />
+    <stringbundleset id="ip-stringbundleset">
+        <stringbundle id="ip-string-bundle" src="chrome://imagepicker/locale/ImagePicker.properties" />
     </stringbundleset>
 
     <popupset>
@@ -70,9 +70,9 @@
                 </hbox>
             </groupbox>
             <hbox align="center" style="margin-left:10px;">
-                <button label="&pick_button_filter.label;" oncommand="ImagePickerChrome.Controller.doFilter();" 
+                <button label="&pick_button_filter.label;" oncommand="ImagePickerChrome.Controller.doFilter();"
                         tooltiptext="&pick_button_filter.tooltip;" />
-                <button label="&pick_button_showall.label;" oncommand="ImagePickerChrome.Controller.doShowAll();" 
+                <button label="&pick_button_showall.label;" oncommand="ImagePickerChrome.Controller.doShowAll();"
                         tooltiptext="&pick_button_showall.tooltip;" />
                 <button type="menu" label="&pick_button_view.label;" id="view-as-button" image="chrome://imagepicker/skin/Pictures.ico">
                     <menupopup>
@@ -111,7 +111,7 @@
                 tooltiptext="&pick_browse.tooltip;" image="chrome://imagepicker/skin/browse.png" />
         </hbox>
         <spacer flex="1" />
-        <button label="&pick_button_save.label;" oncommand="ImagePickerChrome.Controller.doSaveImages();" 
+        <button label="&pick_button_save.label;" oncommand="ImagePickerChrome.Controller.doSaveImages();"
                 tooltiptext="&pick_button_save.tooltip;" />
     </hbox>
     <statusbar>

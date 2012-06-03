@@ -771,7 +771,7 @@ ImagePickerChrome.Controller = {
     getI18NString: function(key){
         // Get a reference to the strings bundle
         if(this.stringsBundle == null){
-            this.stringsBundle = document.getElementById("string-bundle");
+            this.stringsBundle = document.getElementById("ip-string-bundle");
         }
         return this.stringsBundle.getString(key);
     },
@@ -779,7 +779,7 @@ ImagePickerChrome.Controller = {
     getFormattedString : function(key, parameters){
         // Get a reference to the strings bundle
         if(this.stringsBundle == null){
-            this.stringsBundle = document.getElementById("string-bundle");
+            this.stringsBundle = document.getElementById("ip-string-bundle");
         }
         return this.stringsBundle.getFormattedString(key, parameters);
     }
