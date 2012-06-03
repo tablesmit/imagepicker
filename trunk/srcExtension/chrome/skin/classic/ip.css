@@ -1,65 +1,71 @@
 /*  skin/toolbar-button.css  */
+
+/*  image-pick-buttons css  */
+#image-pick-buttons {
+    list-style-image: url("chrome://imagepicker/skin/img-picker_24.png");
+}
+
+toolbar[iconsize ="small"] #image-pick-buttons {
+    list-style-image: url("chrome://imagepicker/skin/img-picker_16.png");
+}
+
 .ip-buttons {
     list-style-image: url("chrome://imagepicker/skin/img-picker_16.png");
 }
 
-toolbar[iconsize ="small"] .ip-buttons {
-    list-style-image: url("chrome://imagepicker/skin/img-picker_16.png");
+/* ip-button-1 css */
+#image-pick-button-simple {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-p1_24.png");
 }
 
-toolbar[iconsize ="large"] .ip-buttons {
-    list-style-image: url("chrome://imagepicker/skin/img-picker_24.png");
+toolbar[iconsize ="small"] #image-pick-button-simple {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-p1_16.png");
 }
 
 .ip-button-1 {
     list-style-image: url("chrome://imagepicker/skin/img-picker-p1_16.png");
 }
 
-toolbar[iconsize ="small"] .ip-button-1 {
-    list-style-image: url("chrome://imagepicker/skin/img-picker-p1_16.png");
+/* ip-button-all css */
+#image-pick-button-all {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-all_24.png");
 }
 
-toolbar[iconsize ="large"] .ip-button-1 {
-    list-style-image: url("chrome://imagepicker/skin/img-picker-p1_24.png");
+toolbar[iconsize ="small"] #image-pick-button-all {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-all_16.png");
 }
 
 .ip-button-all {
     list-style-image: url("chrome://imagepicker/skin/img-picker-all_16.png");
 }
 
-toolbar[iconsize ="small"] .ip-button-all {
-    list-style-image: url("chrome://imagepicker/skin/img-picker-all_16.png");
+/* ip-button-right css */
+#image-pick-button-right {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-right_24.png");
 }
 
-toolbar[iconsize ="large"] .ip-button-all {
-    list-style-image: url("chrome://imagepicker/skin/img-picker-all_24.png");
+toolbar[iconsize ="small"] #image-pick-button-right {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-right_16.png");
 }
 
 .ip-button-right {
     list-style-image: url("chrome://imagepicker/skin/img-picker-right_16.png");
 }
 
-toolbar[iconsize ="small"] .ip-button-right {
-    list-style-image: url("chrome://imagepicker/skin/img-picker-right_16.png");
+/* ip-button-left css */
+#image-pick-button-left {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-left_24.png");
 }
 
-toolbar[iconsize ="large"] .ip-button-right {
-    list-style-image: url("chrome://imagepicker/skin/img-picker-right_24.png");
+toolbar[iconsize ="small"] #image-pick-button-left {
+    list-style-image: url("chrome://imagepicker/skin/img-picker-left_16.png");
 }
-
 
 .ip-button-left {
     list-style-image: url("chrome://imagepicker/skin/img-picker-left_16.png");
 }
 
-toolbar[iconsize ="small"] .ip-button-left {
-    list-style-image: url("chrome://imagepicker/skin/img-picker-left_16.png");
-}
-
-toolbar[iconsize ="large"] .ip-button-left {
-    list-style-image: url("chrome://imagepicker/skin/img-picker-left_24.png");
-}
-
+/* dynamic menu item css */
 .dynamic-pick-menu-item {
     list-style-image: url("chrome://imagepicker/skin/light_16.png");
 }
