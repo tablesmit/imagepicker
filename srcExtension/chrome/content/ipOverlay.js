@@ -26,7 +26,7 @@ ImagePickerChrome.getCurrentTab = function(){
 
 ImagePickerChrome.getFormattedString = function(key, parameters){
     // Get a reference to the strings bundle
-    var stringsBundle = document.getElementById("string-bundle");
+    var stringsBundle = document.getElementById("ip-string-bundle");
     return stringsBundle.getFormattedString(key, parameters);
 };
 
