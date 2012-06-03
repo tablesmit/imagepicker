@@ -13,7 +13,7 @@
     <script type="application/x-javascript" src="views.js" />
     <script type="application/x-javascript" src="controller.js" />
 
-    <stringbundleset id="ip-stringbundleset">
+    <stringbundleset id="stringbundleset">
         <stringbundle id="ip-string-bundle" src="chrome://imagepicker/locale/ImagePicker.properties" />
     </stringbundleset>
 
