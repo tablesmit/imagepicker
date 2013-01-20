@@ -53,6 +53,10 @@ ImagePickerChrome.Controller = {
         // Store the resize flag for first open
         this.MIN_WINDOW_WIDTH = 772;
         this.isResizeToMinWidth = false;
+        
+        var privateBrowsingSvc = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService);
+        this.inPrivateBrowsingMode = privateBrowsingSvc.privateBrowsingEnabled; 
+        ImagePicker.Logger.info("inPrivateBrowsingMode: " + this.inPrivateBrowsingMode);
     },
 
     /**
@@ -526,6 +530,8 @@ ImagePickerChrome.Controller = {
             var reg = new RegExp(textLines[i],"gi");
             subFolderName = subFolderName.replace(reg, '');
         }
+        
+        subFolderName = subFolderName.replace(/\./g, '');
 
         return ImagePicker.FileUtils.toValidName(subFolderName);
     },
@@ -605,11 +611,13 @@ ImagePickerChrome.Controller = {
         persist.persistFlags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES | nsIWBP.PERSIST_FLAGS_FROM_CACHE
                 | nsIWBP.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
 
+        ImagePicker.Logger.debug("inPrivateBrowsingMode: " + this.inPrivateBrowsingMode);
+        
         // Start download
         var dl = dm.addDownload(dm.DOWNLOAD_TYPE_DOWNLOAD, fromURI, toURI, toFile.leafName, mime, Math
-                .round(Date.now() * 1000), null, persist);
+                .round(Date.now() * 1000), null, persist, this.inPrivateBrowsingMode);
         persist.progressListener = dl.QueryInterface(Ci.nsIWebProgressListener);
-        persist.saveURI(dl.source, cacheKey, null, null, null, dl.targetFile);
+        persist.saveURI(dl.source, cacheKey, null, null, null, dl.targetFile, null);
     },
 
     /**

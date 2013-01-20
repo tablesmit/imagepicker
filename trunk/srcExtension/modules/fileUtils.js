@@ -89,7 +89,7 @@ ImagePicker.FileUtils = {
 
         var validName = originalName;
 
-        // replace special char
+        // replace special char: [,\,/,:,*,.,?,",<,>,|,]
         var reg = /[\\\/:\*?\"<>|]/g;
         validName = validName.replace(reg, "");
 
