@@ -2,22 +2,58 @@ Components.utils.import("resource://imagepicker/common.js");
 Components.utils.import("resource://imagepicker/model.js");
 Components.utils.import("resource://imagepicker/settings.js");
 
+ImagePickerChrome.init = function(){
+
+	   var buttonNames = ["ipbutton-simple", "ipbutton-all", "ipbutton-left", "ipbutton-right", "ipbuttons"];
+
+	   // Add buttons to toolbar on first run
+	   Application.getExtensions(function (extensions) {
+            let extension = extensions.get("ImagePicker@topolog.org");
+            ImagePicker.Logger.info("First run: " + extension.firstRun);
+            if (extension.firstRun) {
+            	ImagePicker.Logger.info("Installing button on first run.");
+    	    	buttonNames.forEach(function(buttonName){
+	    		    var buttonId = buttonName + "-toolbar";
+	    		    var isShow = ImagePicker.Settings.isShowOnToolbar(buttonName);
+    		    	ImagePickerChrome.installButton("nav-bar", buttonId, isShow);
+	    		    ImagePicker.Logger.debug("Installed button: " + buttonId + " to toolbar, isShow="+isShow);
+	    		});
+            }
+       });
+
+      // Add buttons to context menu
+	  var contextMenu = document.getElementById("contentAreaContextMenu");
+	  if (contextMenu){
+	    contextMenu.addEventListener("popupshowing", function(){
+
+    	    	buttonNames.forEach(function(buttonName){
+    	    		    var button = document.getElementById(buttonName + "-context");
+    	    		    var isShow = ImagePicker.Settings.isShowOnContextMenu(buttonName);
+    	    		    button.hidden = !isShow;
+    	    		    ImagePicker.Logger.debug("button: " + button.id + ", hidden=" + button.hidden);
+    	    		});
+
+	    }, false);
+	  }
+};
+window.addEventListener("load", ImagePickerChrome.init, false);
+
 /**
  * Return the "browser" type object.
  */
 ImagePickerChrome.getCurrentBrowser = function(){
-    //gBrowser is "tabbrowser" type
-    //tabbrowser.browser() method return the "browser" type
-    //var mainTabBox = getBrowser().mTabBox;
-    //return getBrowser().browsers[mainTabBox.selectedIndex];
+    // gBrowser is "tabbrowser" type
+    // tabbrowser.browser() method return the "browser" type
+    // var mainTabBox = getBrowser().mTabBox;
+    // return getBrowser().browsers[mainTabBox.selectedIndex];
     return gBrowser.selectedBrowser;
 };
 
 /**
- * Return the "tab" type object.
- *     gBrowser.selectedTab == gBrowser.mCurrentTab
- * and gBrowser.selectedBrowser == gBrowser.getBrowserAtIndex(gBrowser.tabContainer.selectedIndex)
- * and gBrowser.selectedBrowser == gBrowser.getBrowserForTab(gBrowser.selectedTab)
+ * Return the "tab" type object. gBrowser.selectedTab == gBrowser.mCurrentTab
+ * and gBrowser.selectedBrowser ==
+ * gBrowser.getBrowserAtIndex(gBrowser.tabContainer.selectedIndex) and
+ * gBrowser.selectedBrowser == gBrowser.getBrowserForTab(gBrowser.selectedTab)
  * and gBrowser.tabs == gBrowser..tabContainer.childNodes
  */
 ImagePickerChrome.getCurrentTab = function(){
@@ -34,14 +70,14 @@ ImagePickerChrome.pickImagesFromCurrentTab = function(event){
 
     event.stopPropagation();
 
-    //Collect current tab
+    // Collect current tab
     var currentTab = ImagePickerChrome.getCurrentTab();
     var tabs = [currentTab]
 
-    //Get document title
+    // Get document title
     var currentTabTitle = ImagePickerChrome.getCurrentBrowser().contentDocument.title;
 
-    //Pick image
+    // Pick image
     ImagePickerChrome.pickImages(tabs, currentTabTitle);
 };
 
@@ -49,16 +85,16 @@ ImagePickerChrome.pickImagesFromAllTabs = function(event){
 
     event.stopPropagation();
 
-    //Collect tabs
+    // Collect tabs
     var tabs = [];
     for(var i=0; i<gBrowser.tabContainer.childNodes.length; i++){
         tabs.push(gBrowser.tabContainer.childNodes[i])
     }
 
-    //Get document title
+    // Get document title
     var currentTabTitle = ImagePickerChrome.getCurrentBrowser().contentDocument.title;
 
-    //Pick image
+    // Pick image
     ImagePickerChrome.pickImages(tabs, currentTabTitle);
 };
 
@@ -66,7 +102,7 @@ ImagePickerChrome.pickImagesFromRightTabs = function(event){
 
     event.stopPropagation();
 
-    //Collect tabs
+    // Collect tabs
     var tabs = [];
     var tab = ImagePickerChrome.getCurrentTab();
     while(tab){
@@ -77,10 +113,10 @@ ImagePickerChrome.pickImagesFromRightTabs = function(event){
        tab = tab.boxObject.nextSibling;
     }
 
-    //Get document title
+    // Get document title
     var currentTabTitle = ImagePickerChrome.getCurrentBrowser().contentDocument.title;
 
-    //Pick image
+    // Pick image
     ImagePickerChrome.pickImages(tabs, currentTabTitle);
 };
 
@@ -88,7 +124,7 @@ ImagePickerChrome.pickImagesFromLeftTabs = function(event){
 
     event.stopPropagation();
 
-    //Collect tabs
+    // Collect tabs
     var tabs = [];
     var tab = ImagePickerChrome.getCurrentTab();
     while(tab){
@@ -99,10 +135,10 @@ ImagePickerChrome.pickImagesFromLeftTabs = function(event){
        tab = tab.boxObject.previousSibling;
     }
 
-    //Get document title
+    // Get document title
     var currentTabTitle = ImagePickerChrome.getCurrentBrowser().contentDocument.title;
 
-    //Pick image
+    // Pick image
     ImagePickerChrome.pickImages(tabs, currentTabTitle);
 };
 
@@ -110,7 +146,7 @@ ImagePickerChrome.pickImagesFromTabs = function(event, tabTitle){
 
     event.stopPropagation();
 
-    //Collect all tabs contain the given tabTitle
+    // Collect all tabs contain the given tabTitle
     var tabs = [];
     for (var i = 0, numTabs = gBrowser.browsers.length; i < numTabs; i++) {
         var curBrowser = gBrowser.getBrowserAtIndex(i);
@@ -120,24 +156,26 @@ ImagePickerChrome.pickImagesFromTabs = function(event, tabTitle){
         }
     }
 
-    //Pick image
+    // Pick image
     ImagePickerChrome.pickImages(tabs, tabTitle);
 };
 
 /**
  * Pick image from the given tabs
  *
- * @param {Array[XULTab]} tabs
- * @param {String} title
+ * @param {Array[XULTab]}
+ *            tabs
+ * @param {String}
+ *            title
  */
 ImagePickerChrome.pickImages = function(tabs, title){
 
-    //init cache session
+    // init cache session
     var cacheService = Cc["@mozilla.org/network/cache-service;1"].getService(Ci.nsICacheService);
     ImagePickerChrome.httpCacheSession = cacheService.createSession("HTTP", Ci.nsICache.STORE_ANYWHERE, Ci.nsICache.STREAM_BASED);
     ImagePickerChrome.httpCacheSession.doomEntriesIfExpired = false;
 
-    //Get images from all given tabs
+    // Get images from all given tabs
     var imageInfoList = new Array();
     tabs.forEach(function(tab){
         ImagePicker.Logger.debug("handling tab = " + tab);
@@ -146,11 +184,11 @@ ImagePickerChrome.pickImages = function(tabs, title){
 
         var documentList = ImagePickerChrome.getDocumentList(contentWindow);
         for (var i = 0; i < documentList.length; i++) {
-            //handle current document
+            // handle current document
             var currentDocument = documentList[i];
             var currentImageList = new Array();
             var documentImageList = currentDocument.getElementsByTagName('img');
-            for (j = 0; j < documentImageList.length; j++) {
+            for (var j = 0; j < documentImageList.length; j++) {
                 var image = documentImageList[j];
                 if (image.src != null && image.src != "") {
                     currentImageList.push(image);
@@ -162,10 +200,10 @@ ImagePickerChrome.pickImages = function(tabs, title){
         }// end for each document
     });
 
-    //Collect tabs to be closed after saved images
+    // Collect tabs to be closed after saved images
     var listeners = [new ImagePickerChrome.CloseTabListener(tabs)];
 
-    //Prepare parameters
+    // Prepare parameters
     var params = {
         "imageList": imageInfoList,
         "title": title,
@@ -192,20 +230,21 @@ ImagePickerChrome.getDocumentList = function(frame){
 };
 
 /**
- * 1. Filter duplicate image
- * 2. Convert the given HTMLElement image list to the ImagePicker.ImageInfo list
- * 3. Sort image by Top
- * @param {Array[HTMLElement]} htmlImageList
+ * 1. Filter duplicate image 2. Convert the given HTMLElement image list to the
+ * ImagePicker.ImageInfo list 3. Sort image by Top
+ *
+ * @param {Array[HTMLElement]}
+ *            htmlImageList
  * @return {Array[ImagePicker.ImageInfo]}
  */
 ImagePickerChrome.convertAndTidyImage = function(htmlImageList){
 
-    //Filter image by url
+    // Filter image by url
     var tidiedHtmlImageList = ImagePickerChrome.filterDuplicateImage(htmlImageList);
     ImagePicker.Logger.info("imageList.length  = " + htmlImageList.length + ", tidiedHtmlImageList.length  = " +
     tidiedHtmlImageList.length);
 
-    //Convert to ImagePicker.ImageInfo
+    // Convert to ImagePicker.ImageInfo
     var imageInfoList = new Array();
     var guid = (new Date()).getTime();
     for (var j = 0; j < tidiedHtmlImageList.length; j++) {
@@ -222,7 +261,7 @@ ImagePickerChrome.convertAndTidyImage = function(htmlImageList){
         imageInfoList.push(image);
     }
 
-    //Sort by the image top
+    // Sort by the image top
     imageInfoList.sort(ImagePickerChrome.sortImagesByTop);
 
     return imageInfoList;
@@ -230,7 +269,9 @@ ImagePickerChrome.convertAndTidyImage = function(htmlImageList){
 
 /**
  * Filter duplicate image by image URL
- * @param {Array[HTMLElement]} imageList
+ *
+ * @param {Array[HTMLElement]}
+ *            imageList
  * @return {Array[HTMLElement]}
  */
 ImagePickerChrome.filterDuplicateImage = function(imageList){
@@ -252,8 +293,11 @@ ImagePickerChrome.filterDuplicateImage = function(imageList){
 
 /**
  * Sort image by image src
- * @param {HTMLElement} imageOne
- * @param {HTMLElement} imageTwo
+ *
+ * @param {HTMLElement}
+ *            imageOne
+ * @param {HTMLElement}
+ *            imageTwo
  */
 ImagePickerChrome.sortImagesBySrc = function(imageOne, imageTwo){
     var imageOneSrc = imageOne.src;
@@ -272,8 +316,11 @@ ImagePickerChrome.sortImagesBySrc = function(imageOne, imageTwo){
 
 /**
  * Sort image by image top
- * @param {ImagePicker.ImageInfo} imageOne
- * @param {ImagePicker.ImageInfo} imageTwo
+ *
+ * @param {ImagePicker.ImageInfo}
+ *            imageOne
+ * @param {ImagePicker.ImageInfo}
+ *            imageTwo
  */
 ImagePickerChrome.sortImagesByTop = function(imageOne, imageTwo){
     var imageOneTop = imageOne.top;
@@ -292,7 +339,9 @@ ImagePickerChrome.sortImagesByTop = function(imageOne, imageTwo){
 
 /**
  * Get the top of image element
- * @param {HTMLElement} image
+ *
+ * @param {HTMLElement}
+ *            image
  */
 ImagePickerChrome.getImageTop = function(image){
 
@@ -305,7 +354,7 @@ ImagePickerChrome.generatePickImageMenuItems = function(event){
 
     var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
-    //Split current tab title to collect feeds
+    // Split current tab title to collect feeds
     var currentTabTitle = ImagePickerChrome.getCurrentBrowser().contentDocument.title;
 
     var separator = /-|_|\(|\)|\[|\]|\|/;
@@ -313,7 +362,8 @@ ImagePickerChrome.generatePickImageMenuItems = function(event){
     var feeds = new Array();
     for (var i = 0; i < feedTexts.length; i++) {
         var feedText = feedTexts[i].trim();
-        if (feedText.length > 1) { //collect only feedText is larger than 1 chars
+        if (feedText.length > 1) { // collect only feedText is larger than 1
+									// chars
             var feed = {
                 text: feedText,
                 occurrence: 0
@@ -340,17 +390,21 @@ ImagePickerChrome.generatePickImageMenuItems = function(event){
     });
 
     // update menu items
+    var configureMenuitem;
     var menuPopup = event.target;
     var children = menuPopup.children;
-    // Remove all dynamic menu items
+    // Remove all dynamic menu items and locate configure menu
     for (var i = children.length - 1; i >= 0; i--) {
         var child = children[i];
         if (child.id == null || child.id == "") {
             menuPopup.removeChild(child);
+        } else if(child.id == "ipbtn-menu-configure"){
+        	configureMenuitem = child;
         }
     }
 
     // Add menu items when occurrence is larger than 1
+    var hasNewMenuitem = false;
     feeds.forEach(function(feed){
         if (feed.occurrence > 1) {
             var label = ImagePickerChrome.getFormattedString("pickButtonDynamicMenuItem", [feed.text, feed.occurrence]);
@@ -361,10 +415,17 @@ ImagePickerChrome.generatePickImageMenuItems = function(event){
                 ImagePickerChrome.pickImagesFromTabs(e, feed.text);
             }, false);
 
-            menuPopup.appendChild(menuitem);
+            menuPopup.insertBefore(menuitem, configureMenuitem);
+            hasNewMenuitem = true;
         }
     });
+
+    if(hasNewMenuitem){
+    	var separator = document.createElementNS(XUL_NS, "menuseparator");
+    	menuPopup.insertBefore(separator, configureMenuitem);
+    }
 };
+
 
 /** **************** CloseTabListener Object Class ******************** */
 /**
@@ -382,14 +443,16 @@ ImagePickerChrome.CloseTabListener.prototype = {
 
     afterSavedImages: function(){
 
+        ImagePicker.Logger.debug("Closing tabs...");
+
         if (this.tabs && ImagePicker.Settings.isCloseBrowserTabAfterSaved()) {
 
-            //Create a blank tab if close all tabs to avoid Firefox is closed.
+            // Create a blank tab if close all tabs to avoid Firefox is closed.
             if(this.tabs.length == gBrowser.tabContainer.childNodes.length){
                 gBrowser.addTab("about:blank");
             }
 
-            //Close all tabs
+            // Close all tabs
             this.tabs.forEach(function(tab){
                 if (tab) {
                     gBrowser.removeTab(tab);

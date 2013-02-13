@@ -1,11 +1,12 @@
 /** **************** FileUtils Object Class ******************** */
 var EXPORTED_SYMBOLS = [];
-
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 const Cu = Components.utils;
 
 Cu.import("resource://imagepicker/common.js");
+Cu.import("resource://imagepicker/sequence.js");
+Cu.import("resource://imagepicker/settings.js");
 
 /**
  * Provides the file utilities and extensions used by the ImagePicker
@@ -44,8 +45,8 @@ ImagePicker.FileUtils = {
     },
 
     /**
-     * Convert the path to nsILocalFile object.
-     * Attempt to create a directory for the given path if it is a nonexistent directory.
+     * Convert the path to nsILocalFile object. Attempt to create a directory for the given path if it is a nonexistent
+     * directory.
      *
      * @method toDirectory
      * @param {String}
@@ -67,7 +68,7 @@ ImagePicker.FileUtils = {
             if (!directory.exists()) {
                 directory.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
             }
-            
+
             return directory;
         } catch (e) {
             ImagePicker.Logger.warn("Cannot convert path: " + path + " to directory. ", e);
@@ -90,7 +91,8 @@ ImagePicker.FileUtils = {
         var validName = originalName;
 
         // replace special char: [,\,/,:,*,.,?,",<,>,|,]
-        var reg = /[\\\/:\*?\"<>|]/g;
+        var reg = new RegExp("[\\\/:\*?\"<>|]", "g");
+
         validName = validName.replace(reg, "");
 
         validName = validName.substr(0, 100);
@@ -120,7 +122,7 @@ ImagePicker.FileUtils = {
      */
     createUniqueFile : function(fileName, parentDir, fileNames) {
 
-        var originalName = ImagePicker.FileUtils.toValidName(fileName);
+        var originalName = this.toValidName(fileName);
 
         var tempName = originalName;
 
@@ -152,5 +154,203 @@ ImagePicker.FileUtils = {
         fileNames[tempName] = true;
 
         return tempFile;
+    },
+
+    /**
+     * save image to local
+     *
+     * @method doSaveImages
+     */
+    saveImages : function(images, destDir, inPrivateBrowsingMode, oldDownloadProgressListener, newDownloadProgressListener, postSavedListeners, stringsBundle) {
+
+        ImagePicker.Logger.debug("inPrivateBrowsingMode: " + inPrivateBrowsingMode);
+
+        //Auto rename
+        if (ImagePicker.Settings.isRenameImageBySequenceNum()) {
+            this._renameBySequence(images);
+        }
+
+        // Got instance of download manager
+        var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
+
+        // Register progress listener
+        if (oldDownloadProgressListener != null) {
+            dm.removeListener(oldDownloadProgressListener);
+        }
+        if(newDownloadProgressListener != null){
+            dm.addListener(newDownloadProgressListener);
+        }
+
+        this._preSaveImages(destDir, images, stringsBundle);
+
+        // Handle each file
+        var fileNames = new Array();
+        for ( var i = 0; i < images.length; i++) {
+            var img = images[i];
+            //document.getElementById("filterStat").label = this.getFormattedString("saveNFile",[img.fileName]);
+            var file = this.createUniqueFile(img.getFileNameExt(), destDir, fileNames);
+            try {
+                // this.saveImageToFile(img, file);
+                this.saveFileByDownloadManager(img.url, file);
+            } catch (ex) {
+                ImagePicker.Logger.error("Cannot save image: " + img, ex);
+            }
+        }
+
+        this._postSaveImages(destDir, images, postSavedListeners, stringsBundle);
+    },
+
+    _preSaveImages : function(savedFolder, images, stringsBundle) {
+
+        var notificationTitle = stringsBundle.getFormattedString("saveNotificationTitleMultiple", [images.length]);
+        if(images.length == 1){
+            notificationTitle = stringsBundle.getFormattedString("saveNotificationTitleSingle", [images[0].getFileNameExt()]);
+        }
+
+        var alertListener = {
+            observe : function(subject, topic, data){
+                if(topic == "alertclickcallback"){
+                    ImagePicker.Logger.debug("Open directory, data=" + data);
+                    var dir = ImagePicker.FileUtils.toDirectory(data);
+                    ImagePicker.FileUtils.revealDirectory(dir);
+                }
+            }
+        };
+    	var alertsService = Components.classes["@mozilla.org/alerts-service;1"].getService(Ci.nsIAlertsService);
+        alertsService.showAlertNotification("chrome://imagepicker/skin/img-picker_32.png", notificationTitle, savedFolder.path, true, savedFolder.path, alertListener, "ImagePickerAlert");
+    },
+
+    _postSaveImages : function(savedFolder, images, postSavedListeners, stringsBundle) {
+
+        if (postSavedListeners) {
+            postSavedListeners.forEach(function(listener) {
+                ImagePicker.Logger.debug("Invoke PostSavedListener: " + listener);
+                if (listener) {
+                    try {
+                        listener.afterSavedImages();
+                    } catch (ex) {
+                        ImagePicker.Logger.error("Occured Error " + ex + " when execute Image Save Listener: "
+                                + listener);
+                    }
+                }
+            });
+        }
+    },
+
+    createFolder : function(parentDirPath, subFolderName) {
+
+        // clone the parent folder, don't use the clone() method.
+        var subFolder = this.toDirectory(parentDirPath);
+
+        // create new folder with window title
+        try {
+            subFolder.append(subFolderName);
+            if (!subFolder.exists() || !subFolder.isDirectory()) {
+                // if it doesn't exist, create
+                subFolder.create(Ci.nsIFile.DIRECTORY_TYPE, 0777);
+            }
+            return subFolder;
+        } catch (e) {
+            ImagePicker.Logger.warn("Cannot create subfolder: " + e);
+        }
+
+        return null;
+    },
+
+    makeFolderNameByTitle : function(docTitle) {
+        var subFolderName = docTitle;
+
+        //remove unnecessary text
+        var textLines = ImagePicker.Settings.getRemoveTextFromTitle();
+        for ( var i = 0; i < textLines.length; i++) {
+            var reg = new RegExp(textLines[i], "gi");
+            subFolderName = subFolderName.replace(reg, '');
+        }
+
+        subFolderName = subFolderName.replace(/\./g, '');
+
+        return this.toValidName(subFolderName);
+    },
+
+    _renameBySequence : function(images) {
+        var maxDigits = images.length.toString().length;
+        var seq = new ImagePicker.Sequence(0, maxDigits);
+
+        for ( var i = 0; i < images.length; i++) {
+            var img = images[i];
+            img.fileName = seq.next();
+        }
+    },
+
+    /**
+     * save image to local
+     *
+     * @method saveImageToFile
+     */
+    saveImageToFile : function(imageInfo, file) {
+
+        var uri = Cc['@mozilla.org/network/standard-url;1'].createInstance(Ci.nsIURI);
+        uri.spec = imageInfo.url;
+
+        var cacheKey = Cc['@mozilla.org/supports-string;1'].createInstance(Ci.nsISupportsString);
+        cacheKey.data = imageInfo.url;
+
+        try {
+            var persist = Cc['@mozilla.org/embedding/browser/nsWebBrowserPersist;1']
+                    .createInstance(Ci.nsIWebBrowserPersist);
+            var nsIWBP = Ci.nsIWebBrowserPersist;
+            var flags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES;
+
+            persist.persistFlags = flags | nsIWBP.PERSIST_FLAGS_FROM_CACHE;
+            persist.persistFlags |= nsIWBP.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
+            persist.saveURI(uri, cacheKey, null, null, null, file);
+
+        } catch (e) {
+            ImagePicker.Logger.info("cannot save file for URL: " + imageInfo.url + ", exception = " + e);
+        }
+    },
+
+    /**
+     * save image to local
+     *
+     * @method saveFileByDownloadManager
+     */
+    saveFileByDownloadManager : function(fromURL, toFile, inPrivateBrowsingMode) {
+
+        // Got instance of download manager
+        var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
+
+        // Create URI from which we want to download file
+        var ios = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
+        var fromURI = ios.newURI(fromURL, null, null);
+
+        // create cacheKey
+        var cacheKey = Cc['@mozilla.org/supports-string;1'].createInstance(Ci.nsISupportsString);
+        cacheKey.data = fromURL;
+
+        // Set to where we want to save downloaded file
+        var toURI = ios.newFileURI(toFile);
+
+        // Set up correct MIME type
+        var mime;
+        try {
+            var msrv = Cc["@mozilla.org/mime;1"].getService(Ci.nsIMIMEService);
+            var type = msrv.getTypeFromURI(fromURI);
+            mime = msrv.getFromTypeAndExtension(type, "");
+        } catch (e) {
+            ImagePicker.Logger.info("cannot get mine type, e = " + e);
+        }
+
+        // Observer for download
+        var nsIWBP = Ci.nsIWebBrowserPersist;
+        var persist = Cc["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"].createInstance(nsIWBP);
+        persist.persistFlags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES | nsIWBP.PERSIST_FLAGS_FROM_CACHE
+                | nsIWBP.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
+
+        // Start download
+        var dl = dm.addDownload(dm.DOWNLOAD_TYPE_DOWNLOAD, fromURI, toURI, toFile.leafName, mime, Math
+                .round(Date.now() * 1000), null, persist, inPrivateBrowsingMode);
+        persist.progressListener = dl.QueryInterface(Ci.nsIWebProgressListener);
+        persist.saveURI(dl.source, cacheKey, null, null, null, dl.targetFile, null);
     }
 };

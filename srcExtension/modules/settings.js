@@ -181,6 +181,24 @@ ImagePicker.Settings =  {
         return results;
     },
 
+    isDoubleclickImageToSaveEnabled: function(){
+        return this._prefs.getBoolPref("collector.doubleclickImageToSave.enable");
+    },
+
+    isDragImageToSaveEnabled: function(){
+        return this._prefs.getBoolPref("collector.dragImageToSave.enable");
+    },
+
+    isShowOnToolbar: function(button){
+        var prefName = "ui." + button + ".toolbar.show";
+        return this._prefs.getBoolPref(prefName);
+    },
+
+    isShowOnContextMenu: function(button){
+	    var prefName = "ui." + button + ".contextmenu.show";
+        return this._prefs.getBoolPref(prefName);
+    },
+
     /**
      * Get a unicode char value from preference system for the given prefName
      * @method getUnicodeChar
