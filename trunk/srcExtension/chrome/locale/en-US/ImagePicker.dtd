@@ -31,6 +31,18 @@
 <!ENTITY pref_close_browser_tab_after_saved.label "Close Browser Tab automatically">
 <!ENTITY pref_notes.label "NOTE: You must re-open the Image Picker dialog for the changes to take effect">
 
+<!ENTITY pref_paneGeneral.label "General">
+<!ENTITY pref_paneUI.label "UI &amp; Mouse">
+
+<!ENTITY pref_ui.label "UI">
+<!ENTITY pref_show_on_toolbar.label "Show on Toolbar">
+<!ENTITY pref_show_on_contextmenu.label "Show on Context Menu">
+
+<!ENTITY pref_mouse_behavior.label "Mouse">
+<!ENTITY pref_mouse_behavior.tooltip "Save image quickly when browsing">
+<!ENTITY pref_collector_doubleclick_image_to_save.label "Double click to save image">
+<!ENTITY pref_collector_drag_image_to_save.label "Drag image to save image">
+
 
 <!ENTITY pick_window.title "Pick Images">
 <!ENTITY pick_size_limits.label "Size limits">
@@ -55,6 +67,7 @@
 <!ENTITY pick_button_save.tooltip "Save selected images">
 <!ENTITY pick_button_close.label "Close">
 <!ENTITY download_progress.tooltip "Open Download Manager">
+<!ENTITY configure_button.label "Configure">
 <!ENTITY configure_button.tooltip "Configure">
 <!ENTITY about_button.tooltip "About Image Picker">
 

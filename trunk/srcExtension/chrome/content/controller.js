@@ -3,7 +3,6 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 Components.utils.import("resource://imagepicker/common.js");
 Components.utils.import("resource://imagepicker/hashMap.js");
-Components.utils.import("resource://imagepicker/sequence.js");
 Components.utils.import("resource://imagepicker/fileUtils.js");
 Components.utils.import("resource://imagepicker/settings.js");
 Components.utils.import("resource://imagepicker/xulUtils.js");
@@ -25,21 +24,46 @@ ImagePickerChrome.Controller = {
      * @method init
      */
     init : function() {
+        // Get preferences
+        this.settings = ImagePicker.Settings;
 
         this.rawImageList = window.arguments[0].imageList;
+        var postSavedListenersFromArgument = window.arguments[0].listeners;
+
         /**
          * Register the given listener to extend the after image saving behavior
          * The given listener must have a afterSavedImages() method.
          */
-        this.listeners = window.arguments[0].listeners;
+        var postSavedListener = {
+            afterSavedImages: function(){
+                //open Explorer after saved if need
+                if (ImagePicker.Settings.isOpenExplorerAfterSaved()) {
+                    ImagePicker.FileUtils.revealDirectory(savedFolder);
+                }
+
+                //open DownloadManager after saved if need
+                if (ImagePicker.Settings.isOpenDownloadManagerAfterSaved()) {
+                    ImagePickerChrome.Controller.showDownloadManagerUI();
+                }
+
+                //close ImagePicker dialog after saved if need
+                if (ImagePicker.Settings.isCloseImagePickerAfterSaved()) {
+                    self.close();
+                }
+            }
+        };
+
+        this.postSavedListeners = [postSavedListener];
+        this.postSavedListeners =  this.postSavedListeners.concat(postSavedListenersFromArgument);
+        ImagePicker.Logger.debug("Argument listeners: " + postSavedListenersFromArgument.length);
+        ImagePicker.Logger.debug("PostSavedListeners: " + this.postSavedListeners.length);
 
         this.imageList = this.rawImageList;
         this.selectedMap = new ImagePicker.HashMap();
         this.filter = null;
         this.progressListener = null;
 
-        // Get preferences
-        this.settings = ImagePicker.Settings;
+
 
         // init image grid
         var gridSize = window.innerWidth - 6;
@@ -53,9 +77,9 @@ ImagePickerChrome.Controller = {
         // Store the resize flag for first open
         this.MIN_WINDOW_WIDTH = 772;
         this.isResizeToMinWidth = false;
-        
+
         var privateBrowsingSvc = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService);
-        this.inPrivateBrowsingMode = privateBrowsingSvc.privateBrowsingEnabled; 
+        this.inPrivateBrowsingMode = privateBrowsingSvc.privateBrowsingEnabled;
         ImagePicker.Logger.info("inPrivateBrowsingMode: " + this.inPrivateBrowsingMode);
     },
 
@@ -354,7 +378,7 @@ ImagePickerChrome.Controller = {
         //Create sub-folder if need
         if(this.settings.isCreatedFolderByTitle()){
 
-            var subFolderName = this._makeFolderNameByTitle(window.document.title);
+            var subFolderName = ImagePicker.FileUtils.makeFolderNameByTitle(window.document.title);
 
 
             //open FolderName Confirmation Popup
@@ -402,222 +426,13 @@ ImagePickerChrome.Controller = {
                 }
             }
 
-            var subFolder = this._createFolder(destPath, subFolderName);
+            var subFolder = ImagePicker.FileUtils.createFolder(destPath, subFolderName);
             if(subFolder != null){
                 dest = subFolder;
             }
         }
 
         return dest;
-    },
-
-    /**
-     * save image to local
-     *
-     * @method doSaveImages
-     */
-    doSaveImages : function() {
-
-        // locate saved directory
-        var dest = this.askSavedFolder();
-        if (!dest) {
-            return;
-        }
-
-        // Collect saved files
-        var savedImages = new Array();
-        for ( var i = 0; i < this.imageList.length; i++) {
-            var img = this.imageList[i];
-            if(this.selectedMap.get(img.id) == true){ // saved selected image only
-                savedImages.push(img);
-            }
-        }
-
-        //Auto rename
-        if(this.settings.isRenameImageBySequenceNum()){
-            this._renameBySequence(savedImages);
-        }
-
-        // Got instance of download manager
-        var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
-
-        // Register progress listener
-        if (this.progressListener != null) {
-            dm.removeListener(this.progressListener);
-        }
-        this.progressListener = new ImagePickerChrome.DownloadProgressListener(savedImages.length);
-        dm.addListener(this.progressListener);
-
-        // Handle each file
-        var fileNames = new Array();
-        for ( var i = 0; i < savedImages.length; i++) {
-
-            var img = savedImages[i];
-
-            //document.getElementById("filterStat").label = this.getFormattedString("saveNFile",[img.fileName]);
-
-            var file = ImagePicker.FileUtils.createUniqueFile(img.getFileNameExt(), dest, fileNames);
-
-            try {
-                // this.saveImageToFile(img, file);
-                this.saveFileByDownloadManager(img.url, file);
-            } catch (ex) {
-                ImagePicker.Logger.error("Cannot save image: " + img, ex);
-            }
-        }
-
-        this._postSaveImages(dest);
-    },
-
-    _postSaveImages : function(savedFolder) {
-
-        //open Explorer after saved if need
-        if(this.settings.isOpenExplorerAfterSaved()){
-            ImagePicker.FileUtils.revealDirectory(savedFolder);
-        }
-
-        //open DownloadManager after saved if need
-        if(this.settings.isOpenDownloadManagerAfterSaved()){
-            this.showDownloadManagerUI();
-        }
-
-        //close ImagePicker dialog after saved if need
-        if(this.settings.isCloseImagePickerAfterSaved()){
-            self.close();
-        }
-
-        if(this.listeners){
-            this.listeners.forEach(function(listener){
-                if (listener) {
-                    try {
-                        listener.afterSavedImages();
-                    } catch (ex) {
-                        ImagePicker.Logger.error("Occured Error " + ex + " when execute Image Save Listener: " + listener);
-                    }
-                }
-            });
-        }
-
-    },
-
-    _createFolder : function(parentDirPath, subFolderName) {
-
-        // clone the parent folder, don't use the clone() method.
-        var subFolder = ImagePicker.FileUtils.toDirectory(parentDirPath);
-
-        // create new folder with window title
-        try {
-            subFolder.append(subFolderName);
-            if (!subFolder.exists() || !subFolder.isDirectory()) {
-                // if it doesn't exist, create
-                subFolder.create(Ci.nsIFile.DIRECTORY_TYPE, 0777);
-            }
-            return subFolder;
-        } catch (e) {
-            ImagePicker.Logger.warn("Cannot create subfolder: " + e);
-            alert(this.getFormattedString("createSaveFolderFailure",[subFolderName]));
-        }
-
-        return null;
-    },
-
-    _makeFolderNameByTitle : function(docTitle){
-        var subFolderName = docTitle;
-
-        //remove unnecessary text
-        var textLines = this.settings.getRemoveTextFromTitle();
-        for (var i = 0; i < textLines.length; i++){
-            var reg = new RegExp(textLines[i],"gi");
-            subFolderName = subFolderName.replace(reg, '');
-        }
-        
-        subFolderName = subFolderName.replace(/\./g, '');
-
-        return ImagePicker.FileUtils.toValidName(subFolderName);
-    },
-
-    _renameBySequence : function(images){
-        var maxDigits = images.length.toString().length;
-        var seq = new ImagePicker.Sequence(0,maxDigits);
-
-        for ( var i = 0; i < images.length; i++) {
-            var img = images[i];
-            img.fileName = seq.next();
-        }
-    },
-
-    /**
-     * save image to local
-     *
-     * @method saveImageToFile
-     */
-    saveImageToFile : function(imageInfo, file) {
-
-        var uri = Cc['@mozilla.org/network/standard-url;1'].createInstance(Ci.nsIURI);
-        uri.spec = imageInfo.url;
-
-        var cacheKey = Cc['@mozilla.org/supports-string;1'].createInstance(Ci.nsISupportsString);
-        cacheKey.data = imageInfo.url;
-
-        try {
-            var persist = Cc['@mozilla.org/embedding/browser/nsWebBrowserPersist;1']
-                    .createInstance(Ci.nsIWebBrowserPersist);
-            var nsIWBP = Ci.nsIWebBrowserPersist;
-            var flags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES;
-
-            persist.persistFlags = flags | nsIWBP.PERSIST_FLAGS_FROM_CACHE;
-            persist.persistFlags |= nsIWBP.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
-            persist.saveURI(uri, cacheKey, null, null, null, file);
-
-        } catch (e) {
-            ImagePicker.Logger.info("cannot save file for URL: " + imageInfo.url + ", exception = " + e);
-        }
-    },
-
-    /**
-     * save image to local
-     *
-     * @method saveFileByDownloadManager
-     */
-    saveFileByDownloadManager : function(fromURL, toFile) {
-
-        // Got instance of download manager
-        var dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
-
-        // Create URI from which we want to download file
-        var ios = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
-        var fromURI = ios.newURI(fromURL, null, null);
-
-        // create cacheKey
-        var cacheKey = Cc['@mozilla.org/supports-string;1'].createInstance(Ci.nsISupportsString);
-        cacheKey.data = fromURL;
-
-        // Set to where we want to save downloaded file
-        var toURI = ios.newFileURI(toFile);
-
-        // Set up correct MIME type
-        var mime;
-        try {
-            var msrv = Cc["@mozilla.org/mime;1"].getService(Ci.nsIMIMEService);
-            var type = msrv.getTypeFromURI(fromURI);
-            mime = msrv.getFromTypeAndExtension(type, "");
-        } catch (e) {
-            ImagePicker.Logger.info("cannot get mine type, e = " + e);
-        }
-
-        // Observer for download
-        var nsIWBP = Ci.nsIWebBrowserPersist;
-        var persist = Cc["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"].createInstance(nsIWBP);
-        persist.persistFlags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES | nsIWBP.PERSIST_FLAGS_FROM_CACHE
-                | nsIWBP.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
-
-        ImagePicker.Logger.debug("inPrivateBrowsingMode: " + this.inPrivateBrowsingMode);
-        
-        // Start download
-        var dl = dm.addDownload(dm.DOWNLOAD_TYPE_DOWNLOAD, fromURI, toURI, toFile.leafName, mime, Math
-                .round(Date.now() * 1000), null, persist, this.inPrivateBrowsingMode);
-        persist.progressListener = dl.QueryInterface(Ci.nsIWebProgressListener);
-        persist.saveURI(dl.source, cacheKey, null, null, null, dl.targetFile, null);
     },
 
     /**
@@ -768,28 +583,54 @@ ImagePickerChrome.Controller = {
         document.getElementById("filterStat").label = this.getFormattedString("statusBarText",[newImageConut, selectedImageConut, oldImageConut]);
     },
 
-    openOptionsDialog: function(){
-        openDialog('chrome://imagepicker/content/options.xul', 'Options', 'chrome,titlebar,resizable,centerscreen,modal=no,dialog=yes');
+    /**
+     * save image to local
+     *
+     * @method doSaveImages
+     */
+    doSaveImages : function(images) {
+
+        // locate saved directory
+        var dest = this.askSavedFolder();
+        if (!dest) {
+            return;
+        }
+
+        // Collect saved files
+        var savedImages = new Array();
+        for ( var i = 0; i < this.imageList.length; i++) {
+            var img = this.imageList[i];
+            if (this.selectedMap.get(img.id) == true) { // saved selected image only
+                savedImages.push(img);
+            }
+        }
+
+        var oldDownloadProgressListener = this.progressListener;
+        var newDownloadProgressListener = new ImagePickerChrome.DownloadProgressListener(savedImages.length);
+        this.progressListener = newDownloadProgressListener;
+        var stringsBundle = this.getStringsBundle();
+
+        ImagePicker.FileUtils.saveImages(savedImages, dest, this.inPrivateBrowsingMode, oldDownloadProgressListener, newDownloadProgressListener, this.postSavedListeners, stringsBundle);
     },
 
-    openAboutDialog: function(){
-        openDialog('chrome://imagepicker/content/about.xul', '', 'chrome,titlebar,resizable,centerscreen,modal=no,dialog=yes');
+    getStringsBundle: function(){
+        // Get a reference to the strings bundle
+        if(this.stringsBundle == null){
+            this.stringsBundle = document.getElementById("ip-string-bundle");
+        }
+        return this.stringsBundle;
     },
 
     getI18NString: function(key){
         // Get a reference to the strings bundle
-        if(this.stringsBundle == null){
-            this.stringsBundle = document.getElementById("ip-string-bundle");
-        }
-        return this.stringsBundle.getString(key);
+        var stringsBundle = this.getStringsBundle();
+        return stringsBundle.getString(key);
     },
 
     getFormattedString : function(key, parameters){
         // Get a reference to the strings bundle
-        if(this.stringsBundle == null){
-            this.stringsBundle = document.getElementById("ip-string-bundle");
-        }
-        return this.stringsBundle.getFormattedString(key, parameters);
+        var stringsBundle = this.getStringsBundle();
+        return stringsBundle.getFormattedString(key, parameters);
     }
 };
 

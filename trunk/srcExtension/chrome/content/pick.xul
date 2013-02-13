@@ -121,8 +121,8 @@
         <statusbarpanel id="downloadStat" flex="1" />
         <space flex="1" />
         <toolbarbutton image="chrome://imagepicker/skin/configure-16.png" tooltiptext="&configure_button.tooltip;"
-                       oncommand="ImagePickerChrome.Controller.openOptionsDialog();"/>
+                       oncommand="ImagePickerChrome.openOptionsDialog(event)"/>
         <toolbarbutton image="chrome://imagepicker/skin/help-about-16.png" tooltiptext="&about_button.tooltip;"
-                       oncommand="ImagePickerChrome.Controller.openAboutDialog();"/>
+                       oncommand="ImagePickerChrome.openAboutDialog(event);"/>
     </statusbar>
 </window>

@@ -1,11 +1,11 @@
 /*  skin/toolbar-button.css  */
 
 /*  image-pick-buttons css  */
-#image-pick-buttons {
+#ipbuttons-toolbar {
     list-style-image: url("chrome://imagepicker/skin/img-picker_24.png");
 }
 
-toolbar[iconsize ="small"] #image-pick-buttons {
+toolbar[iconsize ="small"] #ipbuttons-toolbar {
     list-style-image: url("chrome://imagepicker/skin/img-picker_16.png");
 }
 
@@ -14,11 +14,11 @@ toolbar[iconsize ="small"] #image-pick-buttons {
 }
 
 /* ip-button-1 css */
-#image-pick-button-simple {
+#ipbutton-simple-toolbar {
     list-style-image: url("chrome://imagepicker/skin/img-picker-p1_24.png");
 }
 
-toolbar[iconsize ="small"] #image-pick-button-simple {
+toolbar[iconsize ="small"] #ipbutton-simple-toolbar {
     list-style-image: url("chrome://imagepicker/skin/img-picker-p1_16.png");
 }
 
@@ -27,11 +27,11 @@ toolbar[iconsize ="small"] #image-pick-button-simple {
 }
 
 /* ip-button-all css */
-#image-pick-button-all {
+#ipbutton-all-toolbar {
     list-style-image: url("chrome://imagepicker/skin/img-picker-all_24.png");
 }
 
-toolbar[iconsize ="small"] #image-pick-button-all {
+toolbar[iconsize ="small"] #ipbutton-all-toolbar {
     list-style-image: url("chrome://imagepicker/skin/img-picker-all_16.png");
 }
 
@@ -40,11 +40,11 @@ toolbar[iconsize ="small"] #image-pick-button-all {
 }
 
 /* ip-button-right css */
-#image-pick-button-right {
+#ipbutton-right-toolbar {
     list-style-image: url("chrome://imagepicker/skin/img-picker-right_24.png");
 }
 
-toolbar[iconsize ="small"] #image-pick-button-right {
+toolbar[iconsize ="small"] #ipbutton-right-toolbar {
     list-style-image: url("chrome://imagepicker/skin/img-picker-right_16.png");
 }
 
@@ -53,11 +53,11 @@ toolbar[iconsize ="small"] #image-pick-button-right {
 }
 
 /* ip-button-left css */
-#image-pick-button-left {
+#ipbutton-left-toolbar {
     list-style-image: url("chrome://imagepicker/skin/img-picker-left_24.png");
 }
 
-toolbar[iconsize ="small"] #image-pick-button-left {
+toolbar[iconsize ="small"] #ipbutton-left-toolbar {
     list-style-image: url("chrome://imagepicker/skin/img-picker-left_16.png");
 }
 
@@ -68,6 +68,11 @@ toolbar[iconsize ="small"] #image-pick-button-left {
 /* dynamic menu item css */
 .dynamic-pick-menu-item {
     list-style-image: url("chrome://imagepicker/skin/light_16.png");
+}
+
+/* configure menu item css */
+.configure-menu-item {
+    list-style-image: url("chrome://imagepicker/skin/configure-16.png");
 }
 
 /*  css for image cell  */
