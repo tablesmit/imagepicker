@@ -227,7 +227,7 @@ ImagePicker.FileUtils = {
                 ImagePicker.Logger.debug("Invoke PostSavedListener: " + listener);
                 if (listener) {
                     try {
-                        listener.afterSavedImages();
+                        listener.afterSavedImages(savedFolder, images);
                     } catch (ex) {
                         ImagePicker.Logger.error("Occured Error " + ex + " when execute Image Save Listener: "
                                 + listener);

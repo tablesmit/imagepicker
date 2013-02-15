@@ -95,13 +95,21 @@ ImagePickerChrome.Options = {
     },
 
     restoreAll : function() {
+
+        var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo);
+        var versionChecker = Components.classes["@mozilla.org/xpcom/version-comparator;1"]
+                       .getService(Components.interfaces.nsIVersionComparator);
+        var isUnderV6 = versionChecker.compare(appInfo.version, "6") < 0;
+
         // restore
         var preferences = document.getElementsByTagName("preference");
 
         for ( var i = 0; i < preferences.length; i++) {
             ImagePicker.Logger.info("preference:" + preferences[i].id + ", hasUserValue = "
                     + preferences[i].hasUserValue);
-            preferences[i].reset(); // preference.reset()
+            if(!isUnderV6 || preferences[i].hasUserValue){
+                preferences[i].reset(); // preference.reset()
+            }
         }
 
         // Restore RemoveText Elements
