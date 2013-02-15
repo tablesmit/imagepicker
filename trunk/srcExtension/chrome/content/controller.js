@@ -35,7 +35,7 @@ ImagePickerChrome.Controller = {
          * The given listener must have a afterSavedImages() method.
          */
         var postSavedListener = {
-            afterSavedImages: function(){
+            afterSavedImages: function(savedFolder, images){
                 //open Explorer after saved if need
                 if (ImagePicker.Settings.isOpenExplorerAfterSaved()) {
                     ImagePicker.FileUtils.revealDirectory(savedFolder);
@@ -603,6 +603,10 @@ ImagePickerChrome.Controller = {
             if (this.selectedMap.get(img.id) == true) { // saved selected image only
                 savedImages.push(img);
             }
+        }
+
+        if(savedImages.length == 0){
+           return;
         }
 
         var oldDownloadProgressListener = this.progressListener;
