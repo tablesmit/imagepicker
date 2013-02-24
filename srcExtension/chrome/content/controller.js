@@ -8,6 +8,7 @@ Components.utils.import("resource://imagepicker/settings.js");
 Components.utils.import("resource://imagepicker/xulUtils.js");
 Components.utils.import("resource://imagepicker/model.js");
 Components.utils.import("resource://imagepicker/filters.js");
+Components.utils.import("resource://imagepicker/download.js");
 
 /**
  * Provides the controller
@@ -42,7 +43,8 @@ ImagePickerChrome.Controller = {
                 }
 
                 //open DownloadManager after saved if need
-                if (ImagePicker.Settings.isOpenDownloadManagerAfterSaved()) {
+                if (ImagePicker.Settings.isOpenDownloadManagerAfterSaved() &&
+                       !ImagePicker.Settings.hasWinTaskbar()) {
                     ImagePickerChrome.Controller.showDownloadManagerUI();
                 }
 
@@ -78,9 +80,14 @@ ImagePickerChrome.Controller = {
         this.MIN_WINDOW_WIDTH = 772;
         this.isResizeToMinWidth = false;
 
-        var privateBrowsingSvc = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService);
-        this.inPrivateBrowsingMode = privateBrowsingSvc.privateBrowsingEnabled;
-        ImagePicker.Logger.info("inPrivateBrowsingMode: " + this.inPrivateBrowsingMode);
+        // get provacy context
+        try {
+            var wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
+            var win = wm.getMostRecentWindow("navigator:browser");
+            this.privacyContext = win.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIWebNavigation).QueryInterface(Ci.nsILoadContext);
+        } catch(err) {
+            ImagePicker.Logger.info("cannot get privacy context: " + err);
+        }
     },
 
     /**
@@ -444,7 +451,7 @@ ImagePickerChrome.Controller = {
 
         // And finally show download manager
         var dm_ui = Cc["@mozilla.org/download-manager-ui;1"].createInstance(Ci.nsIDownloadManagerUI);
-        if (!dm_ui.visible) {
+        if (!dm_ui.visible && !ImagePicker.Settings.hasWinTaskbar()) {
             dm_ui.show(window, "", Ci.nsIDownloadManagerUI.REASON_NEW_DOWNLOAD);
         }
     },
@@ -614,7 +621,8 @@ ImagePickerChrome.Controller = {
         this.progressListener = newDownloadProgressListener;
         var stringsBundle = this.getStringsBundle();
 
-        ImagePicker.FileUtils.saveImages(savedImages, dest, this.inPrivateBrowsingMode, oldDownloadProgressListener, newDownloadProgressListener, this.postSavedListeners, stringsBundle);
+        var downloadSession = new ImagePicker.DownloadSession(savedImages, dest, this.privacyContext, oldDownloadProgressListener, newDownloadProgressListener, this.postSavedListeners, stringsBundle);
+        downloadSession.saveImages();
     },
 
     getStringsBundle: function(){

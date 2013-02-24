@@ -10,6 +10,7 @@
      buttonlabelextra2="&pref_button_extra2_label;"
      onload="ImagePickerChrome.Options.onLoad();"
      ondialogaccept="ImagePickerChrome.Options.onDialogAccept();"
+     onunload="ImagePickerChrome.Options.onDialogClose();"
      ondialogextra2="ImagePickerChrome.Options.restoreAll();"
      persist="lastSelected screenX screenY">
     <prefpane id="paneGeneral" label="&pref_paneGeneral.label;" image="chrome://imagepicker/skin/option-general.png">
@@ -27,7 +28,7 @@
             <groupbox>
                 <caption label="&pref_after_saved_behavior.label;" />
                 <checkbox label="&pref_open_explorer_after_saved.label;" preference="pref-openExplorerAfterSaved" />
-                <checkbox label="&pref_open_download_manager_after_saved.label;" preference="pref-openDownloadManagerAfterSaved" />
+                <checkbox label="&pref_open_download_manager_after_saved.label;" preference="pref-openDownloadManagerAfterSaved" id="downloadManagerPrefCheckbox"/>
                 <checkbox label="&pref_close_image_picker_after_saved.label;" preference="pref-closeImagePickerAfterSaved" />
                 <checkbox label="&pref_close_browser_tab_after_saved.label;" preference="pref-closeBrowserTabAfterSaved" />
             </groupbox>

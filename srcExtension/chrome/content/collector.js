@@ -5,6 +5,7 @@ Components.utils.import("resource://imagepicker/xulUtils.js");
 Components.utils.import("resource://imagepicker/fileUtils.js");
 Components.utils.import("resource://imagepicker/model.js");
 Components.utils.import("resource://gre/modules/FileUtils.jsm");
+Components.utils.import("resource://imagepicker/download.js");
 
 /**
  * Provides the collector
@@ -17,12 +18,12 @@ ImagePickerChrome.Collector = {
     dragEvent: null,
 
     /**
-	 * callback function for double click event
-	 *
-	 * @method onDblClick
-	 */
+     * callback function for double click event
+     *
+     * @method onDblClick
+     */
 	onDblClick : function(event) {
-		 ImagePicker.Logger.info("ImagePicker - Double click");
+		 ImagePicker.Logger.debug("on Double click");
 		 if(ImagePicker.Settings.isDoubleclickImageToSaveEnabled()){
 		     var imageElement = ImagePickerChrome.Collector.detectImageElement(event);
 		     if(imageElement){
@@ -32,23 +33,23 @@ ImagePickerChrome.Collector = {
 	},
 
 	/**
-	 * callback function for dragstart event
-	 *
-	 * @method onDragend
-	 */
+     * callback function for dragstart event
+     *
+     * @method onDragend
+     */
 	onDragstart : function(event) {
 	    ImagePickerChrome.Collector.dragEvent = event;
-	    ImagePicker.Logger.debug("ImagePicker onDraggesture, node="+ event.target +", clientX=" + event.clientX + ", clientY=" + event.clientY
+	    ImagePicker.Logger.debug("onDraggesture, node="+ event.target +", clientX=" + event.clientX + ", clientY=" + event.clientY
 	        +", screenX=" + event.screenX + ", screenY=" + event.screenY);
 	},
 
 	/**
-	 * callback function for dragend event
-	 *
-	 * @method onDragend
-	 */
+     * callback function for dragend event
+     *
+     * @method onDragend
+     */
 	onDragend : function(event) {
-		 ImagePicker.Logger.info("ImagePicker - On dragend");
+		 ImagePicker.Logger.debug("On dragend");
 		 if(ImagePicker.Settings.isDragImageToSaveEnabled()){
 		     var dragEvent = ImagePickerChrome.Collector.dragEvent;
 		     dragEvent = (dragEvent == null? event : dragEvent);
@@ -60,25 +61,34 @@ ImagePickerChrome.Collector = {
 	},
 
 	/**
-	 * Save image from the given element when the element is a image
-	 *
-	 * @method saveImageFromElement
-	 */
+     * Save image from the given element when the element is a image
+     *
+     * @method saveImageFromElement
+     */
 	saveImageFromElement : function(imageElement) {
 
 		 var image = new ImagePicker.ImageInfo(1, imageElement, 0);
 		 var destDir = ImagePickerChrome.Collector.getOrCreateSavedFolder();
 
-		 var privateBrowsingSvc = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService);
-         var inPrivateBrowsingMode = privateBrowsingSvc.privateBrowsingEnabled;
+    	 // get provacy context
+    	 var privacyContext = null;
+         try {
+            var wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
+            var win = wm.getMostRecentWindow("navigator:browser");
+            privacyContext = win.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIWebNavigation).QueryInterface(Ci.nsILoadContext);
+         } catch(err) {
+            ImagePicker.Logger.info("cannot get privacy context: " + err);
+         }
+
          var stringsBundle = document.getElementById("ip-string-bundle");
 
-		 ImagePicker.FileUtils.saveImages([image], destDir, inPrivateBrowsingMode, null, null, null, stringsBundle);
+	     var downloadSession = new ImagePicker.DownloadSession([image], destDir, privacyContext, null, null, null, stringsBundle);
+	     downloadSession.saveImages();
 	},
 
 	/**
-	 * @return a nsIFile object
-	 */
+     * @return a nsIFile object
+     */
 	getOrCreateSavedFolder : function() {
         // Get document title
         var currentTabTitle = ImagePickerChrome.getCurrentBrowser().contentDocument.title;
@@ -88,10 +98,10 @@ ImagePickerChrome.Collector = {
         if(paths != null && paths.length > 0){
             destPath = (paths[0] != null && paths[0] != ""? paths[0] : destPath);
         }
-        ImagePicker.Logger.debug("ImagePicker destPath =  " + destPath);
+        ImagePicker.Logger.debug("destPath =  " + destPath);
         var destDir = ImagePicker.FileUtils.toDirectory(destPath);
 
-        //Create sub-folder if need
+        // Create sub-folder if need
         if(ImagePicker.Settings.isCreatedFolderByTitle()){
             var subFolderName = ImagePicker.FileUtils.makeFolderNameByTitle(currentTabTitle);
             destDir = ImagePicker.FileUtils.createFolder(destPath, subFolderName);
@@ -101,15 +111,15 @@ ImagePickerChrome.Collector = {
     },
 
    /**
-	 * @return a nsIFile object
-	 */
+     * @return a nsIFile object
+     */
 	detectImageElement : function(event) {
 
 	     var htmlElement = event.target;
 	     var tagName = htmlElement.tagName.toLowerCase();
 		 var isOnImage = (tagName=="img");
 		 var isOnLink = (tagName=="a");
-		 ImagePicker.Logger.debug("ImagePicker trigger on image? " + isOnImage + " or on link = " + isOnLink + ", tag name = " + tagName);
+		 ImagePicker.Logger.debug("trigger on image? " + isOnImage + " or on link = " + isOnLink + ", tag name = " + tagName);
 
 		 if(isOnImage){
     		 return htmlElement;
@@ -133,9 +143,9 @@ ImagePickerChrome.Collector = {
          var eventY = event.clientY;
 
          var parentNode = htmlElement;
-         for(var loop=0; (loop<2 && parentNode!=null); loop++) { //until 2nd level parent
+         for(var loop=0; (loop<2 && parentNode!=null); loop++) { // until 2nd level parent
              var imageElements = parentNode.getElementsByTagName('img');
-             ImagePicker.Logger.debug("ImagePicker detect image, parentNode="+ parentNode +", images=" + imageElements.length +", eventX=" + eventX + ", eventY=" + eventY);
+             ImagePicker.Logger.debug("detect image, parentNode="+ parentNode +", images=" + imageElements.length +", eventX=" + eventX + ", eventY=" + eventY);
 
              if(imageElements.length == 1){
                  return imageElements[0];
@@ -146,7 +156,7 @@ ImagePickerChrome.Collector = {
                  var point = ImagePickerChrome.Collector._getPosition(imgElem);
                  var isBetweenX = (point.left < eventX) && (eventX < (point.left + imgElem.offsetWidth));
                  var isBetweenY = (point.top < eventY) && (eventY < (point.top + imgElem.offsetHeight));
-                 ImagePicker.Logger.debug("ImagePicker detect image, src="+ imgElem.src +", isBetweenX=" + isBetweenX + ", isBetweenY=" + isBetweenY);
+                 ImagePicker.Logger.debug("detect image, src="+ imgElem.src +", isBetweenX=" + isBetweenX + ", isBetweenY=" + isBetweenY);
                  if(isBetweenX && isBetweenY){
                      return imgElem;
                  }
@@ -159,8 +169,8 @@ ImagePickerChrome.Collector = {
     },
 
     /**
-	 * @return the absolute position of html element
-	 */
+     * @return the absolute position of html element
+     */
 	_getPosition : function(htmlElement) {
 
 	     var curleft = 0;
