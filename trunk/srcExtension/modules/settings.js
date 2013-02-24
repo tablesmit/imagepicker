@@ -221,5 +221,14 @@ ImagePicker.Settings =  {
         var supportsString = Cc["@mozilla.org/supports-string;1"].createInstance(Ci.nsISupportsString);
         supportsString.data = prefValue;
         prefs.setComplexValue(prefName, Ci.nsISupportsString, supportsString);
+    },
+
+    /**
+     * Check the OS have window taskbar
+     */
+    hasWinTaskbar: function(){
+        var winTaskbar = Cc["@mozilla.org/windows-taskbar;1"];
+        var winTaskbarSvc = (winTaskbar? winTaskbar.getService(Ci.nsIWinTaskbar) : null);
+        return (winTaskbarSvc && winTaskbarSvc.available);
     }
 };

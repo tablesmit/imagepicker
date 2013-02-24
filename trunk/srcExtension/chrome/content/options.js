@@ -27,6 +27,12 @@ ImagePickerChrome.Options = {
 
         // init RemoveText Elements
         this.enableOrDisableRemoveTextElements(ImagePicker.Settings.isCreatedFolderByTitle());
+
+        //Disalbe download manager feature since bug https://bugzilla.mozilla.org/show_bug.cgi?id=844566
+        if(ImagePicker.Settings.hasWinTaskbar()){
+            var downloadManagerPrefCheckbox = document.getElementById("downloadManagerPrefCheckbox");
+            downloadManagerPrefCheckbox.disabled = true;
+        }
     },
 
     _splitTitle : function(windowTitle) {
@@ -117,7 +123,7 @@ ImagePickerChrome.Options = {
     },
 
     onDialogAccept : function() {
-        ImagePicker.Logger.info("Installing button...");
+        ImagePicker.Logger.debug("Installing button...");
 
         var buttonNames = [ "ipbutton-simple", "ipbutton-all", "ipbutton-left", "ipbutton-right", "ipbuttons" ];
         buttonNames.forEach(function(buttonName) {
@@ -126,5 +132,14 @@ ImagePickerChrome.Options = {
             ImagePickerChrome.installButton("nav-bar", buttonId, isShow);
             ImagePicker.Logger.debug("Installed button: " + buttonId + " to toolbar, isShow=" + isShow);
         });
+    },
+
+    onDialogClose : function() {
+        var prefWindow = document.getElementById("imagepicker-prefs");
+        ImagePicker.Logger.debug("onDialogClose, prefWindow=" + prefWindow);
+        if(prefWindow.instantApply){
+            ImagePicker.Logger.debug("Call onDialogAccept() when instantApply is on.");
+            this.onDialogAccept();
+        }
     }
 }
