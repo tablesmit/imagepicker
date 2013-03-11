@@ -29,6 +29,9 @@ ImagePickerChrome.Controller = {
         this.settings = ImagePicker.Settings;
 
         this.rawImageList = window.arguments[0].imageList;
+        this.browser = window.arguments[0].browser;
+        this.popupNotifications = window.arguments[0].popupNotifications;
+
         var postSavedListenersFromArgument = window.arguments[0].listeners;
 
         /**
@@ -621,7 +624,11 @@ ImagePickerChrome.Controller = {
         this.progressListener = newDownloadProgressListener;
         var stringsBundle = this.getStringsBundle();
 
-        var downloadSession = new ImagePicker.DownloadSession(savedImages, dest, this.privacyContext, oldDownloadProgressListener, newDownloadProgressListener, this.postSavedListeners, stringsBundle);
+         var notificationTitle = stringsBundle.getFormattedString("saveNotificationTitleMultiple", [ savedImages.length ]);
+         var notification = new ImagePickerChrome.Notification(notificationTitle, dest.path, this.browser, this.popupNotifications);
+         notification.show();
+
+        var downloadSession = new ImagePicker.DownloadSession(savedImages, dest, this.privacyContext, oldDownloadProgressListener, newDownloadProgressListener, this.postSavedListeners, stringsBundle, true);
         downloadSession.saveImages();
     },
 

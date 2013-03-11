@@ -6,6 +6,7 @@
     <script type="application/x-javascript" src="chrome://imagepicker/content/common.js" />
     <script type="application/x-javascript" src="chrome://imagepicker/content/images.js" />
     <script type="application/x-javascript" src="chrome://imagepicker/content/ipOverlay.js" />
+    <script type="application/x-javascript" src="chrome://imagepicker/content/notification.js" />
     <script type="application/x-javascript" src="chrome://imagepicker/content/collector.js" />
 
     <stringbundleset id="stringbundleset">
@@ -15,7 +16,7 @@
     <toolbarpalette id="BrowserToolbarPalette">
         <toolbarbutton id="ipbuttons-toolbar" class="toolbarbutton-1 ip-buttons" type="menu-button"
             label="&toolbarbutton_pick_images.label;" tooltiptext="&toolbarbutton_pick_images.tooltip;" oncommand="ImagePickerChrome.pickImagesFromCurrentTab(event);">
-            <menupopup id="image-pick-button-popup" onpopupshowing="ImagePickerChrome.generatePickImageMenuItems(event);">
+            <menupopup id="image-pick-button-popup" onpopupshowing="ImagePickerChrome.onPopupMenuShowing(event);">
                 <menuitem id="ipbtn-menucurrent" label="&toolbarbutton_pick_images.menuitem.currenttab;"
                     oncommand="ImagePickerChrome.pickImagesFromCurrentTab(event);" class="menuitem-iconic ip-button-1" />
                 <menuitem id="ipbtn-menuall" label="&toolbarbutton_pick_images.menuitem.alltabs;" oncommand="ImagePickerChrome.pickImagesFromAllTabs(event);"
@@ -27,6 +28,12 @@
                 <menuseparator id="ipbtn-menuseparator" />
                 <menuitem id="ipbtn-menu-configure" label="&configure_button.label;" oncommand="ImagePickerChrome.openOptionsDialog(event);"
                     class="menuitem-iconic configure-menu-item" />
+                <menuitem id="ipbtn-menu-configure-doubleclick-save" label="&pref_collector_doubleclick_image_to_save.label;"
+                    oncommand="ImagePickerChrome.enableOrDisablePref(event, 'collector.doubleclickImageToSave.enable');"
+                    class="menuitem-iconic" type="checkbox"/>
+                <menuitem id="ipbtn-menu-configure-drap-save" label="&pref_collector_drag_image_to_save.label;"
+                    oncommand="ImagePickerChrome.enableOrDisablePref(event, 'collector.dragImageToSave.enable');"
+                    class="menuitem-iconic" type="checkbox"/>
             </menupopup>
         </toolbarbutton>
         <toolbarbutton id="ipbutton-simple-toolbar" class="toolbarbutton-1 ip-button-1" label="&toolbarbutton_pick_images.label;"
@@ -54,7 +61,7 @@
         <menuitem id="ipbutton-left-context" label="&toolbarbutton_pick_images.menuitem.lefttabs;" oncommand="ImagePickerChrome.pickImagesFromLeftTabs(event);"
             class="menuitem-iconic ip-button-left" hidden="true"/>
         <menu id="ipbuttons-context" class="menu-iconic ip-buttons" label="&menu_pick_images.label;" hidden="false">
-            <menupopup id="image-pick-button-popup-context" onpopupshowing="ImagePickerChrome.generatePickImageMenuItems(event);">
+            <menupopup id="image-pick-button-popup-context" onpopupshowing="ImagePickerChrome.onPopupMenuShowing(event);">
                 <menuitem id="ipbtn-menucurrent-context" label="&toolbarbutton_pick_images.menuitem.currenttab;"
                     oncommand="ImagePickerChrome.pickImagesFromCurrentTab(event);" class="menuitem-iconic ip-button-1" />
                 <menuitem id="ipbtn-menuall-context" label="&toolbarbutton_pick_images.menuitem.alltabs;"
@@ -66,6 +73,12 @@
                 <menuseparator id="ipbtn-menuseparator" />
                 <menuitem id="ipbtn-menu-configure" label="&configure_button.label;" oncommand="ImagePickerChrome.openOptionsDialog(event);"
                     class="menuitem-iconic configure-menu-item" />
+                <menuitem id="ipbtn-menu-configure-doubleclick-save" label="&pref_collector_doubleclick_image_to_save.label;"
+                    oncommand="ImagePickerChrome.enableOrDisablePref(event, 'collector.doubleclickImageToSave.enable');"
+                    class="menuitem-iconic" type="checkbox"/>
+                <menuitem id="ipbtn-menu-configure-drap-save" label="&pref_collector_drag_image_to_save.label;"
+                    oncommand="ImagePickerChrome.enableOrDisablePref(event, 'collector.dragImageToSave.enable');"
+                    class="menuitem-iconic" type="checkbox"/>
             </menupopup>
         </menu>
     </popup>

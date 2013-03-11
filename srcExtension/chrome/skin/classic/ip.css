@@ -75,6 +75,12 @@ toolbar[iconsize ="small"] #ipbutton-left-toolbar {
     list-style-image: url("chrome://imagepicker/skin/configure-16.png");
 }
 
+
+/* for notification popup */
+.popup-notification-icon[popupid="ImagePickerAlert"] {
+  list-style-image: url("chrome://imagepicker/skin/img-picker_32.png");
+}
+
 /*  css for image cell  */
 .image-cell {
     margin: 5px;

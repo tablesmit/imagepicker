@@ -207,9 +207,10 @@ ImagePickerChrome.pickImages = function(tabs, title){
     var params = {
         "imageList": imageInfoList,
         "title": title,
-        "listeners": listeners
+        "listeners": listeners,
+        "browser": gBrowser.selectedBrowser,
+        "popupNotifications": PopupNotifications
     };
-
     var mainWindow = window.openDialog("chrome://imagepicker/content/pick.xul", "PickImage.mainWindow", "chrome,centerscreen,resizable, dialog=no, modal=no, dependent=no,status=yes", params);
     mainWindow.focus();
 };
@@ -350,8 +351,29 @@ ImagePickerChrome.getImageTop = function(image){
     return top;
 };
 
-ImagePickerChrome.generatePickImageMenuItems = function(event){
+ImagePickerChrome.onPopupMenuShowing = function(event){
 
+    var prefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch("extensions.imagepicker.")
+
+    // update menu items
+    var configureMenuitem;
+    var menuPopup = event.target;
+    var children = menuPopup.children;
+    for (var i = children.length - 1; i >= 0; i--) {
+        var child = children[i];
+        if (child.id == null || child.id == "") {
+            menuPopup.removeChild(child); // Remove all dynamic menu items
+        } else if(child.id == "ipbtn-menu-configure"){
+        	configureMenuitem = child; // Locate configure menu
+        } else if(child.id == "ipbtn-menu-configure-doubleclick-save"){
+        	child.setAttribute("checked", prefs.getBoolPref("collector.doubleclickImageToSave.enable")); // Update check status
+        } else if(child.id == "ipbtn-menu-configure-drap-save"){
+            child.setAttribute("checked", prefs.getBoolPref("collector.dragImageToSave.enable")); // Update check status
+        }
+    }
+
+
+    // Generate dynamic menu item by tab title
     var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
     // Split current tab title to collect feeds
@@ -389,20 +411,6 @@ ImagePickerChrome.generatePickImageMenuItems = function(event){
         return feed1.occurrence - feed2.occurrence;
     });
 
-    // update menu items
-    var configureMenuitem;
-    var menuPopup = event.target;
-    var children = menuPopup.children;
-    // Remove all dynamic menu items and locate configure menu
-    for (var i = children.length - 1; i >= 0; i--) {
-        var child = children[i];
-        if (child.id == null || child.id == "") {
-            menuPopup.removeChild(child);
-        } else if(child.id == "ipbtn-menu-configure"){
-        	configureMenuitem = child;
-        }
-    }
-
     // Add menu items when occurrence is larger than 1
     var hasNewMenuitem = false;
     feeds.forEach(function(feed){
@@ -425,6 +433,14 @@ ImagePickerChrome.generatePickImageMenuItems = function(event){
     	menuPopup.insertBefore(separator, configureMenuitem);
     }
 };
+
+ImagePickerChrome.enableOrDisablePref = function(event, prefName){
+    event.stopPropagation();
+    var prefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch("extensions.imagepicker.")
+    var value = prefs.getBoolPref(prefName);
+    prefs.setBoolPref(prefName, !value);
+};
+
 
 
 /** **************** CloseTabListener Object Class ******************** */

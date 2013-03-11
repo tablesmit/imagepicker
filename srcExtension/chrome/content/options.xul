@@ -13,7 +13,7 @@
      onunload="ImagePickerChrome.Options.onDialogClose();"
      ondialogextra2="ImagePickerChrome.Options.restoreAll();"
      persist="lastSelected screenX screenY">
-    <prefpane id="paneGeneral" label="&pref_paneGeneral.label;" image="chrome://imagepicker/skin/option-general.png">
+    <prefpane id="paneGeneral" label="&pref_paneGeneral.label;" image="chrome://imagepicker/skin/option-general32.png">
       <preferences>
         <preference id="pref-createdFolderByTitle" name="extensions.imagepicker.createdFolderByTitle" type="bool" />
         <preference id="pref-showSubfolderNameConfirmationPopup" name="extensions.imagepicker.showSubfolderNameConfirmationPopup" type="bool" />
@@ -59,7 +59,7 @@
             </groupbox>
       </vbox>
     </prefpane>
-    <prefpane id="paneUI" label="&pref_paneUI.label;" image="chrome://imagepicker/skin/option-mouse.png">
+    <prefpane id="paneUI" label="&pref_paneUI.label;" image="chrome://imagepicker/skin/option-mouse32.png">
           <preferences>
             <preference id="pref-ipButtonsShowOnToolbar" name="extensions.imagepicker.ui.ipbuttons.toolbar.show" type="bool" />
             <preference id="pref-ipButtonSimpleShowOnToolbar" name="extensions.imagepicker.ui.ipbutton-simple.toolbar.show" type="bool" />

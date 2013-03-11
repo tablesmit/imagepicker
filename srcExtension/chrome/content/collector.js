@@ -68,6 +68,9 @@ ImagePickerChrome.Collector = {
 	saveImageFromElement : function(imageElement) {
 
 		 var image = new ImagePicker.ImageInfo(1, imageElement, 0);
+	     ImagePickerChrome.ImageUtils.updateFileExtensionByMIME(image);
+	     ImagePickerChrome.ImageUtils.updateFileNameFromCache(image);
+
 		 var destDir = ImagePickerChrome.Collector.getOrCreateSavedFolder();
 
     	 // get provacy context
@@ -82,7 +85,11 @@ ImagePickerChrome.Collector = {
 
          var stringsBundle = document.getElementById("ip-string-bundle");
 
-	     var downloadSession = new ImagePicker.DownloadSession([image], destDir, privacyContext, null, null, null, stringsBundle);
+         var notificationTitle = stringsBundle.getFormattedString("saveNotificationTitleSingle", [ image.getFileNameExt() ]);
+         var notification = new ImagePickerChrome.Notification(notificationTitle, destDir.path, gBrowser.selectedBrowser);
+         notification.show();
+
+	     var downloadSession = new ImagePicker.DownloadSession([image], destDir, privacyContext, null, null, null, stringsBundle, false);
 	     downloadSession.saveImages();
 	},
 
