@@ -9,6 +9,7 @@ Cu.import("resource://imagepicker/common.js");
 Cu.import("resource://imagepicker/sequence.js");
 Cu.import("resource://imagepicker/settings.js");
 Cu.import("resource://imagepicker/fileUtils.js");
+Cu.import("resource://gre/modules/PopupNotifications.jsm");
 
 /**
  * DownloadSession class is used to download multiple files
@@ -18,7 +19,7 @@ Cu.import("resource://imagepicker/fileUtils.js");
  * @constructor
  */
 ImagePicker.DownloadSession = function(images, destDir, privacyContext, oldDownloadProgressListener,
-        newDownloadProgressListener, postSavedListeners, stringsBundle) {
+        newDownloadProgressListener, postSavedListeners, stringsBundle, batchMode) {
 
     this.images = images;
     this.destDir = destDir;
@@ -42,6 +43,8 @@ ImagePicker.DownloadSession = function(images, destDir, privacyContext, oldDownl
         this.downloadManager = null;
     }
 
+    this.batchMode = batchMode;
+
     ImagePicker.Logger.info("Created DownloadSession[images=" + this.images.length + ", destDir=" + this.destDir.path
             + ", inPrivateBrowsingMode=" + this.inPrivateBrowsingMode + ", downloadManager=" + this.downloadManager + "]");
 };
@@ -58,7 +61,7 @@ ImagePicker.DownloadSession.prototype = {
         var images = this.images;
 
         // Auto rename
-        if (ImagePicker.Settings.isRenameImageBySequenceNum()) {
+        if (ImagePicker.Settings.isRenameImageBySequenceNum() && this.batchMode) {
             this._renameBySequence(images);
         }
 
@@ -78,7 +81,8 @@ ImagePicker.DownloadSession.prototype = {
         var fileNames = new Array();
         for ( var i = 0; i < images.length; i++) {
             var img = images[i];
-            var file = ImagePicker.FileUtils.createUniqueFile(img.getFileNameExt(), this.destDir, fileNames);
+            var fileNameExt = img.fileName + "." + (img.fileExt == null? "jpg" : img.fileExt);
+            var file = ImagePicker.FileUtils.createUniqueFile(fileNameExt, this.destDir, fileNames);
             try {
                 this._saveImageToFile(img.url, file, this.downloadManager);
             } catch (ex) {
@@ -90,25 +94,6 @@ ImagePicker.DownloadSession.prototype = {
     },
 
     _preSaveImages : function(savedFolder, images, stringsBundle) {
-
-        var notificationTitle = stringsBundle.getFormattedString("saveNotificationTitleMultiple", [ images.length ]);
-        if (images.length == 1) {
-            notificationTitle = stringsBundle.getFormattedString("saveNotificationTitleSingle", [ images[0]
-                    .getFileNameExt() ]);
-        }
-
-        var alertListener = {
-            observe : function(subject, topic, data) {
-                if (topic == "alertclickcallback") {
-                    ImagePicker.Logger.debug("Open directory, data=" + data);
-                    var dir = ImagePicker.FileUtils.toDirectory(data);
-                    ImagePicker.FileUtils.revealDirectory(dir);
-                }
-            }
-        };
-        var alertsService = Components.classes["@mozilla.org/alerts-service;1"].getService(Ci.nsIAlertsService);
-        alertsService.showAlertNotification("chrome://imagepicker/skin/img-picker_32.png", notificationTitle,
-                savedFolder.path, true, savedFolder.path, alertListener, "ImagePickerAlert");
     },
 
     _postSaveImages : function(savedFolder, images, postSavedListeners, stringsBundle) {
