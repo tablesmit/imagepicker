@@ -18,20 +18,20 @@ Cu.import("resource://gre/modules/PopupNotifications.jsm");
  * @class ImagePicker.DownloadSession
  * @constructor
  */
-ImagePicker.DownloadSession = function(images, destDir, privacyContext, oldDownloadProgressListener,
+ImagePicker.DownloadSession = function(images, destDir, privacyInfo, oldDownloadProgressListener,
         newDownloadProgressListener, postSavedListeners, stringsBundle, batchMode) {
 
     this.images = images;
     this.destDir = destDir;
-    this.privacyContext = privacyContext;
+    this.privacyContext = privacyInfo.privacyContext;
+    this.inPrivateBrowsingMode = privacyInfo.inPrivateBrowsing;
+
     this.oldDownloadProgressListener = oldDownloadProgressListener;
     this.newDownloadProgressListener = newDownloadProgressListener;
     this.postSavedListeners = postSavedListeners;
     this.stringsBundle = stringsBundle;
 
-    var privateBrowsingSvc = Components.classes["@mozilla.org/privatebrowsing;1"]
-            .getService(Components.interfaces.nsIPrivateBrowsingService);
-    this.inPrivateBrowsingMode = privateBrowsingSvc.privateBrowsingEnabled;
+
 
     this.ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
     this.mimeService = Cc["@mozilla.org/mime;1"].getService(Ci.nsIMIMEService);

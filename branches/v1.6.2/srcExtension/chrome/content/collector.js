@@ -73,23 +73,14 @@ ImagePickerChrome.Collector = {
 
 		 var destDir = ImagePickerChrome.Collector.getOrCreateSavedFolder();
 
-    	 // get provacy context
-    	 var privacyContext = null;
-         try {
-            var wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
-            var win = wm.getMostRecentWindow("navigator:browser");
-            privacyContext = win.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIWebNavigation).QueryInterface(Ci.nsILoadContext);
-         } catch(err) {
-            ImagePicker.Logger.info("cannot get privacy context: " + err);
-         }
-
          var stringsBundle = document.getElementById("ip-string-bundle");
 
          var notificationTitle = stringsBundle.getFormattedString("saveNotificationTitleSingle", [ image.getFileNameExt() ]);
          var notification = new ImagePickerChrome.Notification(notificationTitle, destDir.path, gBrowser.selectedBrowser);
          notification.show();
 
-	     var downloadSession = new ImagePicker.DownloadSession([image], destDir, privacyContext, null, null, null, stringsBundle, false);
+         var privacyInfo = ImagePickerChrome.getPrivacyInfo();
+	     var downloadSession = new ImagePicker.DownloadSession([image], destDir, privacyInfo, null, null, null, stringsBundle, false);
 	     downloadSession.saveImages();
 	},
 
