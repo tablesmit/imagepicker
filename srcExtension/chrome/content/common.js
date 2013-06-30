@@ -59,4 +59,37 @@ if ("undefined" == typeof (ImagePickerChrome)) {
             document.persist(toolbar.id, "currentset");
         }
     };
+
+    ImagePickerChrome.getPrivacyInfo = function() {
+
+        // get privacy context
+        var privacyContext = null;
+        var win = null;
+        try {
+            var wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
+            var win = wm.getMostRecentWindow("navigator:browser");
+            privacyContext = win.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIWebNavigation).QueryInterface(Ci.nsILoadContext);
+        } catch(e) {
+            Components.utils.reportError(e);
+        }
+
+        var inPrivateBrowsing = false;
+        try {
+            // Firefox 20+
+            Components.utils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
+            inPrivateBrowsing = PrivateBrowsingUtils.isWindowPrivate(win);
+        } catch(e) {
+            // pre Firefox 20 (if you do not have access to a doc.
+            // might use doc.hasAttribute("privatebrowsingmode") then instead)
+            try {
+                inPrivateBrowsing = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService).privateBrowsingEnabled;
+            } catch(e) {
+            }
+        }
+        return {
+            "inPrivateBrowsing" : inPrivateBrowsing,
+            "privacyContext" : privacyContext
+        };
+    };
+
 }
