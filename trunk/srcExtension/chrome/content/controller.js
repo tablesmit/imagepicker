@@ -82,15 +82,6 @@ ImagePickerChrome.Controller = {
         // Store the resize flag for first open
         this.MIN_WINDOW_WIDTH = 772;
         this.isResizeToMinWidth = false;
-
-        // get provacy context
-        try {
-            var wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
-            var win = wm.getMostRecentWindow("navigator:browser");
-            this.privacyContext = win.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIWebNavigation).QueryInterface(Ci.nsILoadContext);
-        } catch(err) {
-            ImagePicker.Logger.info("cannot get privacy context: " + err);
-        }
     },
 
     /**
@@ -628,7 +619,8 @@ ImagePickerChrome.Controller = {
          var notification = new ImagePickerChrome.Notification(notificationTitle, dest.path, this.browser, this.popupNotifications);
          notification.show();
 
-        var downloadSession = new ImagePicker.DownloadSession(savedImages, dest, this.privacyContext, oldDownloadProgressListener, newDownloadProgressListener, this.postSavedListeners, stringsBundle, true);
+        var privacyInfo = ImagePickerChrome.getPrivacyInfo();
+        var downloadSession = new ImagePicker.DownloadSession(savedImages, dest, privacyInfo, oldDownloadProgressListener, newDownloadProgressListener, this.postSavedListeners, stringsBundle, true);
         downloadSession.saveImages();
     },
 
