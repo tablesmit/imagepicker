@@ -190,7 +190,11 @@ ImagePickerChrome.pickImages = function(tabs, title){
             var documentImageList = currentDocument.getElementsByTagName('img');
             for (var j = 0; j < documentImageList.length; j++) {
                 var image = documentImageList[j];
-                if (image.src != null && image.src != "") {
+
+                var isEmptyImage = (image.style.width == '0px' && image.style.height == '0px')
+                                        || (image.width == 0 && image.height == 0);
+                if (image.src != null && image.src != "" && !isEmptyImage) {
+                    //alert(image.src + " - " +image.style.width + " - " + image.style.height);
                     currentImageList.push(image);
                 }
             }
