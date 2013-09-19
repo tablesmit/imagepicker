@@ -620,7 +620,7 @@ ImagePickerChrome.Controller = {
          notification.show();
 
         var privacyInfo = ImagePickerChrome.getPrivacyInfo();
-        var downloadSession = new ImagePicker.DownloadSession(savedImages, dest, privacyInfo, oldDownloadProgressListener, newDownloadProgressListener, this.postSavedListeners, stringsBundle, true);
+        var downloadSession = new ImagePicker.DownloadSession(savedImages, dest, null, privacyInfo, oldDownloadProgressListener, newDownloadProgressListener, this.postSavedListeners, stringsBundle, true);
         downloadSession.saveImages();
     },
 
