@@ -189,6 +189,23 @@ ImagePicker.Settings =  {
         return this._prefs.getBoolPref("collector.dragImageToSave.enable");
     },
 
+    getSavedSingleImageToFolder: function(){
+        var path = this.getUnicodeChar(this._prefs, "collector.savedSingleImageToFolder");
+        return path;
+    },
+
+    setSavedSingleImageToFolder: function(path){
+        this.setUnicodeChar(this._prefs, "collector.savedSingleImageToFolder", path);
+    },
+
+    getSavedSingleImageToOption: function(){
+        return this._prefs.getCharPref("collector.savedSingleImageToOption");
+    },
+
+    setSavedSingleImageToOption: function(option){
+        return this._prefs.setCharPref("collector.savedSingleImageToOption", option);
+    },
+
     isShowOnToolbar: function(button){
         var prefName = "ui." + button + ".toolbar.show";
         return this._prefs.getBoolPref(prefName);

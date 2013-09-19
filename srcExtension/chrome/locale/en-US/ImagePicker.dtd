@@ -32,7 +32,9 @@
 <!ENTITY pref_notes.label "NOTE: You must re-open the Image Picker dialog for the changes to take effect">
 
 <!ENTITY pref_paneGeneral.label "General">
-<!ENTITY pref_paneUI.label "UI &amp; Mouse">
+<!ENTITY pref_paneBatchDownload.label "Batch Download">
+<!ENTITY pref_paneSingleDownload.label "Single Download">
+<!ENTITY pref_paneUI.label "UI">
 
 <!ENTITY pref_ui.label "UI">
 <!ENTITY pref_show_on_toolbar.label "Show on Toolbar">
@@ -42,6 +44,9 @@
 <!ENTITY pref_mouse_behavior.tooltip "Save image quickly when browsing">
 <!ENTITY pref_collector_doubleclick_image_to_save.label "Double click to save image">
 <!ENTITY pref_collector_drag_image_to_save.label "Drag image to save image">
+<!ENTITY pref_save_image_to.label "Save image to">
+<!ENTITY pref_save_image_to_folder.label "Folder">
+<!ENTITY pref_save_image_to_askme.label "Always ask me where to save image">
 
 
 <!ENTITY pick_window.title "Pick Images">

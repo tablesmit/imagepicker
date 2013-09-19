@@ -13,7 +13,12 @@
      onunload="ImagePickerChrome.Options.onDialogClose();"
      ondialogextra2="ImagePickerChrome.Options.restoreAll();"
      persist="lastSelected screenX screenY">
-    <prefpane id="paneGeneral" label="&pref_paneGeneral.label;" image="chrome://imagepicker/skin/option-general32.png">
+
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="ip-string-bundle" src="chrome://imagepicker/locale/ImagePicker.properties" />
+    </stringbundleset>
+
+    <prefpane id="paneBatchDownload" label="&pref_paneBatchDownload.label;" image="chrome://imagepicker/skin/option-mdownload32.png">
       <preferences>
         <preference id="pref-createdFolderByTitle" name="extensions.imagepicker.createdFolderByTitle" type="bool" />
         <preference id="pref-showSubfolderNameConfirmationPopup" name="extensions.imagepicker.showSubfolderNameConfirmationPopup" type="bool" />
@@ -59,7 +64,34 @@
             </groupbox>
       </vbox>
     </prefpane>
-    <prefpane id="paneUI" label="&pref_paneUI.label;" image="chrome://imagepicker/skin/option-mouse32.png">
+        <prefpane id="paneSingleDownload" label="&pref_paneSingleDownload.label;" image="chrome://imagepicker/skin/option-mouse32.png">
+          <preferences>
+            <preference id="pref-collectorDoubleclickImageToSaveEnable" name="extensions.imagepicker.collector.doubleclickImageToSave.enable" type="bool" />
+            <preference id="pref-collectorDragImageToSaveEnable" name="extensions.imagepicker.collector.dragImageToSave.enable" type="bool" />
+            <preference id="pref-collectorSavedSingleImageToFolder" name="extensions.imagepicker.collector.savedSingleImageToFolder" type="unichar" />
+          </preferences>
+          <vbox>
+            <groupbox>
+                <caption label="&pref_mouse_behavior.label;" tooltiptext="&pref_mouse_behavior.tooltip;"/>
+                <label value="&pref_mouse_behavior.tooltip;"/>
+                <checkbox label="&pref_collector_doubleclick_image_to_save.label;" preference="pref-collectorDoubleclickImageToSaveEnable" />
+                <checkbox label="&pref_collector_drag_image_to_save.label;" preference="pref-collectorDragImageToSaveEnable" />
+            </groupbox>
+            <groupbox>
+                <caption label="&pref_save_image_to.label;"/>
+                <radiogroup>
+                     <hbox >
+                       <radio id="ipFolderRadio" label="&pref_save_image_to_folder.label;"/>
+                       <textbox id="ipFolderTextbox" style="width:300px" preference="pref-collectorSavedSingleImageToFolder"/>
+                       <toolbarbutton id="browsedir" oncommand="ImagePickerChrome.Options.browseDir();"
+                           image="chrome://imagepicker/skin/browse.png" />
+                     </hbox>
+                     <radio id="askMeRadio" label="&pref_save_image_to_askme.label;"/>
+                </radiogroup>
+            </groupbox>
+        </vbox>
+    </prefpane>
+    <prefpane id="paneUI" label="&pref_paneUI.label;" image="chrome://imagepicker/skin/option-setting32.png">
           <preferences>
             <preference id="pref-ipButtonsShowOnToolbar" name="extensions.imagepicker.ui.ipbuttons.toolbar.show" type="bool" />
             <preference id="pref-ipButtonSimpleShowOnToolbar" name="extensions.imagepicker.ui.ipbutton-simple.toolbar.show" type="bool" />
@@ -72,9 +104,6 @@
             <preference id="pref-ipButtonAllShowOnContextMenu" name="extensions.imagepicker.ui.ipbutton-all.contextmenu.show" type="bool" />
             <preference id="pref-ipButtonRightShowOnContextMenu" name="extensions.imagepicker.ui.ipbutton-right.contextmenu.show" type="bool" />
             <preference id="pref-ipButtonLeftShowOnContextMenu" name="extensions.imagepicker.ui.ipbutton-left.contextmenu.show" type="bool" />
-
-            <preference id="pref-collectorDoubleclickImageToSaveEnable" name="extensions.imagepicker.collector.doubleclickImageToSave.enable" type="bool" />
-            <preference id="pref-collectorDragImageToSaveEnable" name="extensions.imagepicker.collector.dragImageToSave.enable" type="bool" />
           </preferences>
           <vbox>
              <groupbox>
@@ -132,12 +161,6 @@
                         </row>
                     </rows>
                 </grid>
-            </groupbox>
-            <groupbox>
-                <caption label="&pref_mouse_behavior.label;" tooltiptext="&pref_mouse_behavior.tooltip;"/>
-                <label value="&pref_mouse_behavior.tooltip;"/>
-                <checkbox label="&pref_collector_doubleclick_image_to_save.label;" preference="pref-collectorDoubleclickImageToSaveEnable" />
-                <checkbox label="&pref_collector_drag_image_to_save.label;" preference="pref-collectorDragImageToSaveEnable" />
             </groupbox>
         </vbox>
     </prefpane>

@@ -24,6 +24,13 @@ pref('extensions.imagepicker.ui.ipbutton-left.contextmenu.show', false);
 pref('extensions.imagepicker.collector.doubleclickImageToSave.enable', true);
 pref('extensions.imagepicker.collector.dragImageToSave.enable', true);
 
+//askMe -- Always ask me where to save image
+pref('extensions.imagepicker.collector.savedSingleImageToOption', 'askMe');
+
+//The actual folder path
+pref('extensions.imagepicker.collector.savedSingleImageToFolder', '');
+
+
 pref('extensions.imagepicker.savedFolderPathList', "");
 pref('extensions.imagepicker.createdFolderByTitle', true);
 pref('extensions.imagepicker.showSubfolderNameConfirmationPopup', false);

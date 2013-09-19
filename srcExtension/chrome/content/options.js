@@ -14,6 +14,19 @@ Components.utils.import("resource://imagepicker/settings.js");
 ImagePickerChrome.Options = {
 
     onLoad : function() {
+        ImagePicker.Logger.debug("Call onLoad()");
+
+        // Handle save single image option
+        var savedSingleImageOption = ImagePicker.Settings.getSavedSingleImageToOption();
+        ImagePicker.Logger.debug("savedSingleImageOption =" + savedSingleImageOption);
+        var isAskMeSelected = (savedSingleImageOption == "askMe");
+        if (isAskMeSelected) {
+            var askMeRadio = document.getElementById("askMeRadio");
+            askMeRadio.click();
+        } else {
+            var ipFolderRadio = document.getElementById("ipFolderRadio");
+            ipFolderRadio.click();
+        }
 
         // populate windows title for "remove text"
         var removeTextMenulist = document.getElementById("removeTextMenulist");
@@ -28,7 +41,7 @@ ImagePickerChrome.Options = {
         // init RemoveText Elements
         this.enableOrDisableRemoveTextElements(ImagePicker.Settings.isCreatedFolderByTitle());
 
-        //Disalbe download manager feature since bug https://bugzilla.mozilla.org/show_bug.cgi?id=844566
+        //Disable download manager feature since bug https://bugzilla.mozilla.org/show_bug.cgi?id=844566
         if(ImagePicker.Settings.hasWinTaskbar()){
             var downloadManagerPrefCheckbox = document.getElementById("downloadManagerPrefCheckbox");
             downloadManagerPrefCheckbox.disabled = true;
@@ -123,8 +136,17 @@ ImagePickerChrome.Options = {
     },
 
     onDialogAccept : function() {
-        ImagePicker.Logger.debug("Installing button...");
 
+        // Handle save single image option
+        var askMeRadio = document.getElementById("askMeRadio");
+        ImagePicker.Logger.debug("askMeRadio.selected =" + askMeRadio.selected);
+        if(askMeRadio.selected == true){
+            ImagePicker.Settings.setSavedSingleImageToOption("askMe");
+        } else {
+            ImagePicker.Settings.setSavedSingleImageToOption("ipFolder");
+        }
+
+        ImagePicker.Logger.debug("Installing button...");
         var buttonNames = [ "ipbutton-simple", "ipbutton-all", "ipbutton-left", "ipbutton-right", "ipbuttons" ];
         buttonNames.forEach(function(buttonName) {
             var buttonId = buttonName + "-toolbar";
@@ -140,6 +162,34 @@ ImagePickerChrome.Options = {
         if(prefWindow.instantApply){
             ImagePicker.Logger.debug("Call onDialogAccept() when instantApply is on.");
             this.onDialogAccept();
+        }
+    },
+
+    /**
+     * browse directory
+     *
+     * @method browseDir
+     */
+    browseDir : function() {
+
+        var stringsBundle = document.getElementById("ip-string-bundle");
+        var title = stringsBundle.getString('selectFloderTitle');
+
+        var nsIFilePicker = Ci.nsIFilePicker;
+        var filePicker = Cc['@mozilla.org/filepicker;1'].createInstance(nsIFilePicker);
+        filePicker.init(window, title, nsIFilePicker.modeGetFolder);
+
+        // locate current directory
+        var pathTextBox = document.getElementById("ipFolderTextbox");
+        var destPath = pathTextBox.value;
+        var dest = ImagePicker.FileUtils.toDirectory(destPath);
+        if (dest) {
+            filePicker.displayDirectory = dest;
+        }
+        var result = filePicker.show();
+        if (result == nsIFilePicker.returnOK) {
+            pathTextBox.value = filePicker.file.path;
+            pathTextBox.click(); // fix un-saved issue
         }
     }
 }

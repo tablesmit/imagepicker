@@ -18,11 +18,12 @@ Cu.import("resource://gre/modules/PopupNotifications.jsm");
  * @class ImagePicker.DownloadSession
  * @constructor
  */
-ImagePicker.DownloadSession = function(images, destDir, privacyInfo, oldDownloadProgressListener,
+ImagePicker.DownloadSession = function(images, destDir, destFile, privacyInfo, oldDownloadProgressListener,
         newDownloadProgressListener, postSavedListeners, stringsBundle, batchMode) {
 
     this.images = images;
     this.destDir = destDir;
+    this.destFile = destFile;
     this.privacyContext = privacyInfo.privacyContext;
     this.inPrivateBrowsingMode = privacyInfo.inPrivateBrowsing;
 
@@ -79,17 +80,19 @@ ImagePicker.DownloadSession.prototype = {
 
         // Handle each file
         var fileNames = new Array();
-        for ( var i = 0; i < images.length; i++) {
+        for (var i = 0; i < images.length; i++) {
             var img = images[i];
-            var fileNameExt = img.fileName + "." + (img.fileExt == null? "jpg" : img.fileExt);
-            var file = ImagePicker.FileUtils.createUniqueFile(fileNameExt, this.destDir, fileNames);
+            var fileNameExt = img.fileName + "." + (img.fileExt == null ? "jpg" : img.fileExt);
+            var file = this.destFile;
+            if(!file){
+               file = ImagePicker.FileUtils.createUniqueFile(fileNameExt, this.destDir, fileNames);
+            }
             try {
                 this._saveImageToFile(img.url, file, this.downloadManager);
             } catch (ex) {
                 ImagePicker.Logger.error("Cannot save image: " + img, ex);
             }
         }
-
         this._postSaveImages(this.destDir, images, this.postSavedListeners, this.stringsBundle);
     },
 
@@ -122,6 +125,22 @@ ImagePicker.DownloadSession.prototype = {
             img.fileName = seq.next();
         }
     },
+
+
+    /**
+     * Chunk array
+     */
+    _chunk : function (arr, len) {
+
+        var chunks = [], i = 0, n = arr.length;
+
+        while (i < n) {
+            chunks.push(arr.slice(i, i += len));
+        }
+
+        return chunks;
+    },
+
 
     /**
      * save image to local

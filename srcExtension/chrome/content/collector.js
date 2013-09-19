@@ -71,39 +71,74 @@ ImagePickerChrome.Collector = {
 	     ImagePickerChrome.ImageUtils.updateFileExtensionByMIME(image);
 	     ImagePickerChrome.ImageUtils.updateFileNameFromCache(image);
 
-		 var destDir = ImagePickerChrome.Collector.getOrCreateSavedFolder();
-
          var stringsBundle = document.getElementById("ip-string-bundle");
+		 var destDirOrFile = ImagePickerChrome.Collector.getOrCreateSavedFolderOrFile(stringsBundle, image);
+		 if(destDirOrFile){
+		     var destDir = destDirOrFile;
+		     var destFile = null;
+		     if(destDirOrFile.isFile()){
+		         destDir = destDirOrFile.parent;
+		         destFile = destDirOrFile;
+		     }
 
-         var notificationTitle = stringsBundle.getFormattedString("saveNotificationTitleSingle", [ image.getFileNameExt() ]);
-         var notification = new ImagePickerChrome.Notification(notificationTitle, destDir.path, gBrowser.selectedBrowser);
-         notification.show();
+             var notificationTitle = stringsBundle.getFormattedString("saveNotificationTitleSingle", [ image.getFileNameExt() ]);
+             var notification = new ImagePickerChrome.Notification(notificationTitle, destDir.path, gBrowser.selectedBrowser);
+             notification.show();
 
-         var privacyInfo = ImagePickerChrome.getPrivacyInfo();
-	     var downloadSession = new ImagePicker.DownloadSession([image], destDir, privacyInfo, null, null, null, stringsBundle, false);
-	     downloadSession.saveImages();
+             var privacyInfo = ImagePickerChrome.getPrivacyInfo();
+    	     var downloadSession = new ImagePicker.DownloadSession([image], destDir, destFile, privacyInfo, null, null, null, stringsBundle, false);
+    	     downloadSession.saveImages();
+	     }
 	},
 
 	/**
      * @return a nsIFile object
      */
-	getOrCreateSavedFolder : function() {
-        // Get document title
-        var currentTabTitle = ImagePickerChrome.getCurrentBrowser().contentDocument.title;
+	getOrCreateSavedFolderOrFile : function(stringsBundle, image) {
 
-        var destPath = FileUtils.getDir("DfltDwnld", []).path;
-        var paths = ImagePicker.Settings.getSavedFolderPaths();
-        if(paths != null && paths.length > 0){
-            destPath = (paths[0] != null && paths[0] != ""? paths[0] : destPath);
+	    var savedSingleImageOption = ImagePicker.Settings.getSavedSingleImageToOption();
+	    var destPath = ImagePicker.Settings.getSavedSingleImageToFolder();
+	    var destDir = ImagePicker.FileUtils.toDirectory(destPath);
+
+        if (savedSingleImageOption == "askMe" || destDir == null) {
+            var title = stringsBundle.getString('selectFloderTitle');
+            var nsIFilePicker = Ci.nsIFilePicker;
+            var filePicker = Cc['@mozilla.org/filepicker;1'].createInstance(nsIFilePicker);
+            filePicker.init(window, title, nsIFilePicker.modeSave);
+            filePicker.defaultExtension = image.fileExt;
+            filePicker.defaultString = image.getFileNameExt();
+            filePicker.appendFilters(nsIFilePicker.filterImages);
+
+            // locate current directory
+            if (destDir == null) {
+                destPath = FileUtils.getDir("DfltDwnld", []).path;
+                destDir = ImagePicker.FileUtils.toDirectory(destPath);
+            }
+            filePicker.displayDirectory = destDir;
+
+            var result = filePicker.show();
+            if (result == nsIFilePicker.returnCancel) {
+                return null;
+            }
+
+            var file = filePicker.file;
+            if (!file.exists()) {
+                try {
+                    file.create(Ci.nsIFile.NORMAL_FILE_TYPE, 0777);
+                } catch(e) {
+                    ImagePicker.Logger.error("Cannot create file =  " + file.path);
+                }
+            }
+
+            if (file.parent != null) {
+                ImagePicker.Settings.setSavedSingleImageToFolder(file.parent.path);
+            }
+
+            return file;
         }
+
+
         ImagePicker.Logger.debug("destPath =  " + destPath);
-        var destDir = ImagePicker.FileUtils.toDirectory(destPath);
-
-        // Create sub-folder if need
-        if(ImagePicker.Settings.isCreatedFolderByTitle()){
-            var subFolderName = ImagePicker.FileUtils.makeFolderNameByTitle(currentTabTitle);
-            destDir = ImagePicker.FileUtils.createFolder(destPath, subFolderName);
-        }
 
         return destDir;
     },
