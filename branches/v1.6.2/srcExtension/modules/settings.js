@@ -265,6 +265,10 @@ ImagePicker.Settings =  {
         return this._prefs.getBoolPref(prefName);
     },
 
+    isUsedFirefoxBuildinNotification: function(button){
+        return this._prefs.getBoolPref("ui.notification.firefox-buildin");
+    },
+
     /**
      * Get a unicode char value from preference system for the given prefName
      * @method getUnicodeChar
