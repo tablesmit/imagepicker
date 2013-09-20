@@ -72,7 +72,17 @@ ImagePickerChrome.Collector = {
 	     ImagePickerChrome.ImageUtils.updateFileNameFromCache(image);
 
          var stringsBundle = document.getElementById("ip-string-bundle");
-		 var destDirOrFile = ImagePickerChrome.Collector.getOrCreateSavedFolderOrFile(stringsBundle, image);
+         var currentTabId = null;
+         var currentTab = gBrowser.selectedTab;
+         if(currentTab) {
+             currentTabId = currentTab.getUserData("tabId");
+             if(currentTabId == null){
+                 currentTabId = "t-" + new Date().valueOf();
+                 currentTab.setUserData("tabId", currentTabId, null);
+             }
+         }
+
+		 var destDirOrFile = ImagePickerChrome.Collector.getOrCreateSavedFolderOrFile(image, currentTabId, stringsBundle);
 		 if(destDirOrFile){
 		     var destDir = destDirOrFile;
 		     var destFile = null;
@@ -94,53 +104,96 @@ ImagePickerChrome.Collector = {
 	/**
      * @return a nsIFile object
      */
-	getOrCreateSavedFolderOrFile : function(stringsBundle, image) {
 
-	    var savedSingleImageOption = ImagePicker.Settings.getSavedSingleImageToOption();
-	    var destPath = ImagePicker.Settings.getSavedSingleImageToFolder();
-	    var destDir = ImagePicker.FileUtils.toDirectory(destPath);
+    getOrCreateSavedFolderOrFile : function(image, currentTabId, stringsBundle) {
 
-        if (savedSingleImageOption == "askMe" || destDir == null) {
-            var title = stringsBundle.getString('selectFloderTitle');
-            var nsIFilePicker = Ci.nsIFilePicker;
-            var filePicker = Cc['@mozilla.org/filepicker;1'].createInstance(nsIFilePicker);
-            filePicker.init(window, title, nsIFilePicker.modeSave);
-            filePicker.defaultExtension = image.fileExt;
-            filePicker.defaultString = image.getFileNameExt();
-            filePicker.appendFilters(nsIFilePicker.filterImages);
+        var title = stringsBundle.getString('collectorSaveImageDialogTitle');
 
-            // locate current directory
-            if (destDir == null) {
-                destPath = FileUtils.getDir("DfltDwnld", []).path;
-                destDir = ImagePicker.FileUtils.toDirectory(destPath);
+        var savedSingleImageOption = ImagePicker.Settings.getSavedSingleImageToOption();
+
+        ImagePicker.Logger.debug("savedSingleImageOption =  " + savedSingleImageOption + ", currentTabId=" + currentTabId);
+
+        if (savedSingleImageOption == "askMe") {
+            var lastSavedFolderPath = ImagePicker.Settings.getLastSavedFolder();
+            var lastSavedFolder = ImagePicker.FileUtils.toDirectory(lastSavedFolderPath);
+            var file = this.showSaveImageDialog(image, title, lastSavedFolder);
+            if (file) {
+                ImagePicker.Settings.setLastSavedFolder(file.parent.path);
             }
-            filePicker.displayDirectory = destDir;
-
-            var result = filePicker.show();
-            if (result == nsIFilePicker.returnCancel) {
-                return null;
-            }
-
-            var file = filePicker.file;
-            if (!file.exists()) {
-                try {
-                    file.create(Ci.nsIFile.NORMAL_FILE_TYPE, 0777);
-                } catch(e) {
-                    ImagePicker.Logger.error("Cannot create file =  " + file.path);
-                }
-            }
-
-            if (file.parent != null) {
-                ImagePicker.Settings.setSavedSingleImageToFolder(file.parent.path);
-            }
-
             return file;
+
+        } else if (savedSingleImageOption == "askMePerTab") {
+
+            var lastSavedFolderPath = ImagePicker.Settings.getLastSavedFolder();
+            var lastSavedFolder = ImagePicker.FileUtils.toDirectory(lastSavedFolderPath);
+            var lastSavedTabId = ImagePicker.Settings.getLastSavedTabId();
+
+            if (lastSavedTabId != currentTabId || lastSavedFolder == null) {
+                var file = this.showSaveImageDialog(image, title, lastSavedFolder);
+                if (file) {
+                    ImagePicker.Settings.setLastSavedFolder(file.parent.path);
+                    ImagePicker.Settings.setLastSavedTabId(currentTabId);
+                }
+                return file;
+            } else {
+                return lastSavedFolder
+            }
+        } else {
+            var destPath = ImagePicker.Settings.getSavedSingleImageToFolder();
+            var destDir = ImagePicker.FileUtils.toDirectory(destPath);
+            if (destDir == null) {
+                var file = this.showSaveImageDialog(image, title, destDir);
+                if (file) {
+                    ImagePicker.Settings.setSavedSingleImageToFolder(file.parent.path);
+                }
+                return file;
+            } else {
+                if(ImagePicker.Settings.isCreatedFolderByTitleForSingle()){
+                    var subFolderName = ImagePicker.FileUtils.makeFolderNameByTitle(window.document.title);
+                    var subFolder = ImagePicker.FileUtils.createFolder(destPath, subFolderName);
+                    if(subFolder != null){
+                        destDir = subFolder;
+                    }
+                }
+                return destDir
+            }
+        }
+    },
+
+
+
+    /**
+     * @return a nsIFile object
+     */
+    showSaveImageDialog : function(image, title, initFolder) {
+
+        var nsIFilePicker = Ci.nsIFilePicker;
+        var filePicker = Cc['@mozilla.org/filepicker;1'].createInstance(nsIFilePicker);
+        filePicker.init(window, title, nsIFilePicker.modeSave);
+        filePicker.defaultExtension = image.fileExt;
+        filePicker.defaultString = image.getFileNameExt();
+        filePicker.appendFilters(nsIFilePicker.filterImages);
+
+        // locate current directory
+        if (initFolder == null) {
+            filePicker.displayDirectory = initFolder;
         }
 
+        var result = filePicker.show();
+        if (result == nsIFilePicker.returnCancel) {
+            return null;
+        }
 
-        ImagePicker.Logger.debug("destPath =  " + destPath);
+        var file = filePicker.file;
+        if (!file.exists()) {
+            try {
+                file.create(Ci.nsIFile.NORMAL_FILE_TYPE, 0777);
+            } catch(e) {
+                ImagePicker.Logger.error("Cannot create file =  " + file.path);
+            }
+        }
 
-        return destDir;
+        return file;
     },
 
    /**

@@ -25,11 +25,14 @@ pref('extensions.imagepicker.collector.doubleclickImageToSave.enable', true);
 pref('extensions.imagepicker.collector.dragImageToSave.enable', true);
 
 //askMe -- Always ask me where to save image
-pref('extensions.imagepicker.collector.savedSingleImageToOption', 'askMe');
-
+//askMePerTab -- Ask me where to save image for new tab
+//ipFolder -- Save image to configured folder
+pref('extensions.imagepicker.collector.savedSingleImageToOption', 'askMePerTab');
 //The actual folder path
 pref('extensions.imagepicker.collector.savedSingleImageToFolder', '');
-
+pref('extensions.imagepicker.collector.createdFolderByTitle', true);
+pref('extensions.imagepicker.collector.lastSavedTabId', "");
+pref('extensions.imagepicker.collector.lastSavedFolder', "");
 
 pref('extensions.imagepicker.savedFolderPathList', "");
 pref('extensions.imagepicker.createdFolderByTitle', true);

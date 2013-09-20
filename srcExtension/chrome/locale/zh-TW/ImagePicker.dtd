@@ -47,6 +47,8 @@
 <!ENTITY pref_save_image_to.label "保存圖片至">
 <!ENTITY pref_save_image_to_folder.label "目錄">
 <!ENTITY pref_save_image_to_askme.label "總是詢問保存圖片的位置">
+<!ENTITY pref_save_image_to_askme_pertab.label "只在保存第一個圖片時，詢問保存圖片的位置">
+
 
 <!ENTITY pick_window.title "拾圖">
 <!ENTITY pick_size_limits.label "大小限制">
