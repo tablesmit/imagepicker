@@ -36,6 +36,7 @@ pref('extensions.imagepicker.collector.lastSavedFolder', "");
 
 pref('extensions.imagepicker.savedFolderPathList', "");
 pref('extensions.imagepicker.createdFolderByTitle', true);
+// Mapping to show sub folder in UI
 pref('extensions.imagepicker.showSubfolderNameConfirmationPopup', false);
 pref('extensions.imagepicker.removeTextFromTitle', "- Mozilla Firefox\n- Powered by Discuz!");
 pref('extensions.imagepicker.renameImageBySequenceNum', false);

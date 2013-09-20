@@ -135,7 +135,7 @@ ImagePicker.Settings =  {
         return this._prefs.getBoolPref("createdFolderByTitle");
     },
 
-    isShowSubfolderNameConfirmationPopup: function(){
+    isShowSubfolderInUI: function(){
         return this._prefs.getBoolPref("showSubfolderNameConfirmationPopup");
     },
 
@@ -179,6 +179,34 @@ ImagePicker.Settings =  {
         );
 
         return results;
+    },
+
+    addTextToBeRemoveFromTitle: function(text){
+
+        if(!text || text.length < 3){
+            return;
+        }
+
+        var storedTexts = this.getUnicodeChar(this._prefs, "removeTextFromTitle");
+        storedTexts = storedTexts + "\n"
+        if(!storedTexts || storedTexts.indexOf(text + "\n") > -1){
+            return;
+        }
+
+        storedTexts = storedTexts + text;
+        this.setUnicodeChar(this._prefs, "removeTextFromTitle", storedTexts);
+    },
+
+    getRemoveTextFromTitleRaw: function(){
+        return this.getUnicodeChar(this._prefs, "removeTextFromTitle");
+    },
+
+    setRemoveTextFromTitleRaw: function(content){
+        return this.setUnicodeChar(this._prefs, "removeTextFromTitle", content);
+    },
+
+    resetRemoveTextFromTitleRaw: function(content){
+        return this._prefs.clearUserPref("removeTextFromTitle");
     },
 
     isDoubleclickImageToSaveEnabled: function(){

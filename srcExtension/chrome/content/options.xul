@@ -12,6 +12,7 @@
      ondialogaccept="ImagePickerChrome.Options.onDialogAccept();"
      onunload="ImagePickerChrome.Options.onDialogClose();"
      ondialogextra2="ImagePickerChrome.Options.restoreAll();"
+     style="min-width:500px;"
      persist="lastSelected screenX screenY">
 
     <stringbundleset id="stringbundleset">
@@ -39,23 +40,13 @@
             </groupbox>
             <groupbox>
                 <caption label="&pref_folder_creation.label;" />
-                <checkbox label="&pref_created_folder_by_title.label;" preference="pref-createdFolderByTitle"
-                          oncommand="ImagePickerChrome.Options.selectCreatedFolderByTitle(event);"/>
-                <groupbox>
-                    <caption label="&pref_remove_text_from_title_textbox.label;" />
-                    <textbox multiline="true"  cols="80" rows="5" preference="pref-removeTextFromTitle" id="removeTextTB"/>
-                    <hbox align="center" style="border: 1px blue;">
-                        <label value="&pref_remove_text_from_title_menulist.label;" />
-                        <menulist editable="true" flex="1" id="removeTextMenulist">
-                          <menupopup>
-                          </menupopup>
-                        </menulist>
-                        <button label="&pref_remove_text_from_title_button.label;" oncommand="ImagePickerChrome.Options.addRemoveText();"
-                                tooltiptext="&pref_remove_text_from_title_button.tooltip;"  id="removeTextBtn"/>
-                    </hbox>
-                </groupbox>
-                <checkbox label="&pref_show_folder_name_confirmation.label;" preference="pref-showSubfolderNameConfirmationPopup"
-                          id="showSubfolderNameConfirmationPopupCheckbox"/>
+                <hbox>
+                    <checkbox label="&pref_created_folder_by_title.label;" preference="pref-createdFolderByTitle"
+                              oncommand="ImagePickerChrome.Options.selectCreatedFolderByTitle(event);"/>
+                    <label id="titleMgrLink" class="text-link" value="&pref_remove_text_from_title_link;" onclick="ImagePickerChrome.Options.openTitleManagementDialog(event);" />
+                </hbox>
+                <checkbox label="&pref_display_subfolder_ui.label;" preference="pref-showSubfolderNameConfirmationPopup"
+                          id="showSubfolderNameInUI"/>
             </groupbox>
             <groupbox>
                  <caption label="&pref_file_creation.label;" />
@@ -81,14 +72,17 @@
             <groupbox>
                 <caption label="&pref_save_image_to.label;"/>
                 <radiogroup>
-                    <vbox style="border:1px groove white">
+                    <vbox style="border:1px groove #b9ae9d">
                          <hbox >
                            <radio id="ipFolderRadio" label="&pref_save_image_to_folder.label;" oncommand="ImagePickerChrome.Options.enableOrDisableIpFolderElements(true);"/>
                            <textbox id="ipFolderTextbox" style="width:300px" preference="pref-collectorSavedSingleImageToFolder"/>
                            <toolbarbutton id="ipFolderButton" oncommand="ImagePickerChrome.Options.browseDir();"
                                image="chrome://imagepicker/skin/browse.png" />
                          </hbox>
-                         <checkbox id="ipFolderCheckbox" label="&pref_created_folder_by_title.label;" preference="pref-collectorCreatedFolderByTitle" style="margin-left: 23px;"/>
+                         <hbox >
+                             <checkbox id="ipFolderCheckbox" label="&pref_created_folder_by_title.label;" preference="pref-collectorCreatedFolderByTitle" style="margin-left: 23px;"/>
+                             <label id="titleMgrLink" class="text-link" value="&pref_remove_text_from_title_link;" onclick="ImagePickerChrome.Options.openTitleManagementDialog(event);" />
+                         </hbox>
                      </vbox>
                      <radio id="askMeRadio" label="&pref_save_image_to_askme.label;" oncommand="ImagePickerChrome.Options.enableOrDisableIpFolderElements(false);"/>
                      <radio id="askMePerTabRadio" label="&pref_save_image_to_askme_pertab.label;" oncommand="ImagePickerChrome.Options.enableOrDisableIpFolderElements(false);"/>
