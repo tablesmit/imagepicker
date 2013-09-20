@@ -1,4 +1,5 @@
 Components.utils.import("resource://imagepicker/common.js");
+Components.utils.import("resource://imagepicker/settings.js");
 Components.utils.import("resource://imagepicker/fileUtils.js");
 Components.utils.import("resource://gre/modules/PopupNotifications.jsm");
 
@@ -32,15 +33,24 @@ ImagePickerChrome.Notification.prototype = {
             }
         };
 
-        try {
-            var alertsService = Cc["@mozilla.org/alerts-service;1"].getService(Ci.nsIAlertsService);
-            alertsService.showAlertNotification("chrome://imagepicker/skin/img-picker_32.png", this.title,
-                    this.savedFolderPath, true, this.savedFolderPath, alertListener, "ImagePickerAlert");
-            //abcefg.throwEx();
-        } catch (ex) {
-            ImagePicker.Logger.error("Occured Error " + ex);
-            var filePath = this.savedFolderPath;
+        var isUsedFirefoxStyle = ImagePicker.Settings.isUsedFirefoxBuildinNotification();
+        var hasErrorWhenUsedOsStyle = false;
 
+        if(!isUsedFirefoxStyle){
+            try {
+                var alertsService = Cc["@mozilla.org/alerts-service;1"].getService(Ci.nsIAlertsService);
+                alertsService.showAlertNotification("chrome://imagepicker/skin/img-picker_32.png", this.title,
+                        this.savedFolderPath, true, this.savedFolderPath, alertListener, "ImagePickerAlert");
+                //abcefg.throwEx();
+            } catch (ex) {
+                ImagePicker.Logger.error("Occured Error " + ex);
+                hasErrorWhenUsedOsStyle = true;
+            }
+        }
+
+
+        if (isUsedFirefoxStyle || hasErrorWhenUsedOsStyle) {
+            var filePath = this.savedFolderPath;
             var openAction = function() {
                 var dir = fileUtils.toDirectory(filePath);
                 fileUtils.revealDirectory(dir);
@@ -57,7 +67,8 @@ ImagePickerChrome.Notification.prototype = {
 
             setTimeout(function() {
                 notification.remove();
-            }, 1500); // Time in seconds to disappear the door-hanger popup.
+            }, 1500);
+            // Time in seconds to disappear the door-hanger popup.
         }
     }
 };
