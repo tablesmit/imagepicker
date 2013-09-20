@@ -23,18 +23,8 @@ ImagePickerChrome.Options = {
         var askMeRadio = document.getElementById(savedSingleImageOption + "Radio");
         askMeRadio.click();
 
-        // populate windows title for "remove text"
-        var removeTextMenulist = document.getElementById("removeTextMenulist");
-
-        var windowTitle = window.opener.document.title;
-        var removeTexts = this._splitTitle(windowTitle);
-        for ( var i = 0; i < removeTexts.length; i++) {
-            var item = removeTextMenulist.appendItem(removeTexts[i]);
-            item.setAttribute("crop", "none");
-        }
-
         // init RemoveText Elements
-        this.enableOrDisableRemoveTextElements(ImagePicker.Settings.isCreatedFolderByTitle());
+        this.enableOrDisableCreatedByTitleElements(ImagePicker.Settings.isCreatedFolderByTitle());
 
         //Disable download manager feature since bug https://bugzilla.mozilla.org/show_bug.cgi?id=844566
         if(ImagePicker.Settings.hasWinTaskbar()){
@@ -43,68 +33,22 @@ ImagePickerChrome.Options = {
         }
     },
 
-    _splitTitle : function(windowTitle) {
-
-        var results = new Array();
-
-        if (windowTitle != null && windowTitle != "") {
-
-            var headTexts = new Array();
-            var tailTexts = new Array();
-
-            var separatorRE = /\t|-|_|\|/g;
-            var result = separatorRE.exec(windowTitle);
-            while (result != null) {
-                var hText = windowTitle.substring(0, separatorRE.lastIndex);
-                headTexts.push(hText);
-
-                var tText = windowTitle.substring(result.index);
-                tailTexts.push(tText);
-
-                result = separatorRE.exec(windowTitle);
-            }
-
-            results = headTexts.concat(tailTexts);
-        }
-
-        return results;
-    },
-
-    addRemoveText : function() {
-        var removeTextMenulist = document.getElementById("removeTextMenulist");
-        var text = removeTextMenulist.value;
-
-        var removeTextTB = document.getElementById("removeTextTB");
-
-        removeTextTB.value = text + "\n" + removeTextTB.value;
-        removeTextTB.click(); // fix un-saved issue
-    },
-
     selectCreatedFolderByTitle : function(aEvent) {
 
         var createdFolderByTitleCheckBox = aEvent.target;
-        this.enableOrDisableRemoveTextElements(createdFolderByTitleCheckBox.checked);
+        this.enableOrDisableCreatedByTitleElements(createdFolderByTitleCheckBox.checked);
     },
 
-    enableOrDisableRemoveTextElements : function(enable) {
+    enableOrDisableCreatedByTitleElements : function(enable) {
 
-        var showSubfolderNameConfirmationPopupCheckbox = document
-                .getElementById("showSubfolderNameConfirmationPopupCheckbox");
-        var removeTextMenulist = document.getElementById("removeTextMenulist");
-        var removeTextTB = document.getElementById("removeTextTB");
-        var removeTextBtn = document.getElementById("removeTextBtn");
+        var showSubfolderNameInUI = document
+                .getElementById("showSubfolderNameInUI");
 
         if (enable) {
-            showSubfolderNameConfirmationPopupCheckbox.disabled = false;
-            removeTextMenulist.disabled = false;
-            removeTextTB.disabled = false;
-            removeTextBtn.disabled = false;
+            showSubfolderNameInUI.disabled = false;
         } else {
-            showSubfolderNameConfirmationPopupCheckbox.disabled = true;
-            showSubfolderNameConfirmationPopupCheckbox.checked = false;
-            removeTextMenulist.disabled = true;
-            removeTextTB.disabled = true;
-            removeTextBtn.disabled = true;
+            showSubfolderNameInUI.disabled = true;
+            showSubfolderNameInUI.checked = false;
         }
     },
 
@@ -123,6 +67,14 @@ ImagePickerChrome.Options = {
             ipFolderButton.disabled = true;
             ipFolderCheckbox.disabled = true;
         }
+    },
+
+    openTitleManagementDialog : function(event) {
+        if (event) {
+            event.stopPropagation();
+        }
+        openDialog('chrome://imagepicker/content/titleManagement.xul', '',
+                'chrome,titlebar,resizable,centerscreen,modal=no,dialog=yes');
     },
 
     restoreAll : function() {
@@ -144,11 +96,15 @@ ImagePickerChrome.Options = {
         }
 
         // Restore RemoveText Elements
-        this.enableOrDisableRemoveTextElements(true);
+        this.enableOrDisableCreatedByTitleElements(true);
 
         // Restore save image to settings
         var askMeRadio = document.getElementById("askMeRadio");
         askMeRadio.click();
+
+        // Restore RemoveTextFromTitle value
+        ImagePicker.Settings.resetRemoveTextFromTitleRaw();
+
     },
 
     onDialogAccept : function() {

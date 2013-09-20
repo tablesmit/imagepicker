@@ -14,11 +14,14 @@
 
 <!ENTITY pref_folder_creation.label "創建目錄">
 <!ENTITY pref_created_folder_by_title.label "按標題自動創建保存目錄">
-<!ENTITY pref_show_folder_name_confirmation.label "顯示保存目錄名對話框">
-<!ENTITY pref_remove_text_from_title_textbox.label "從標題中，刪除下面內容">
-<!ENTITY pref_remove_text_from_title_menulist.label "要刪除的內容：">
-<!ENTITY pref_remove_text_from_title_button.label "添加">
-<!ENTITY pref_remove_text_from_title_button.tooltip "添加要刪除的內容">
+<!ENTITY pref_display_subfolder_ui.label "在界面上顯示要創建的子目錄">
+<!ENTITY pref_remove_text_from_title_link "自動刪除部分標題">
+
+<!ENTITY title_management_dialog.title "自動刪除部分標題">
+<!ENTITY title_management_remove_text_from_title_textbox.label "當按標題創建目錄時，下面的內容將會被自動刪除">
+<!ENTITY title_management_remove_text_from_title_menulist.label "要刪除的內容：">
+<!ENTITY title_management_remove_text_from_title_button.label "添加">
+<!ENTITY title_management_remove_text_from_title_button.tooltip "添加要刪除的內容">
 
 <!ENTITY pref_file_creation.label "創建文件">
 <!ENTITY pref_rename_image_by_sequence_num.label "按圖片的出現順序，自動重命名圖片">
@@ -80,9 +83,6 @@
 <!ENTITY pick_contex_menu_select_similar.label "選擇相似的">
 <!ENTITY pick_contex_menu_select_all.label "全選">
 <!ENTITY pick_contex_menu_unselect_all.label "全不選">
-
-<!ENTITY folder_confirmation_dialog.title "保存目錄名確認">
-<!ENTITY folder_confirmation_dialog.label "請選擇或輸入保存圖片的目錄名">
 
 <!ENTITY about_dialog.title "關於 Image Picker">
 <!ENTITY about_extension_name.label "集圖工具 （Image Picker）">

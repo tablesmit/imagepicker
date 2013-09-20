@@ -125,6 +125,7 @@ ImagePickerChrome.Controller = {
         document.getElementById("showImageNameMI").setAttribute("checked", isShowImageName);
 
         this._renderSavedFolderPathMenuList();
+        this._renderSavedSubFolder();
 
         this.doFilter();
 
@@ -177,6 +178,52 @@ ImagePickerChrome.Controller = {
 
         //update UI
         this._renderSavedFolderPathMenuList();
+    },
+
+    _renderSavedSubFolder : function() {
+
+        var savedSubFolderMenulist = document.getElementById("savedSubFolderMenulist");
+        if(!this.settings.isShowSubfolderInUI()){
+            savedSubFolderMenulist.hidden = true;
+        }
+
+        //Create sub-folder if need
+        if(this.settings.isCreatedFolderByTitle()){
+
+            var subFolderName = ImagePicker.FileUtils.makeFolderNameByTitle(window.document.title);
+
+            //prepare menu items
+            var folders = [];
+            // locate current directory
+            var destPath = document.getElementById("savedPathMenulist").value;
+            var dest = ImagePicker.FileUtils.toDirectory(destPath);
+            if (dest && dest.isDirectory()) {
+                var dirEntries = dest.directoryEntries;
+                while (dirEntries.hasMoreElements()) {
+                    var entry = dirEntries.getNext();
+                    entry.QueryInterface(Components.interfaces.nsIFile);
+                    if(entry.isDirectory()){
+                        folders.push(entry);
+                    }
+                }
+            }
+
+            // sort by last modified time DESC
+            folders.sort(function(folder1, folder2){
+                return -(folder1.lastModifiedTime - folder2.lastModifiedTime);
+            });
+
+            var folderNames = [subFolderName];
+            folders.forEach(function(folder){
+                folderNames.push(folder.leafName);
+            });
+
+            for (var i = 0; i < folderNames.length; i++) {
+                savedSubFolderMenulist.insertItemAt(i, folderNames[i]);
+            }
+
+            savedSubFolderMenulist.selectedIndex = 0;
+        }
     },
 
     /**
@@ -379,57 +426,32 @@ ImagePickerChrome.Controller = {
         //Create sub-folder if need
         if(this.settings.isCreatedFolderByTitle()){
 
-            var subFolderName = ImagePicker.FileUtils.makeFolderNameByTitle(window.document.title);
-
-
-            //open FolderName Confirmation Popup
-            if (this.settings.isShowSubfolderNameConfirmationPopup()) {
-
-                //prepare parameter
-                var folders = [];
-                if (dest.isDirectory()) {
-                    var dirEntries = dest.directoryEntries;
-                    while (dirEntries.hasMoreElements()) {
-                        var entry = dirEntries.getNext();
-                        entry.QueryInterface(Components.interfaces.nsIFile);
-                        if(entry.isDirectory()){
-                            folders.push(entry);
-                        }
-                    }
-                }
-
-                // sort by last modified time DESC
-                folders.sort(function(folder1, folder2){
-                    return -(folder1.lastModifiedTime - folder2.lastModifiedTime);
-                });
-
-                var folderNames = [subFolderName];
-                folders.forEach(function(folder){
-                    folderNames.push(folder.leafName);
-                });
-
-                var params = {
-                    input: {
-                        savedfolderNames: folderNames
-                    },
-                    output: {
-                        savedFolderName: null
-                    }
-                };
-
-                var confirmDialog = window.openDialog("chrome://imagepicker/content/folderConfirmation.xul", "", "chrome, dialog, modal, centerscreen, resizable=yes", params);
-                confirmDialog.focus();
-
-                //handle result
-                var result = params.output.savedFolderName;
-                if(result!=null && result.trim() != ""){
-                    subFolderName = result;
-                }
-            }
-
+            var subFolderName = document.getElementById("savedSubFolderMenulist").value;
             var subFolder = ImagePicker.FileUtils.createFolder(destPath, subFolderName);
             if(subFolder != null){
                 dest = subFolder;
+
+                // Saved removed texts automatically
+                var originalSubFolderName = ImagePicker.FileUtils.makeFolderNameByTitle(window.document.title);
+                var startPos = originalSubFolderName.indexOf(subFolderName);
+
+                ImagePicker.Logger.debug("originalSubFolderName=" + originalSubFolderName + ", subFolderName=" + subFolderName + "startPos=" + startPos);
+
+                if(startPos > -1){
+                    var removedHeaderText = originalSubFolderName.substring(0, startPos);
+                    var removedTailText = originalSubFolderName.substring(startPos + subFolderName.length);
+                    ImagePicker.Logger.debug("removedHeaderText=" + removedHeaderText + ", removedTailText=" + removedTailText);
+
+                    var separatorRE = /\W|\s/g;
+                    if(separatorRE.test(removedHeaderText)){
+                        ImagePicker.Logger.debug("add head text to be removed");
+                        this.settings.addTextToBeRemoveFromTitle(removedHeaderText);
+                    }
+                    if(separatorRE.test(removedTailText)){
+                        ImagePicker.Logger.debug("add tail text to be removed");
+                        this.settings.addTextToBeRemoveFromTitle(removedTailText);
+                    }
+                }
             }
         }
 
