@@ -47,6 +47,7 @@
 <!ENTITY pref_save_image_to.label "Save image to">
 <!ENTITY pref_save_image_to_folder.label "Folder">
 <!ENTITY pref_save_image_to_askme.label "Always ask me where to save image">
+<!ENTITY pref_save_image_to_askme_pertab.label "Ask me where to save image for new tab">
 
 
 <!ENTITY pick_window.title "Pick Images">

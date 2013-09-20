@@ -69,6 +69,7 @@
             <preference id="pref-collectorDoubleclickImageToSaveEnable" name="extensions.imagepicker.collector.doubleclickImageToSave.enable" type="bool" />
             <preference id="pref-collectorDragImageToSaveEnable" name="extensions.imagepicker.collector.dragImageToSave.enable" type="bool" />
             <preference id="pref-collectorSavedSingleImageToFolder" name="extensions.imagepicker.collector.savedSingleImageToFolder" type="unichar" />
+            <preference id="pref-collectorCreatedFolderByTitle" name="extensions.imagepicker.collector.createdFolderByTitle" type="bool" />
           </preferences>
           <vbox>
             <groupbox>
@@ -80,13 +81,17 @@
             <groupbox>
                 <caption label="&pref_save_image_to.label;"/>
                 <radiogroup>
-                     <hbox >
-                       <radio id="ipFolderRadio" label="&pref_save_image_to_folder.label;"/>
-                       <textbox id="ipFolderTextbox" style="width:300px" preference="pref-collectorSavedSingleImageToFolder"/>
-                       <toolbarbutton id="browsedir" oncommand="ImagePickerChrome.Options.browseDir();"
-                           image="chrome://imagepicker/skin/browse.png" />
-                     </hbox>
-                     <radio id="askMeRadio" label="&pref_save_image_to_askme.label;"/>
+                    <vbox style="border:1px groove white">
+                         <hbox >
+                           <radio id="ipFolderRadio" label="&pref_save_image_to_folder.label;" oncommand="ImagePickerChrome.Options.enableOrDisableIpFolderElements(true);"/>
+                           <textbox id="ipFolderTextbox" style="width:300px" preference="pref-collectorSavedSingleImageToFolder"/>
+                           <toolbarbutton id="ipFolderButton" oncommand="ImagePickerChrome.Options.browseDir();"
+                               image="chrome://imagepicker/skin/browse.png" />
+                         </hbox>
+                         <checkbox id="ipFolderCheckbox" label="&pref_created_folder_by_title.label;" preference="pref-collectorCreatedFolderByTitle" style="margin-left: 23px;"/>
+                     </vbox>
+                     <radio id="askMeRadio" label="&pref_save_image_to_askme.label;" oncommand="ImagePickerChrome.Options.enableOrDisableIpFolderElements(false);"/>
+                     <radio id="askMePerTabRadio" label="&pref_save_image_to_askme_pertab.label;" oncommand="ImagePickerChrome.Options.enableOrDisableIpFolderElements(false);"/>
                 </radiogroup>
             </groupbox>
         </vbox>

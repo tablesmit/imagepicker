@@ -206,6 +206,27 @@ ImagePicker.Settings =  {
         return this._prefs.setCharPref("collector.savedSingleImageToOption", option);
     },
 
+    getLastSavedFolder: function(){
+        var path = this.getUnicodeChar(this._prefs, "collector.lastSavedFolder");
+        return path;
+    },
+
+    setLastSavedFolder: function(path){
+        this.setUnicodeChar(this._prefs, "collector.lastSavedFolder", path);
+    },
+
+    getLastSavedTabId: function(){
+        return this._prefs.getCharPref("collector.lastSavedTabId");
+    },
+
+    setLastSavedTabId: function(tabId){
+        return this._prefs.setCharPref("collector.lastSavedTabId", tabId);
+    },
+
+    isCreatedFolderByTitleForSingle: function(){
+        return this._prefs.getBoolPref("collector.createdFolderByTitle");
+    },
+
     isShowOnToolbar: function(button){
         var prefName = "ui." + button + ".toolbar.show";
         return this._prefs.getBoolPref(prefName);

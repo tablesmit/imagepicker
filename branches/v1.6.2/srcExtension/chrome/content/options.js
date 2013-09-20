@@ -19,14 +19,9 @@ ImagePickerChrome.Options = {
         // Handle save single image option
         var savedSingleImageOption = ImagePicker.Settings.getSavedSingleImageToOption();
         ImagePicker.Logger.debug("savedSingleImageOption =" + savedSingleImageOption);
-        var isAskMeSelected = (savedSingleImageOption == "askMe");
-        if (isAskMeSelected) {
-            var askMeRadio = document.getElementById("askMeRadio");
-            askMeRadio.click();
-        } else {
-            var ipFolderRadio = document.getElementById("ipFolderRadio");
-            ipFolderRadio.click();
-        }
+
+        var askMeRadio = document.getElementById(savedSingleImageOption + "Radio");
+        askMeRadio.click();
 
         // populate windows title for "remove text"
         var removeTextMenulist = document.getElementById("removeTextMenulist");
@@ -113,6 +108,23 @@ ImagePickerChrome.Options = {
         }
     },
 
+    enableOrDisableIpFolderElements : function(enable) {
+
+        var ipFolderTextbox = document.getElementById("ipFolderTextbox");
+        var ipFolderButton = document.getElementById("ipFolderButton");
+        var ipFolderCheckbox = document.getElementById("ipFolderCheckbox");
+
+        if (enable) {
+            ipFolderTextbox.disabled = false;
+            ipFolderButton.disabled = false;
+            ipFolderCheckbox.disabled = false;
+        } else {
+            ipFolderTextbox.disabled = true;
+            ipFolderButton.disabled = true;
+            ipFolderCheckbox.disabled = true;
+        }
+    },
+
     restoreAll : function() {
 
         var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo);
@@ -133,15 +145,22 @@ ImagePickerChrome.Options = {
 
         // Restore RemoveText Elements
         this.enableOrDisableRemoveTextElements(true);
+
+        // Restore save image to settings
+        var askMeRadio = document.getElementById("askMeRadio");
+        askMeRadio.click();
     },
 
     onDialogAccept : function() {
 
         // Handle save single image option
         var askMeRadio = document.getElementById("askMeRadio");
-        ImagePicker.Logger.debug("askMeRadio.selected =" + askMeRadio.selected);
+        var askMePerTabRadio = document.getElementById("askMePerTabRadio");
+
         if(askMeRadio.selected == true){
             ImagePicker.Settings.setSavedSingleImageToOption("askMe");
+        } else if(askMePerTabRadio.selected == true){
+            ImagePicker.Settings.setSavedSingleImageToOption("askMePerTab");
         } else {
             ImagePicker.Settings.setSavedSingleImageToOption("ipFolder");
         }
