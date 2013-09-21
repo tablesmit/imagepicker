@@ -24,8 +24,18 @@
 <!ENTITY title_management_remove_text_from_title_button.tooltip "添加要刪除的內容">
 
 <!ENTITY pref_file_creation.label "創建文件">
-<!ENTITY pref_rename_image_by_sequence_num.label "按圖片的出現順序，自動重命名圖片">
-<!ENTITY pref_rename_image_by_sequence_num.tooltip "例如： 001.jpg, 002.jpg, 003.jpg, ...">
+<!ENTITY pref_rename_image_enable "按指定的標記重命名圖片">
+<!ENTITY pref_rename_tags_desc "重命名標記">
+<!ENTITY pref_rename_tag_seq_num "&lt;seq_num&gt;">
+<!ENTITY pref_rename_tag_seq_num_desc "按圖片的出現順序，自動重命名圖片, 例如： 001, 002, 003 ...">
+<!ENTITY pref_rename_tag_date "&lt;date&gt;">
+<!ENTITY pref_rename_tag_date_desc "當前日期, 例如：2013-09-21">
+<!ENTITY pref_rename_tag_datetime "&lt;datetime&gt;">
+<!ENTITY pref_rename_tag_datetime_desc "當前日期和時間, 例如：2013-09-21 23_16_02">
+<!ENTITY pref_rename_tag_tabtitle "&lt;tab_title&gt;">
+<!ENTITY pref_rename_tag_tabtitle_desc "每個標簽頁的標題">
+<!ENTITY pref_rename_tag_name "&lt;name&gt;">
+<!ENTITY pref_rename_tag_name_desc "原始圖片名">
 
 <!ENTITY pref_after_saved_behavior.label "保存後">
 <!ENTITY pref_open_explorer_after_saved.label "自動打開文件瀏覽器">

@@ -23,6 +23,8 @@ ImagePickerChrome.Options = {
         var askMeRadio = document.getElementById(savedSingleImageOption + "Radio");
         askMeRadio.click();
 
+        this.enableOrDisableRenamingElements(ImagePicker.Settings.isRenamingEnabled());
+
         // init RemoveText Elements
         this.enableOrDisableCreatedByTitleElements(ImagePicker.Settings.isCreatedFolderByTitle());
 
@@ -49,6 +51,18 @@ ImagePickerChrome.Options = {
         } else {
             showSubfolderNameInUI.disabled = true;
             showSubfolderNameInUI.checked = false;
+        }
+    },
+
+    enableOrDisableRenamingElements : function(enable) {
+
+        var renamingMaskTextbox = document
+                .getElementById("renamingMaskTextbox");
+
+        if (enable) {
+            renamingMaskTextbox.disabled = false;
+        } else {
+            renamingMaskTextbox.disabled = true;
         }
     },
 
@@ -94,6 +108,8 @@ ImagePickerChrome.Options = {
                 preferences[i].reset(); // preference.reset()
             }
         }
+
+        this.enableOrDisableRenamingElements(false);
 
         // Restore RemoveText Elements
         this.enableOrDisableCreatedByTitleElements(true);

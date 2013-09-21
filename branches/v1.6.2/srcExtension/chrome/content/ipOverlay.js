@@ -1,6 +1,7 @@
 Components.utils.import("resource://imagepicker/common.js");
 Components.utils.import("resource://imagepicker/model.js");
 Components.utils.import("resource://imagepicker/settings.js");
+Components.utils.import("resource://imagepicker/fileUtils.js");
 
 ImagePickerChrome.init = function(){
 
@@ -180,6 +181,9 @@ ImagePickerChrome.pickImages = function(tabs, title){
     tabs.forEach(function(tab){
         ImagePicker.Logger.debug("handling tab = " + tab);
         var browser = gBrowser.getBrowserForTab(tab);
+        // remove unnecessary text from tab title
+        var validTabTitle = ImagePicker.FileUtils.makeFolderNameByTitle(browser.contentDocument.title);
+
         var contentWindow = browser.contentWindow;
 
         var documentList = ImagePickerChrome.getDocumentList(contentWindow);
@@ -200,7 +204,7 @@ ImagePickerChrome.pickImages = function(tabs, title){
             }
             ImagePicker.Logger.info("document = " + currentDocument.title + ", images = " + currentImageList.length);
 
-            imageInfoList = imageInfoList.concat(ImagePickerChrome.convertAndTidyImage(currentImageList));
+            imageInfoList = imageInfoList.concat(ImagePickerChrome.convertAndTidyImage(currentImageList, validTabTitle));
         }// end for each document
     });
 
@@ -242,7 +246,7 @@ ImagePickerChrome.getDocumentList = function(frame){
  *            htmlImageList
  * @return {Array[ImagePicker.ImageInfo]}
  */
-ImagePickerChrome.convertAndTidyImage = function(htmlImageList){
+ImagePickerChrome.convertAndTidyImage = function(htmlImageList, tabTitle){
 
     // Filter image by url
     var tidiedHtmlImageList = ImagePickerChrome.filterDuplicateImage(htmlImageList);
@@ -258,6 +262,7 @@ ImagePickerChrome.convertAndTidyImage = function(htmlImageList){
         ImagePicker.Logger.info("image" + j + " = " + tImg.src);
 
         var image = new ImagePicker.ImageInfo(guid++, tImg, ImagePickerChrome.getImageTop(tImg));
+        image.tabTitle = tabTitle;
 
         ImagePickerChrome.ImageUtils.updateFileExtensionByMIME(image);
         ImagePickerChrome.ImageUtils.updateFileSizeFromCache(image);
