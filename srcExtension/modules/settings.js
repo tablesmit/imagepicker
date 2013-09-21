@@ -139,8 +139,12 @@ ImagePicker.Settings =  {
         return this._prefs.getBoolPref("showSubfolderNameConfirmationPopup");
     },
 
-    isRenameImageBySequenceNum: function(){
-        return this._prefs.getBoolPref("renameImageBySequenceNum");
+    isRenamingEnabled: function(){
+        return this._prefs.getBoolPref("renamingEnable");
+    },
+
+    getRenamingMask: function(){
+        return this._prefs.getCharPref("renamingMask");
     },
 
     isOpenExplorerAfterSaved: function(){

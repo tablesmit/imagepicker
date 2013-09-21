@@ -24,7 +24,8 @@
         <preference id="pref-createdFolderByTitle" name="extensions.imagepicker.createdFolderByTitle" type="bool" />
         <preference id="pref-showSubfolderNameConfirmationPopup" name="extensions.imagepicker.showSubfolderNameConfirmationPopup" type="bool" />
         <preference id="pref-removeTextFromTitle" name="extensions.imagepicker.removeTextFromTitle" type="unichar"/>
-        <preference id="pref-renameImageBySequenceNum" name="extensions.imagepicker.renameImageBySequenceNum" type="bool" />
+        <preference id="pref-renamingEnable" name="extensions.imagepicker.renamingEnable" type="bool" />
+        <preference id="pref-renamingMask" name="extensions.imagepicker.renamingMask" type="string" />
         <preference id="pref-openExplorerAfterSaved" name="extensions.imagepicker.openExplorerAfterSaved" type="bool" />
         <preference id="pref-openDownloadManagerAfterSaved" name="extensions.imagepicker.openDownloadManagerAfterSaved" type="bool" />
         <preference id="pref-closeImagePickerAfterSaved" name="extensions.imagepicker.closeImagePickerAfterSaved" type="bool" />
@@ -50,9 +51,40 @@
             </groupbox>
             <groupbox>
                  <caption label="&pref_file_creation.label;" />
-                 <checkbox label="&pref_rename_image_by_sequence_num.label;" preference="pref-renameImageBySequenceNum"
-                           tooltiptext="&pref_rename_image_by_sequence_num.tooltip;"/>
-            </groupbox>
+                 <hbox>
+                     <checkbox label="&pref_rename_image_enable;" preference="pref-renamingEnable" oncommand="ImagePickerChrome.Options.enableOrDisableRenamingElements(this.checked);"/>
+                     <textbox id="renamingMaskTextbox" preference="pref-renamingMask" style="width: 300px;"/>
+                 </hbox>
+                 <label value="&pref_rename_tags_desc;" style="font-weight:bold; margin-left: 26px;"/>
+                 <grid pack="center" style="margin-left: 26px;">
+                        <columns>
+                            <column width="150"/>
+                            <column />
+                        </columns>
+                        <rows>
+                            <row>
+                                <label value="&pref_rename_tag_seq_num;"/>
+                                <label value="&pref_rename_tag_seq_num_desc;"/>
+                            </row>
+                            <row>
+                                <label value="&pref_rename_tag_date;"/>
+                                <label value="&pref_rename_tag_date_desc;"/>
+                            </row>
+                            <row>
+                                <label value="&pref_rename_tag_datetime;"/>
+                                <label value="&pref_rename_tag_datetime_desc;"/>
+                            </row>
+                            <row>
+                                <label value="&pref_rename_tag_tabtitle;"/>
+                                <label value="&pref_rename_tag_tabtitle_desc;"/>
+                            </row>
+                            <row>
+                                <label value="&pref_rename_tag_name;"/>
+                                <label value="&pref_rename_tag_name_desc;"/>
+                            </row>
+                          </rows>
+                     </grid>
+              </groupbox>
       </vbox>
     </prefpane>
         <prefpane id="paneSingleDownload" label="&pref_paneSingleDownload.label;" image="chrome://imagepicker/skin/option-mouse32.png">

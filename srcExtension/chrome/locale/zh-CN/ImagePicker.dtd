@@ -25,8 +25,18 @@
 
 
 <!ENTITY pref_file_creation.label "创建文件">
-<!ENTITY pref_rename_image_by_sequence_num.label "按图片的出现顺序，自动重命名图片">
-<!ENTITY pref_rename_image_by_sequence_num.tooltip "例如： 001.jpg, 002.jpg, 003.jpg, ...">
+<!ENTITY pref_rename_image_enable "按指定的标记重命名图片">
+<!ENTITY pref_rename_tags_desc "重命名标记">
+<!ENTITY pref_rename_tag_seq_num "&lt;seq_num&gt;">
+<!ENTITY pref_rename_tag_seq_num_desc "按图片的出现顺序，自动重命名图片, 例如： 001, 002, 003 ...">
+<!ENTITY pref_rename_tag_date "&lt;date&gt;">
+<!ENTITY pref_rename_tag_date_desc "当前日期, 例如：2013-09-21">
+<!ENTITY pref_rename_tag_datetime "&lt;datetime&gt;">
+<!ENTITY pref_rename_tag_datetime_desc "当前日期和时间, 例如：2013-09-21 23_16_02">
+<!ENTITY pref_rename_tag_tabtitle "&lt;tab_title&gt;">
+<!ENTITY pref_rename_tag_tabtitle_desc "每个标签页的标题">
+<!ENTITY pref_rename_tag_name "&lt;name&gt;">
+<!ENTITY pref_rename_tag_name_desc "原始图片名">
 
 <!ENTITY pref_after_saved_behavior.label "保存后">
 <!ENTITY pref_open_explorer_after_saved.label "自动打开文件浏览器">

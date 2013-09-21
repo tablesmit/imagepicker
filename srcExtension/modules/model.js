@@ -18,7 +18,7 @@ Cu.import("resource://imagepicker/common.js");
  * @param {HTMLElement}
  *            image element
  * @param {Number}
- *            the top of image (absolute position)     
+ *            the top of image (absolute position)
  */
 ImagePicker.ImageInfo = function(id, image, imageTop) {
 
@@ -28,6 +28,7 @@ ImagePicker.ImageInfo = function(id, image, imageTop) {
     this.height = image.height;
     this.width = image.width;
     this.top = imageTop;
+    this.tabTitle = "";
     this.fileSize = 0;
     this.isCached = true;
     this.loadFileSizeFromCacheCompleted = false;
@@ -35,7 +36,7 @@ ImagePicker.ImageInfo = function(id, image, imageTop) {
 
     this.nameFromURL = this.url.substring(this.url.lastIndexOf('/') + 1, this.url.length);
 
-    this.fileExt = null; 
+    this.fileExt = null;
     this.setFileName(this.nameFromURL);
 
     ImagePicker.Logger.info("Created ImageInfo[id=" + this.id + ", name=" + this.fileName + ", width=" + this.width
@@ -76,7 +77,7 @@ ImagePicker.ImageInfo.prototype = {
             this.properyChangeListener.onPropertyChange(this);
         }
     },
-    
+
     setFileExt : function(newFileExt) {
         this.fileExt = newFileExt;
 
@@ -85,7 +86,7 @@ ImagePicker.ImageInfo.prototype = {
             this.properyChangeListener.onPropertyChange(this);
         }
     },
-    
+
     getFileNameExt : function() {
         return this.fileName + (this.fileExt == null? "": ("." + this.fileExt));
     },
